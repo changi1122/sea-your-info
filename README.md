@@ -4,9 +4,9 @@
 데이터베이스로는 Mongo DB를 사용합니다.
 
 ## 폴더 구조
-client : GUI 프로그램을 담고 있는 폴더
-crawler : 웹 크롤러를 담고 있는 폴더
-server : Django와 DjangoRestFramework를 통한 REST API 서버를 담고 있는 폴더
+client : GUI 프로그램을 담고 있는 폴더.
+crawler : 웹 크롤러를 담고 있는 폴더.
+server : Django와 DjangoRestFramework를 통한 REST API 서버를 담고 있는 폴더.
 
 ## 실행 방법
 추가 필요.
