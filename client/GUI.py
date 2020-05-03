@@ -21,6 +21,11 @@ def register():
     win_reg.iconbitmap(r'c:\Users\wonjoong\PycharmProjects\HelloWorld\schoolwork\sea_your_info.ico')
 
 
+#우측 설명 이미지
+image_explain = PhotoImage(file="imagefile/infoimage.gif")
+text_explain = Label(root, image=image_explain)
+text_explain.grid(rowspan=6, column=3, padx=18)
+
 # pack이 아니라 grid로 화면 띄우는법
 ###제일 위 마크 띄우는 부분###
 icon_seayourinfo = PhotoImage(file="imagefile/sea_your_info.gif")
@@ -47,9 +52,10 @@ btn_login = Button(root, text="로그인", width=19, bg='#00B9FF', fg='white').g
 btn_register = Button(root, text="회원가입", command=register, width=19, bg='#00B9FF', fg='white').grid(row=5, columnspan=2,
                                                                                                     pady=10)
 ###우측의 설명 부분### 아직 추가적으로 작업이 필요한 부분
-text_explain_upper = Label(root, text="여기서부터")
-text_explain_upper.grid(row=0,column=3)
-text_explain_lower = Label(root, text="여기까지는 설명이 들어갈 부분입니다.")
-text_explain_lower.grid(row=5, column=3)
+# text_explain_upper = Label(root, text="여기서부터")
+# text_explain_upper.grid(row=0,column=3)
+# text_explain_lower = Label(root, text="여기까지는 설명이 들어갈 부분입니다.")
+# text_explain_lower.grid(row=5, column=3)
+
 
 root.mainloop()
