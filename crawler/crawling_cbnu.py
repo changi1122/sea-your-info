@@ -20,7 +20,7 @@ todayPost_cbnu = []                                           # 당일 게시된
 for i in range(5, len(tempDate_cbnu), 6) :
     uploadDate_cbnu.append(tempDate_cbnu[i].text.replace('.', '-'))
 
-# 홈페이지에 공지로 올라온 게시글 및 작성일 배제하는 for문
+# 홈페이지에 공지로 올라온 게시글 및 작성일 배제하는 for 문
 for i in range(0, len(select_cbnu)) :
     del title_cbnu[0]
     del uploadDate_cbnu[0]
