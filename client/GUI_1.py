@@ -4,7 +4,6 @@ from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
 
-
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
