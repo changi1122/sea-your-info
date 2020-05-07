@@ -6,9 +6,7 @@ from tkinter.font import *
 root = Tk()
 root.title("Sea your Info")
 root.geometry('500x360')
-#각자 알맞은 경로 사용하세요
-#root.iconbitmap(r'c:\Users\wonjoong\PycharmProjects\HelloWorld\schoolwork\sea_your_info.ico')
-root.iconbitmap(r'C:\Users\hyun9\PycharmProjects\sea-your-info')
+root.iconbitmap(r'imagefile\sea_your_info.ico')#icon이미지 파일 폴더 안에 추가함으로 각자 사용안해도 되게 업데이트
 root.configure(background='white')
 root.resizable(width=False, height=False)
 
@@ -18,7 +16,7 @@ def main():
     win_main = Tk()
     win_main.title("Sea your Info")
     win_main.geometry('300x300')
-    win_main.iconbitmap(r'c:\Users\wonjoong\PycharmProjects\HelloWorld\schoolwork\sea_your_info.ico')
+    win_main.iconbitmap(r'imagefile\sea_your_info.ico')
 
 
 # 회원가입 창
@@ -26,7 +24,7 @@ def register():
     win_reg = Tk()
     win_reg.title("회원가입")
     win_reg.geometry('300x300')
-    win_reg.iconbitmap(r'C:\Users\hyun9\PycharmProjects\sea-your-info')
+    win_reg.iconbitmap(r'imagefile\sea_your_info.ico')
 
 
 # 우측 설명 이미지
