@@ -75,10 +75,15 @@ WSGI_APPLICATION = 'server.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
+# 데이터베이스 관련 설정은 실행하는 환경에 맞춰 직접 넣어야 합니다.
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'seayourinfo',           # 이 이름의 Database를 먼저 생성해야 함
+        'USER': 'root',                 # 실행할 컴퓨터에 설치된 MariaDB의 계정, 아마 기본 계정은 root
+        'PASSWORD': '(Password)',       # 해당 계정의 패스워드
+        'HOST': '127.0.0.1',            # localhost IP
+        'PORT': '3306'                  # MariaDB의 포트
     }
 }
 
