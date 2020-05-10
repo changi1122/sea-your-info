@@ -329,15 +329,14 @@ class Find_ID(tk.Frame):
         self.controller = controller
         self.configure(background='white')
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
-        label.pack(side="top", fill="x", pady=10)
+        label.place(x=100, y=35)
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
         label2 = tk.Label(self, text="등록하신 아이디는... 입니다.", font=controller.title_font, background='white')
-        label2.place(x=200, y=100)
+        label2.place(x=250, y=300)
 
-        button1 = tk.Button(self, text="확인", command=lambda: controller.show_frame("StartPage"))
-        # button1.pack()
-        button1.place(x=450, y=300)
+        button1 = tk.Button(self, text="    확인    ", command=lambda: controller.show_frame("StartPage"))
+        button1.place(x=800, y=500)
 
 
 class Find_PW(tk.Frame):
@@ -346,16 +345,14 @@ class Find_PW(tk.Frame):
         self.controller = controller
         self.configure(background='white')
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
-        label.pack(side="top", fill="x", pady=10)
+        label.place(x=100, y=35)
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        label2 = tk.Label(self, text="임시 비밀번호 ... 이 되었습니다.\n 접속후 PW를 변경해 주세요", font=controller.title_font,
-                          background='white')
-        label2.place(x=200, y=100)
+        label2 = tk.Label(self, text="임시 비밀번호 ... 이 되었습니다.\n 접속후 PW를 변경해 주세요", font=controller.title_font, background='white')
+        label2.place(x=250, y=300)
 
         button1 = tk.Button(self, text="확인", command=lambda: controller.show_frame("StartPage"))
-        # button1.pack()
-        button1.place(x=450, y=300)
+        button1.place(x=800, y=500)
 
 
 class Mk_U_Suss(tk.Frame):
@@ -385,12 +382,10 @@ class ch_U_Suss(tk.Frame):
         label.place(x=100, y=35)
 
         label2 = tk.Label(self, text="회원정보 변경에 성공했습니다.", font=controller.title_font, background='white')
-        label2.place(x=200, y=100)
+        label2.place(x=250, y=300)
 
         button1 = tk.Button(self, text="돌아가기", command=lambda: controller.show_frame("main"))
-        # button1.pack()
-        button1.place(x=450, y=300)
-
+        button1.place(x=700, y=500)
 
 if __name__ == "__main__":
     app = Apps()
