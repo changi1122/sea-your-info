@@ -301,42 +301,26 @@ class Find_User_Info(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        label2 = tk.Label(self, text="find ID", font=controller.title_font, background='white')
-        # label2.pack(side="top", pady=5)
-        label2.place(x=120, y=80)
+        image_user = PhotoImage(file="imagefile/KakaoTalk_20200510_195325903.png")
+        user_image = Label(self, image=image_user,background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=120)
 
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white')
-        # LabelWidget1.pack(side=LEFT)
-        LabelWidget1.place(x=170, y=120)
+
+        # 아이디 찾기
         display1 = tk.Entry(self, width=20)
-        # display1.pack(side=RIGHT)
-        display1.place(x=270, y=120)
-
-        LabelWidget2 = tk.Label(self, text="Name", background='white')
-        # LabelWidget1.pack(side=LEFT)
-        LabelWidget2.place(x=170, y=150)
+        display1.place(x=470, y=232)
         display2 = tk.Entry(self, width=20)
-        # display2.pack(side=RIGHT)
-        display2.place(x=270, y=150)
+        display2.place(x=470, y=291)
 
-        label3 = tk.Label(self, text="find PW", font=controller.title_font, background='white')
-        label3.pack(side="top", pady=5)
-        label3.place(x=120, y=220)
-
-        LabelWidget3 = tk.Label(self, text="E-mail", background='white')
-        # LabelWidget3.pack(side=LEFT)
-        LabelWidget3.place(x=170, y=260)
         display3 = tk.Entry(self, width=20)
-        # display3.pack(side=RIGHT)
-        display3.place(x=270, y=260)
+        display3.place(x=470, y=522)
 
-        button1 = tk.Button(self, text="완료", command=lambda: controller.show_frame("Find_ID"))
-        # button1.pack()
-        button1.place(x=400, y=180)
 
-        button2 = tk.Button(self, text="완료", command=lambda: controller.show_frame("Find_PW"))
-        # button2.pack()
-        button2.place(x=400, y=290)
+        button1 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_ID"))
+        button1.place(x=720, y=330)
+        button2 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_PW"))
+        button2.place(x=720, y=567)
 
 
 class Find_ID(tk.Frame):
