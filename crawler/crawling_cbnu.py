@@ -1,6 +1,7 @@
 ## 충북대학교 공식홈페이지 공지사항 크롤러 ##
 
 import requests
+import json
 from datetime import date
 from bs4 import BeautifulSoup   # Javascript 에 조건이 충족되어야만 얻을 수 있는 데이터에 접근하는 것에 한계
 
@@ -45,8 +46,32 @@ print()
 print(today + " 크롤링 결과")
 for i in range(0, len(todayPost_cbnu)) :
     print(str(i+1) + ". 제목 : " + todayPost_cbnu[i][0] + ", URL : " + todayPost_cbnu[i][1] + ", 작성일 : " + todayPost_cbnu[i][2])
+print()
 
+print("DB에 새로운 게시물을 생성하는 코드 샘플입니다.")
+# 실행전 확인 : URL 설정
 
+# Header : 데이터에 관한 설명
+headers = {
+    'Content-Type': 'application/json; charset=utf-8'
+}
 
+# URL : 목적지 URL
+URL = "http://ras.studio1122.net:8000/posts/"
 
+# Data (Dictionary 타입) : 전송할 데이터
+for i in range(0, len(todayPost_cbnu)) :
+    data = {
+        "title": todayPost_cbnu[i][0],
+        "date": todayPost_cbnu[i][2],
+        # Date(날짜) 필드는 UTC 시간으로 바꾸고(-9 hour), "YYYY-MM-DDTHH:MM:SS.000Z" 형식으로 전송 필요합니다.
+        "url": todayPost_cbnu[i][1],    # 수정 필요
+        "type": "scholarship"           # 수정 필요
+    }
 
+    # Request POST
+    response = requests.post(URL, data=json.dumps(data), headers=headers)
+
+    # 응답 코드, 텍스트 출력
+    print("status code : ", response.status_code)  # 성공 : 201
+    print("response text : ", response.text)  # 응답 텍스트 : JSON 형식 문자열

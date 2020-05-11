@@ -4,6 +4,7 @@
     >> BeautifulSoup + Selenium 사용"""
 
 import requests
+import json
 import time
 from datetime import date
 from selenium import webdriver      # 각자 크롬 웹드라이버를 설치해야 함
@@ -57,5 +58,33 @@ print()
 print(today + " 크롤링 결과")
 for i in range(0, len(todayPost_sw)) :
     print(str(i+1) + ". 제목 : " + todayPost_sw[i][0] + ", URL : " + todayPost_sw[i][1] + ", 작성일 : " + todayPost_sw[i][2])
+print()
 
+print("DB에 새로운 게시물을 생성하는 코드 샘플입니다.")
+# 실행전 확인 : URL 설정
+
+# Header : 데이터에 관한 설명
+headers = {
+    'Content-Type': 'application/json; charset=utf-8'
+}
+
+# URL : 목적지 URL
+URL = "http://ras.studio1122.net:8000/posts/"
+
+# Data (Dictionary 타입) : 전송할 데이터
+for i in range(0, len(todayPost_sw)) :
+    data = {
+        "title": todayPost_sw[i][0],
+        "date": todayPost_sw[i][2],
+        # Date(날짜) 필드는 UTC 시간으로 바꾸고(-9 hour), "YYYY-MM-DDTHH:MM:SS.000Z" 형식으로 전송 필요합니다.
+        "url": todayPost_sw[i][1],      # 수정 필요
+        "type": "scholarship"           # 수정 필요
+    }
+
+    # Request POST
+    response = requests.post(URL, data=json.dumps(data), headers=headers)
+
+    # 응답 코드, 텍스트 출력
+    print("status code : ", response.status_code)  # 성공 : 201
+    print("response text : ", response.text)  # 응답 텍스트 : JSON 형식 문자열
 
