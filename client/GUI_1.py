@@ -127,7 +127,7 @@ class main(tk.Frame):
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
-        user_image.place(x=25, y=120)
+        user_image.place(x=25, y=130)
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
         button1 = tk.Button(self, text="로그아웃", command=lambda: controller.show_frame("StartPage"), borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
@@ -172,6 +172,9 @@ class main(tk.Frame):
         radio_text9 = Radiobutton(self, text="txt9", background='white', value=12, font=font_radiobuttontext)
         radio_text9.place(x=230, y=500)
 
+        # 라디오버튼 선 잇는 부분
+        #rectangle_radiobutton = Canvas.create_line(10, 10, 20, 20, 20, 130, 30, 140, fill="red")
+
         # 탭 부분 - notebook 이용하면 됨
         notebook_main = ttk.Notebook(self, width=670, height=470, padding=10)
         notebook_main.place(x=330, y=115)
@@ -188,6 +191,7 @@ class main(tk.Frame):
         notebook_main.add(frame_school_notice, text="  학교 공지  ")
         label_sn_1 = Label(frame_school_notice, text="충북대학교 등록금 전액 환불 추진")
         label_sn_1.place(x=20, y=20)
+
 
 
 class Make_User_page(tk.Frame):

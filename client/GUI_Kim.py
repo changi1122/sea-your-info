@@ -1,8 +1,13 @@
 import tkinter as tk
+import GUI_get_posts
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
+
+
+GUI_get_posts.test()
+
 
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
