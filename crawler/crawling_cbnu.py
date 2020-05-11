@@ -34,7 +34,7 @@ for i in range(0, len(title_cbnu)):
 print(uploadDate_cbnu)
 print()
 
-today = '2020-04-29'   # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+today = '2020-05-07'   # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
 # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
 for i in range(0, len(uploadDate_cbnu)):
@@ -63,7 +63,7 @@ URL = "http://ras.studio1122.net:8000/posts/"
 for i in range(0, len(todayPost_cbnu)) :
     data = {
         "title": todayPost_cbnu[i][0],
-        "date": todayPost_cbnu[i][2],
+        "date": todayPost_cbnu[i][2]+"T11:11:11.000Z",
         # Date(날짜) 필드는 UTC 시간으로 바꾸고(-9 hour), "YYYY-MM-DDTHH:MM:SS.000Z" 형식으로 전송 필요합니다.
         "url": todayPost_cbnu[i][1],    # 수정 필요
         "type": "scholarship"           # 수정 필요
