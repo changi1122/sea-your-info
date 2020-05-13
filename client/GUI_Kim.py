@@ -212,14 +212,12 @@ def Show_data():
     scrollbar.pack(side="right", fill ="y")
     listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
 
-    title=""
-    date=""
-    url=""
-    for i in range(0, len(a),4):
-        title
-        if (i+1) % 4 == 0:
-            listbox.insert(i, txt)
-            txt=""
+    txt=""
+    for i in range(0, len(a), 4):
+        for k in range(i,i+4):
+            txt+=" "+str(a[k])
+        listbox.insert(i, txt)
+        txt=""
     listbox.pack()
 
     scrollbar["command"]=listbox.yview
