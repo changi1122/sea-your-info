@@ -1,12 +1,9 @@
 import tkinter as tk
-import GUI_get_posts
+import GUI_get_posts as Gposts
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
-
-
-GUI_get_posts.test()
 
 
 class Apps(tk.Tk):
@@ -37,8 +34,7 @@ class Apps(tk.Tk):
 
         self.frames = {}
         for F in (
-                StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID,
-                Find_PW):
+                StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID, Find_PW):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -130,6 +126,8 @@ class main(tk.Frame):
         # 맨 위에 Sea your Info 가 보이는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
+        global frame_department_notice
+        global frame_school_notice
 
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
         image_user = PhotoImage(file="imagefile/user_image.gif")
@@ -186,6 +184,7 @@ class main(tk.Frame):
 
         # 탭 부분 중에서 각 프레임 설정 부분
         # 첫 번째 프레임 설정 부분
+
         frame_department_notice = Frame(self)
         notebook_main.add(frame_department_notice, text="  학과 공지  ")
         label_frame1_1 = Label(frame_department_notice, text="소프트웨어학과 최우수 학과 선정")
@@ -196,6 +195,34 @@ class main(tk.Frame):
         notebook_main.add(frame_school_notice, text="  학교 공지  ")
         label_sn_1 = Label(frame_school_notice, text="충북대학교 등록금 전액 환불 추진")
         label_sn_1.place(x=20, y=20)
+
+        # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
+                           background="#00b0f0", font=font_Cheack_B, command=Show_data)
+        button.place(x=230, y=560)
+
+# NoteBook에 Enter 클릭시 data 출력 부분
+def Show_data():
+    global frame_department_notice
+    global frame_school_notice
+    a = []
+    Gposts.test(a)
+    scrollbar=tk.Scrollbar(frame_department_notice)
+    scrollbar.pack(side="right", fill ="y")
+    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
+
+    title=""
+    date=""
+    url=""
+    for i in range(0, len(a),4):
+        title
+        if (i+1) % 4 == 0:
+            listbox.insert(i, txt)
+            txt=""
+    listbox.pack()
+
+    scrollbar["command"]=listbox.yview
 
 
 class Make_User_page(tk.Frame):
@@ -219,7 +246,8 @@ class Make_User_page(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        label2 = tk.Label(self, text="Sing Up", background='white', font=font_startpageinfo)
+        #label2 = tk.Label(self, text="Sing Up", background='white', font=font_startpageinfo)
+        label2 = tk.Label(self, text="회원가입", background='white', font=font_startpageinfo)
         label2.place(x=375, y=230)
 
         str1 = StringVar()
