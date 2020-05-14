@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
+import webbrowser
 
 
 class Apps(tk.Tk):
@@ -117,6 +118,33 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
+# NoteBook에 Enter 클릭시 data 출력 부분
+def Show_data(self):
+    global frame_department_notice
+    global frame_school_notice
+    global button_list, url
+    a = []
+    Gposts.test(a)
+    scrollbar=tk.Scrollbar(frame_department_notice)
+    scrollbar.pack(side="right", fill ="y")
+    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
+
+    txt=""
+    j=0;
+    for i in range(0, len(a), 5):
+        for k in range(i,i+5):
+                txt+=" "+str(a[k])
+        listbox.insert(j, txt)
+        j+=1
+        txt=""
+
+    listbox.pack()
+
+    scrollbar["command"]=listbox.yview
+
+def openweb(url):
+    webbrowser.open(url)
+
 
 class main(tk.Frame):
     def __init__(self, parent, controller):
@@ -128,7 +156,11 @@ class main(tk.Frame):
         label.place(x=100, y=35)
         global frame_department_notice
         global frame_school_notice
+        global button_list, url
 
+        button_list=[]
+        url=[]
+        
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
@@ -196,31 +228,17 @@ class main(tk.Frame):
         label_sn_1 = Label(frame_school_notice, text="충북대학교 등록금 전액 환불 추진")
         label_sn_1.place(x=20, y=20)
 
+
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
-                           background="#00b0f0", font=font_Cheack_B, command=Show_data)
+                           background="#00b0f0", font=font_Cheack_B, command=Show_data(self))
         button.place(x=230, y=560)
 
-# NoteBook에 Enter 클릭시 data 출력 부분
-def Show_data():
-    global frame_department_notice
-    global frame_school_notice
-    a = []
-    Gposts.test(a)
-    scrollbar=tk.Scrollbar(frame_department_notice)
-    scrollbar.pack(side="right", fill ="y")
-    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
+        for j in range(0, len(button_list)):
+            button_list[j]=tk.Button(self, text="Link", command=openweb(url[j]))
+            button_list[j].place(x=500 , y=50*(j+1))
 
-    txt=""
-    for i in range(0, len(a), 4):
-        for k in range(i,i+4):
-            txt+=" "+str(a[k])
-        listbox.insert(i, txt)
-        txt=""
-    listbox.pack()
-
-    scrollbar["command"]=listbox.yview
 
 
 class Make_User_page(tk.Frame):
