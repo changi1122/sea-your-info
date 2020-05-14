@@ -118,33 +118,6 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
-# NoteBook에 Enter 클릭시 data 출력 부분
-def Show_data(self):
-    global frame_department_notice
-    global frame_school_notice
-    global button_list, url
-    a = []
-    Gposts.test(a)
-    scrollbar=tk.Scrollbar(frame_department_notice)
-    scrollbar.pack(side="right", fill ="y")
-    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
-
-    txt=""
-    j=0;
-    for i in range(0, len(a), 5):
-        for k in range(i,i+5):
-                txt+=" "+str(a[k])
-        listbox.insert(j, txt)
-        j+=1
-        txt=""
-
-    listbox.pack()
-
-    scrollbar["command"]=listbox.yview
-
-def openweb(url):
-    webbrowser.open(url)
-
 
 class main(tk.Frame):
     def __init__(self, parent, controller):
@@ -232,13 +205,36 @@ class main(tk.Frame):
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
-                           background="#00b0f0", font=font_Cheack_B, command=Show_data(self))
+                           background="#00b0f0", font=font_Cheack_B, command=Show_data)
         button.place(x=230, y=560)
 
-        for j in range(0, len(button_list)):
-            button_list[j]=tk.Button(self, text="Link", command=openweb(url[j]))
-            button_list[j].place(x=500 , y=50*(j+1))
 
+# NoteBook에 Enter 클릭시 data 출력 부분
+def Show_data():
+    global frame_department_notice
+    global frame_school_notice
+    global button_list, url
+    a = []
+    Gposts.test(a)
+    scrollbar=tk.Scrollbar(frame_department_notice)
+    scrollbar.pack(side="right", fill ="y")
+    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
+
+    txt=""
+    j=0
+    for i in range(0, len(a), 5):
+        for k in range(i,i+5):
+                txt+=" "+str(a[k])
+        listbox.insert(j, txt)
+        j+=1
+        txt=""
+
+    listbox.pack()
+
+    scrollbar["command"]=listbox.yview
+
+#def openweb(url):
+#   webbrowser.open(url)
 
 
 class Make_User_page(tk.Frame):
