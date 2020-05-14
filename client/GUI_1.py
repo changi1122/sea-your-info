@@ -51,6 +51,7 @@ class StartPage(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(background='white')
+
         # 맨 위의 Sea Your Info 들어가는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         # label.pack(side="top", fill="x", pady=10)
@@ -68,11 +69,13 @@ class StartPage(tk.Frame):
             messagebox.showinfo("Button CLicked", str2.get())
             controller.show_frame("main")
 
+
         # 첫 화면 텍스트 부분
         label4 = tk.Label(self,
                           text="\t정보바다에 오신 것을 환영합니다.\n\n정보바다에서는 여러분들의 학업 증진을 위하여\n 학교의 공지사항 정보들을 알려드리고 있습니다.\n\n회원가입과 로그인을 통하여 자세히 알아보세요.\n\n\nWelcome to Sea-Your-Info!\n\nSea-Your-Info will let you know all of the\nimportant school notice.\nIt will save your precious time.\n\nFor more information, do not hesitate to\njoin our free membership!\n\n",
                           font=font_startpageinfo, background='white')
         label4.place(x=380, y=180)
+
 
         # 텍스트 옆에 들어가는 로고 이미지 부분
         image_logo = PhotoImage(file='imagefile/logo2_wb.gif')
@@ -103,6 +106,7 @@ class StartPage(tk.Frame):
         image_loginbutton = PhotoImage(file='imagefile/loginbutton.gif')
 
         button1 = Button(self, text="처음 오셨나요?", command=lambda: controller.show_frame("Make_User_page"),
+
                          background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
         button2 = Button(self, text="아이디와 비밀번호를 잊어버리셨나요?", command=lambda: controller.show_frame("Find_User_Info"),
                          background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
@@ -119,6 +123,7 @@ class main(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(background='white')
+
         # 맨 위에 Sea your Info 가 보이는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
