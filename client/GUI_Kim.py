@@ -224,13 +224,13 @@ def Show_data():
     address = []  # 각 주소(하이퍼링크)들을 저장
     Gposts.test(a)
 # Updated upstream
-    scrollbar = tk.Scrollbar(frame_department_notice)
+    scrollbar = tk.Scrollbar(frame_school_notice)
     scrollbar.pack(side="right", fill="y")
-    listbox = tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set, width=660, height=460)
+    listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460)
 
-    scrollbar=tk.Scrollbar(frame_department_notice)
-    scrollbar.pack(side="right", fill ="y")
-    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460 , selectmode="extended")
+    scrollbar2=tk.Scrollbar(frame_department_notice)
+    scrollbar2.pack(side="right", fill ="y")
+    listbox2=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set,width=660, height=460 , selectmode="extended")
 # Stashed changes
 
     txt = ""
@@ -252,6 +252,7 @@ def Show_data():
         txt = ""
 
     listbox.pack()
+    listbox2.pack()
     print(url_list)
     # 링크 가져와서 address배열에 저장하는 코드
     #for i in range(0, len(singly)):
