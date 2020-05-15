@@ -222,7 +222,7 @@ def Show_data():
     singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
     https_pos = []  # 각 singly 인덱스에서 https가 시작하는 위치를 알기 위한 배열
     address = []  # 각 주소(하이퍼링크)들을 저장
-    Gposts.test(a)
+    Gposts.Get_Department(a)
 # Updated upstream
     scrollbar = tk.Scrollbar(frame_school_notice)
     scrollbar.pack(side="right", fill="y")
@@ -241,7 +241,13 @@ def Show_data():
         for k in range(i,i+4):
             if k%5 == 3:
                 url_list.append(a[k])
-            elif k%5 != 2:
+            elif k%5==0 :
+                if j < 9:
+                    txt+=" "+"0"
+                else :
+                    txt+=" "
+                txt+=str(j+1)+" | "
+            elif k%5 != 2 :
                 txt+=" "+str(a[k])+" | "
             else :
                 txt+=" "+str(a[k][0:10])
