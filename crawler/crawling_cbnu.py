@@ -8,20 +8,22 @@ import json
 import schedule         # 특정 시간에 crawler를 실행하기 위한 module
 import time
 
+import crawler.crawler_get_cbnu as get
+
 # scheduler를 실행시키기 위해 crawling 부분을 함수로 정의
 def crawler_cbnu():
     html_cbnu = requests.get("https://www.chungbuk.ac.kr/site/www/boardList.do?page=1&boardSeq=112&key=698").text
     soup_cbnu = BeautifulSoup(html_cbnu, "html.parser")
 
     # 충북대학교 홈페이지에서 상단의 공지로 올라와있는 게시물은 title과 겹침
-    select_cbnu = soup_cbnu.select("em")  # 공지가 붙은 태그의 개수를 세기 위해 parsing
-    title_cbnu = soup_cbnu.select("td.subject > a ")  # 모든 게시글의 제목 태크 parsing
-    today = date.today().isoformat()  # 크롤링을 진행하고 있는 year-month-day 구하기
-    tempDate_cbnu = soup_cbnu.select("tbody > tr> td")  # 작성일 태크가 들어있는 태그 파싱(가공 전)
-    uploadDate_cbnu = []  # 각 게시물의 작성일 저장(가공 후)
-    url_cbnu = []  # url 태그 저장할 리스트 선언
-    type_cbnu = []  # 제목을 이용해서 DB로 넘길 type 저장
-    todayPost_cbnu = []  # 당일 게시된 공지사항의 제목, URL, 작성일을 저장
+    select_cbnu = soup_cbnu.select("em")                 # 공지가 붙은 태그의 개수를 세기 위해 parsing
+    title_cbnu = soup_cbnu.select("td.subject > a ")     # 모든 게시글의 제목 태크 parsing
+    today = date.today().isoformat()                     # 크롤링을 진행하고 있는 year-month-day 구하기
+    tempDate_cbnu = soup_cbnu.select("tbody > tr> td")   # 작성일 태크가 들어있는 태그 파싱(가공 전)
+    uploadDate_cbnu = []                                 # 각 게시물의 작성일 저장(가공 후)
+    url_cbnu = []                                        # url 태그 저장할 리스트 선언
+    type_cbnu = []                                       # 제목을 이용해서 DB로 넘길 type 저장
+    todayPost_cbnu = []                                  # 당일 게시된 공지사항의 제목, URL, 작성일을 저장
 
     # tempDate의 정보 중 작성일을 추출하여 uploadDate에 저장(공지까지 포함)
     for i in range(5, len(tempDate_cbnu), 6):
@@ -37,6 +39,7 @@ def crawler_cbnu():
         url_cbnu.append("https://www.chungbuk.ac.kr/site/www" + title_cbnu[i]["href"].lstrip("."))
         title_cbnu[i] = title_cbnu[i].text.strip()
 
+        # Type 구분
         if title_cbnu[i].find('장학생' or '장학금') > -1:
             type_cbnu.append('scholarship')
         elif title_cbnu[i].find('대회') > -1:
@@ -62,7 +65,7 @@ def crawler_cbnu():
     print(uploadDate_cbnu)
     print()
 
-    today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    today = '2020-05-12'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
     for i in range(0, len(uploadDate_cbnu)):
@@ -98,12 +101,21 @@ def crawler_cbnu():
             "type": todayPost_cbnu[i][3]
         }
 
+        # 현재 DB에 들어있는 게시글 정보와 중복된 것이 있는지 확인
+        i = 0
+        for i in range(0, len(get.response_dict)):
+            if get.response_dict[i]['title'] == data['title']:
+                break
+        if get.response_dict[i]['title'] == data['title']:
+            print('해당 공지사항의 정보는 이미 DB에 저장되어 있습니다.\n')   # 추후 삭제
+            break
+
         # Request POST
         response = requests.post(URL, data=json.dumps(data), headers=headers)
 
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201
-        print("response text : ", response.text)  # 응답 텍스트 : JSON 형식 문자열
+        print("response text : ", response.text)       # 응답 텍스트 : JSON 형식 문자열
 
 schedule.every(10).seconds.do(crawler_cbnu) # scheduler Test
 
