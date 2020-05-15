@@ -216,7 +216,7 @@ class main(tk.Frame):
 def Show_data():
     global frame_department_notice
     global frame_school_notice
-    global button_list, url
+    global url_list
 
     a = []
     singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
@@ -234,40 +234,44 @@ def Show_data():
 # Stashed changes
 
     txt = ""
+    url_list=[]
     j = 0
     for i in range(0, len(a), 5):
 # Updated upstream
-        for k in range(i,i+3):
-            if k%5 != 2:
+        for k in range(i,i+4):
+            if k%5 == 3:
+                url_list.append(a[k])
+            elif k%5 != 2:
                 txt+=" "+str(a[k])+" | "
             else :
                 txt+=" "+str(a[k][0:10])
 # Stashed changes
         listbox.insert(j, txt)
-        singly.append(txt)  # a에서 넘겨받은 것을 하나씩 나눠서 b배열에 저장
+        #singly.append(txt)  # a에서 넘겨받은 것을 하나씩 나눠서 b배열에 저장
         j += 1
         txt = ""
 
     listbox.pack()
-
+    print(url_list)
     # 링크 가져와서 address배열에 저장하는 코드
-    for i in range(0, len(singly)):
-        https_pos.append(singly[i].find("https://"))  # https:// 부분을 찾아서 시작점 반환해서 https_pos에 저장해줌
-        address.append(singly[i][https_pos[i]:(len(singly[i]) - 6)])  # 각 주소들을 address배열에 저장함
+    #for i in range(0, len(singly)):
+    #    https_pos.append(singly[i].find("https://"))  # https:// 부분을 찾아서 시작점 반환해서 https_pos에 저장해줌
+    #    address.append(singly[i][https_pos[i]:(len(singly[i]) - 6)])  # 각 주소들을 address배열에 저장함
 
-    # value = listbox.curselection()
-    # print(listbox.curselection())
+    #print(listbox.curselection())
 
     #클릭되면 특정 사이트로 넘어가게 하는 코드 => 클릭된 특정 위치를 찾아서 넘겨줘야하는데 클릭된 위치 찾기가 힘듬
     #이것만하면 더블클릭했을때 특정 사이트로 넘어감
-    link = Label(text="https://software.cbnu.ac.kr/")
-    listbox.bind("<Double-Button>", lambda event: webbrowser.open(link.cget("text")))  # 더블클릭 감지하는 코드
+    #link = Label(text="https://software.cbnu.ac.kr/")
+    listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection()))  # 더블클릭 감지하는 코드
 
 # Updated upstream
     scrollbar["command"] = listbox.yview
-
-def openweb(url):
-   webbrowser.open(url)
+# url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
+def openweb(Data):
+    global url_list
+    url = Data[0]
+    webbrowser.open(url_list[url])
 # Stashed changes
 
 
