@@ -64,6 +64,8 @@ def crawler_sw():
         else:
             type_sw.append('other')
 
+        title_sw[i] = title_sw[i][0:55]         # 제목 글자수 55글자로 제한
+
         print(title_sw[i] + " " + url_sw[i] + " " + type_sw[i])
     print()
 
@@ -126,7 +128,7 @@ def crawler_sw():
         print("response text : ", response.text)       # 응답 텍스트 : JSON 형식 문자열
     print()
 
-schedule.every(10).seconds.do(crawler_sw) # scheduler Test
+schedule.every(10).seconds.do(crawler_sw)              # scheduler Test
 
 # crawler를 실행시킬 특정 시간을 정한 뒤 pending으로 예약한 작업 실행
 '''

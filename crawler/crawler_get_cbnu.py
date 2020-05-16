@@ -32,4 +32,4 @@ if __name__ == '__main__':
             print("\t\t", key, " : ", response_dict[i][key])
         print("\t},")
 
-print("]")
+    print("]")

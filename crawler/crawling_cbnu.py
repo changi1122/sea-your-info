@@ -42,7 +42,7 @@ def crawler_cbnu():
         # Type 구분
         if title_cbnu[i].find('장학생' or '장학금') > -1:
             type_cbnu.append('scholarship')
-        elif title_cbnu[i].find('대회') > -1:
+        elif title_cbnu[i].find('대회' or '모집' or '콘테스트') > -1:
             type_cbnu.append('contest')
         elif title_cbnu[i].find('교환학생') > -1:
             type_cbnu.append('exchange')
@@ -54,12 +54,14 @@ def crawler_cbnu():
             type_cbnu.append('freshman')
         elif title_cbnu[i].find('외국어') > -1:
             type_cbnu.append('foreign')
-        elif title_cbnu[i].find('채용' or '인턴쉽') > -1:
+        elif title_cbnu[i].find('채용' or '인턴쉽' or '인턴십') > -1:
             type_cbnu.append('job')
         elif title_cbnu[i].find('특강') > -1:
             type_cbnu.append('lecture')
         else:
             type_cbnu.append('other')
+
+        title_cbnu[i] = title_cbnu[i][0:55]         # 제목 글자수 55글자로 제한
 
         print(title_cbnu[i] + " " + url_cbnu[i] + " " + type_cbnu[i])
     print(uploadDate_cbnu)
@@ -117,7 +119,7 @@ def crawler_cbnu():
         print("status code : ", response.status_code)  # 성공 : 201
         print("response text : ", response.text)       # 응답 텍스트 : JSON 형식 문자열
 
-schedule.every(10).seconds.do(crawler_cbnu) # scheduler Test
+schedule.every(10).seconds.do(crawler_cbnu)            # scheduler Test
 
 # crawler를 실행시킬 특정 시간을 정한 뒤 pending으로 예약한 작업 실행
 '''
