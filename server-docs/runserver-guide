@@ -1,0 +1,19 @@
+내 컴퓨터에서 서버를 실행하는 방법
+
+1. 프로젝트를 클론하여 실행할 준비
+2. MariaDB 설치, seayourinfo 데이터베이스 만들기
+3. server/server/settings.py에서 MariaDB 비밀번호로 수정
+
+(PowerShell에서)
+4. pip 설치
+5. pip install django, djangorestframework
+
+(PowerShell에서)
+6. 이 프로젝트의 server 폴더로 이동
+    > cd '...\sea-your-info\server' (Example)
+7. 데이터베이스에 반영할 항목 만들기
+    > python manage.py makemigrations
+8. 데이터베이스에 반영하기
+    > python manage.py migrate
+9. 서버 실행
+    > python manage.py runserver
