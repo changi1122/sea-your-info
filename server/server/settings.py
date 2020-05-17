@@ -31,15 +31,28 @@ ALLOWED_HOSTS = ['*']
 # Application definition
 
 INSTALLED_APPS = [
+    # Django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Third-Party
     'rest_framework',
+    'rest_framework.authtoken',
+
+    # Local
     'posts.apps.PostsConfig',
+    'user.apps.UserConfig',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # <-- And here
+    ],
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -79,9 +92,9 @@ WSGI_APPLICATION = 'server.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'seayourinfo',           # 이 이름의 Database를 먼저 생성해야 함
+        'NAME': 'seayourinfo',          # 이 이름의 Database를 먼저 생성해야 함
         'USER': 'root',                 # 실행할 컴퓨터에 설치된 MariaDB의 계정, 아마 기본 계정은 root
-        'PASSWORD': '(Password)',       # 해당 계정의 패스워드
+        'PASSWORD': '(password)',       # 해당 계정의 패스워드
         'HOST': '127.0.0.1',            # localhost IP
         'PORT': '3306'                  # MariaDB의 포트
     }

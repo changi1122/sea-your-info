@@ -6,7 +6,7 @@ import json
 
 # URL : 목적지 URL
 URL = "http://ras.studio1122.net:8000/posts/"
-                        # URL = "http://localhost:8000/posts/" 자기 컴퓨터에서 서버를 실행한 경우
+# URL = "http://localhost:8000/posts/" # 자기 컴퓨터에서 서버를 실행한 경우
 
 
 # Request GET

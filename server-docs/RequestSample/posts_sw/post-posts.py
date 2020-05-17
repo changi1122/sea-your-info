@@ -6,7 +6,8 @@ import json
 
 # Header : 데이터에 관한 설명
 headers = {
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 }
 
 # URL : 목적지 URL

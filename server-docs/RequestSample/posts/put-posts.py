@@ -6,12 +6,14 @@ import json
 
 # Header : 데이터에 관한 설명
 headers = {
-    'Content-Type': 'application/json; charset=utf-8'
+    'Content-Type': 'application/json; charset=utf-8',
+    'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 }
 
 # URL : 목적지 URL
 URL = "http://ras.studio1122.net:8000/posts/"
-                        # URL = "http://localhost:8000/posts/" 자기 컴퓨터에서 서버를 실행한 경우
+# URL = "http://localhost:8000/posts/" # 자기 컴퓨터에서 서버를 실행한 경우
+
 # ID : 수정할 게시물의 id
 ID = "3"                        # 변수!!! 실행전 설정 필수!!!
 
