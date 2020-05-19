@@ -77,6 +77,8 @@ class StartPage(tk.Frame):
             string=[]
             user_ID=str1.get()
             user_PW=str2.get()
+            display1.delete(0, tk.END)
+            display3.delete(0, tk.END)
             Lg=Login.Login(user_ID, user_PW)
             Lg.Check(string)
             print(string)
@@ -104,7 +106,7 @@ class StartPage(tk.Frame):
         label3.place(x=40, y=135)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=font_logintext)
+        LabelWidget1 = tk.Label(self, text="ID", background='white', font=font_logintext)
         LabelWidget1.place(x=40, y=240)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=115, y=245)
@@ -112,7 +114,7 @@ class StartPage(tk.Frame):
         str2 = StringVar()
         LabelWidget3 = tk.Label(self, text="PW", background='white', font=font_logintext)
         LabelWidget3.place(x=40, y=280)
-        display3 = tk.Entry(self, width=20, textvariable=str2)
+        display3 = tk.Entry(self, width=20, textvariable=str2, show="")
         display3.place(x=115, y=285)
 
         log_B = PhotoImage(file='imagefile/OP_button3.png')
@@ -246,7 +248,7 @@ class main(tk.Frame):
 
         def Show_data():
             global type_list
-
+            global url_list
             if listbox.size() != 0:
                 listbox.delete(0,listbox.size())
 
