@@ -21,7 +21,7 @@ def Get_Department(lst_Dep=[]):
 
     for i in range(0, len(response_dict)):
         for key in response_dict[i].keys():
-            if key != "type" :
+            if key != "isSent" :
                 lst_Dep.append(response_dict[i][key])
 
     return lst_Dep
@@ -50,7 +50,7 @@ def Get_SW(lst_sw=[]):
 
     for i in range(0, len(response_dict_sw)):
         for key in response_dict_sw[i].keys():
-            if key != "type" :
+            if key != "isSent" :
                 lst_sw.append(response_dict_sw[i][key])
 
     return lst_sw
