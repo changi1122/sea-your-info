@@ -12,8 +12,8 @@ headers = {
 }
 
 # URL : 목적지 URL
-# URL = "http://ras.studio1122.net:8000/auth/"
-URL = "http://localhost:8000/auth/" # 자기 컴퓨터에서 서버를 실행한 경우
+URL = "http://ras.studio1122.net:8000/auth/"
+#URL = "http://localhost:8000/auth/" # 자기 컴퓨터에서 서버를 실행한 경우
 
 # Data (Dictionary 타입) : 전송할 데이터
 data = {

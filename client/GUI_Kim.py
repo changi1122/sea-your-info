@@ -1,5 +1,7 @@
 import tkinter as tk
 import GUI_get_posts as Gposts
+import Create_User
+import Login
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -72,11 +74,19 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            # 아무것도 입력하지 않았을때 오류 발생문 필요
-
-            messagebox.showinfo("Button CLicked", str1.get())
-            messagebox.showinfo("Button CLicked", str2.get())
-            controller.show_frame("main")
+            string=[]
+            user_ID=str1.get()
+            user_PW=str2.get()
+            Lg=Login.Login(user_ID, user_PW)
+            Lg.Check(string)
+            print(string)
+            if string[0] == 200:
+                controller.show_frame("main")
+            else:
+                txt = ""
+                for i in range(1, len(string)):
+                    txt += string[i] + '\n'
+                messagebox.showwarning("Error", txt)
 
         # 첫 화면 텍스트 부분
         label4 = tk.Label(self,
@@ -354,10 +364,22 @@ class Make_User_page(tk.Frame):
         self.configure(background='white')
 
         def clickMe():
-            messagebox.showinfo("Button CLicked", str1.get())
-            messagebox.showinfo("Button CLicked", str2.get())
-            messagebox.showinfo("Button CLicked", str3.get())
-            controller.show_frame("Mk_U_Suss")
+            string=[]
+            user_ID = str1.get()
+            user_Email=str2.get()
+            user_PW=str3.get()
+            Mk=Create_User.Make_user(user_ID, user_Email, user_PW)
+            Mk.make(string)
+            print(string)
+            if string[0] ==201:
+                controller.show_frame("Mk_U_Suss")
+            else :
+                txt=""
+                for i in range(1,len(string)):
+                    txt+=string[i]+'\n'
+                messagebox.showwarning(
+                    "Error", txt)
+
 
         # 회원가입 뒤 배경 추가
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -373,13 +395,13 @@ class Make_User_page(tk.Frame):
         label2.place(x=375, y=230)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=FB)
+        LabelWidget1 = tk.Label(self, text="ID(user name)", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=475, y=290)
 
         str2 = StringVar()
-        LabelWidget2 = tk.Label(self, text="Name", background='white', font=FB)
+        LabelWidget2 = tk.Label(self, text="E-mail", background='white', font=FB)
         LabelWidget2.place(x=375, y=360)
         display2 = tk.Entry(self, width=20, textvariable=str2)
         display2.place(x=475, y=360)
