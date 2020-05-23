@@ -4,6 +4,7 @@ from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
+import webbrowser
 
 
 class Apps(tk.Tk):
@@ -34,7 +35,8 @@ class Apps(tk.Tk):
 
         self.frames = {}
         for F in (
-                StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID, Find_PW):
+                StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID,
+                Find_PW):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -91,7 +93,6 @@ class StartPage(tk.Frame):
         label3 = tk.Label(self, text="Login", font=controller.title_font, background='white')
         label3.place(x=40, y=135)
 
-
         str1 = StringVar()
         LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=font_logintext)
         LabelWidget1.place(x=40, y=240)
@@ -110,8 +111,9 @@ class StartPage(tk.Frame):
                          background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
         button2 = Button(self, text="아이디와 비밀번호를 잊어버리셨나요?", command=lambda: controller.show_frame("Find_User_Info"),
                          background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
-        button3 = Button(self, borderwidth=3,relief="flat",background='white', command=clickMe, padx=10, pady=10, image=log_B)
-        button3.image = log_B # 이미지 안될 때는 이렇게 재정의 해줘야 함
+        button3 = Button(self, borderwidth=3, relief="flat", background='white', command=clickMe, padx=10, pady=10,
+                         image=log_B)
+        button3.image = log_B  # 이미지 안될 때는 이렇게 재정의 해줘야 함
 
         button1.place(x=40, y=570)
         button2.place(x=40, y=590)
@@ -128,6 +130,10 @@ class main(tk.Frame):
         label.place(x=100, y=35)
         global frame_department_notice
         global frame_school_notice
+        global button_list, url
+
+        button_list = []
+        url = []
 
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
         image_user = PhotoImage(file="imagefile/user_image.gif")
@@ -136,9 +142,11 @@ class main(tk.Frame):
         user_image.place(x=25, y=120)
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
-        button1 = tk.Button(self, text="로그아웃", command=lambda: controller.show_frame("StartPage"), borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
+        button1 = tk.Button(self, text="로그아웃", command=lambda: controller.show_frame("StartPage"), borderwidth=0,
+                            background='white', font=font_hypertext, fg="#0000FF")
         button1.place(x=145, y=160)
-        button2 = tk.Button(self, text="회원정보 수정", command=lambda: controller.show_frame("Change_User_Info"), borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
+        button2 = tk.Button(self, text="회원정보 수정", command=lambda: controller.show_frame("Change_User_Info"),
+                            borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         button2.place(x=145, y=185)
 
         # 라디오 버튼 들어가는 부분, Radiobutton에 command추가 해야 한다.
@@ -197,30 +205,81 @@ class main(tk.Frame):
         label_sn_1.place(x=20, y=20)
 
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
-
+        global listbox
+        listbox = tk.Listbox()
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
                            background="#00b0f0", font=font_Cheack_B, command=Show_data)
         button.place(x=230, y=560)
+
 
 # NoteBook에 Enter 클릭시 data 출력 부분
 def Show_data():
     global frame_department_notice
     global frame_school_notice
+    global url_list
+
     a = []
-    Gposts.test(a)
-    scrollbar=tk.Scrollbar(frame_department_notice)
-    scrollbar.pack(side="right", fill ="y")
-    listbox=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar.set,width=660, height=460)
+    singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
+    https_pos = []  # 각 singly 인덱스에서 https가 시작하는 위치를 알기 위한 배열
+    address = []  # 각 주소(하이퍼링크)들을 저장
+    Gposts.Get_Department(a)
+# Updated upstream
+    scrollbar = tk.Scrollbar(frame_school_notice)
+    scrollbar.pack(side="right", fill="y")
+    listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460)
 
-    txt=""
-    for i in range(0, len(a), 4):
+    scrollbar2=tk.Scrollbar(frame_department_notice)
+    scrollbar2.pack(side="right", fill ="y")
+    listbox2=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set,width=660, height=460 , selectmode="extended")
+# Stashed changes
+
+    txt = ""
+    url_list=[]
+    j = 0
+    for i in range(0, len(a), 5):
+# Updated upstream
         for k in range(i,i+4):
-            txt+=" "+str(a[k])
-        listbox.insert(i, txt)
-        txt=""
-    listbox.pack()
+            if k%5 == 3:
+                url_list.append(a[k])
+            elif k%5==0 :
+                if j < 9:
+                    txt+=" "+"0"
+                else :
+                    txt+=" "
+                txt+=str(j+1)+" | "
+            elif k%5 != 2 :
+                txt+=" "+str(a[k])+" | "
+            else :
+                txt+=" "+str(a[k][0:10])
+# Stashed changes
+        listbox.insert(j, txt)
+        #singly.append(txt)  # a에서 넘겨받은 것을 하나씩 나눠서 b배열에 저장
+        j += 1
+        txt = ""
 
-    scrollbar["command"]=listbox.yview
+    listbox.pack()
+    listbox2.pack()
+    print(url_list)
+    # 링크 가져와서 address배열에 저장하는 코드
+    #for i in range(0, len(singly)):
+    #    https_pos.append(singly[i].find("https://"))  # https:// 부분을 찾아서 시작점 반환해서 https_pos에 저장해줌
+    #    address.append(singly[i][https_pos[i]:(len(singly[i]) - 6)])  # 각 주소들을 address배열에 저장함
+
+    #print(listbox.curselection())
+
+    #클릭되면 특정 사이트로 넘어가게 하는 코드 => 클릭된 특정 위치를 찾아서 넘겨줘야하는데 클릭된 위치 찾기가 힘듬
+    #이것만하면 더블클릭했을때 특정 사이트로 넘어감
+    #link = Label(text="https://software.cbnu.ac.kr/")
+    listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection()))  # 더블클릭 감지하는 코드
+
+# Updated upstream
+    scrollbar["command"] = listbox.yview
+# url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
+def openweb(Data):
+    global url_list
+    url = Data[0]
+    webbrowser.open(url_list[url])
+# Stashed changes
 
 
 class Make_User_page(tk.Frame):
@@ -235,6 +294,7 @@ class Make_User_page(tk.Frame):
             messagebox.showinfo("Button CLicked", str2.get())
             messagebox.showinfo("Button CLicked", str3.get())
             controller.show_frame("Mk_U_Suss")
+
         # 회원가입 뒤 배경 추가
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
         user_image = Label(self, image=image_user, borderwidth=0)
@@ -244,7 +304,7 @@ class Make_User_page(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        #label2 = tk.Label(self, text="Sing Up", background='white', font=font_startpageinfo)
+        # label2 = tk.Label(self, text="Sing Up", background='white', font=font_startpageinfo)
         label2 = tk.Label(self, text="회원가입", background='white', font=font_startpageinfo)
         label2.place(x=375, y=230)
 
@@ -262,16 +322,17 @@ class Make_User_page(tk.Frame):
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=font_radiobuttontext)
-        Label_PW_Rool=tk.Label(self, text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number", background="white")
+        Label_PW_Rool = tk.Label(self,
+                                 text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
+                                 background="white")
         LabelWidget3.place(x=375, y=430)
         Label_PW_Rool.place(x=475, y=450)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=430)
 
-
-        button = tk.Button(self, borderwidth=3,relief="flat", text="Sing up for Sea Your Info", command=clickMe, fg="white", background="#00b0f0", font=font_Cheack_B)
+        button = tk.Button(self, borderwidth=3, relief="flat", text="Sing up for Sea Your Info", command=clickMe,
+                           fg="white", background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
-
 
 
 class Change_User_Info(tk.Frame):
@@ -314,13 +375,16 @@ class Change_User_Info(tk.Frame):
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=font_radiobuttontext)
-        Label_PW_Rool = tk.Label(self, text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number", background="white")
+        Label_PW_Rool = tk.Label(self,
+                                 text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
+                                 background="white")
         LabelWidget3.place(x=375, y=430)
         Label_PW_Rool.place(x=475, y=450)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=430)
 
-        button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=clickMe, fg="white", background="#00b0f0", font=font_Cheack_B)
+        button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=clickMe, fg="white",
+                           background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
 
@@ -333,10 +397,9 @@ class Find_User_Info(tk.Frame):
         label.place(x=100, y=35)
 
         image_user = PhotoImage(file="imagefile/KakaoTalk_20200510_195325903.png")
-        user_image = Label(self, image=image_user,background="white", borderwidth=0)
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=120)
-
 
         # 아이디 찾기
         display1 = tk.Entry(self, width=20)
@@ -346,7 +409,6 @@ class Find_User_Info(tk.Frame):
 
         display3 = tk.Entry(self, width=20)
         display3.place(x=470, y=522)
-
 
         button1 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_ID"))
         button1.place(x=720, y=330)
@@ -379,7 +441,8 @@ class Find_PW(tk.Frame):
         label.place(x=100, y=35)
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        label2 = tk.Label(self, text="임시 비밀번호 ... 이 되었습니다.\n 접속후 PW를 변경해 주세요", font=controller.title_font, background='white')
+        label2 = tk.Label(self, text="임시 비밀번호 ... 이 되었습니다.\n 접속후 PW를 변경해 주세요", font=controller.title_font,
+                          background='white')
         label2.place(x=250, y=300)
 
         button1 = tk.Button(self, text="확인", command=lambda: controller.show_frame("StartPage"))
@@ -396,11 +459,13 @@ class Mk_U_Suss(tk.Frame):
 
         # 로그인 성공시 페이지
         image_user = PhotoImage(file="imagefile/Make_User_Successful.png")
-        user_image = Label(self, image=image_user,  background="white", borderwidth=0)
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=270, y=130)
 
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="Move Back", command=lambda: controller.show_frame("StartPage"),fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="Move Back",
+                            command=lambda: controller.show_frame("StartPage"), fg="white", background="#00b0f0",
+                            font=font_Cheack_B)
         button1.place(x=700, y=500)
 
 
@@ -417,6 +482,7 @@ class ch_U_Suss(tk.Frame):
 
         button1 = tk.Button(self, text="돌아가기", command=lambda: controller.show_frame("main"))
         button1.place(x=700, y=500)
+
 
 if __name__ == "__main__":
     app = Apps()
