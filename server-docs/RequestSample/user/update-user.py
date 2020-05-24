@@ -24,13 +24,13 @@ data = {
     "username": "test",
     "email": "test@chungbuk.ac.kr",
     "password": "password",             # 현재 비밀번호 : 필수
-    "new_password": "newpassword",      # 새로운 비밀번호 : 이 줄을 삭제하면 비밀번호 유지
+    "new_password": "password",      # 새로운 비밀번호 : 이 줄을 삭제하면 비밀번호 유지
     "hasSubscribed": "false",           # 이메일을 구독했는지 여부 : true면 주기적으로 이메일 전송
     "topics": "none"                    # 관심 있는 분야 (리스트를 문자열로 저장)
 }
 
 # Request PUT
-response = requests.put(URL, data=json.dumps(data), headers=headers)
+response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
 
 # 응답 코드, 텍스트 출력
 print("status code : ", response.status_code)   # 성공 : 201

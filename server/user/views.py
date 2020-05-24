@@ -3,10 +3,11 @@ from django.contrib.auth.hashers import make_password, check_password
 from rest_framework.views import APIView
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAdminUser
+from rest_framework.permissions import IsAuthenticated, IsAdminUser, AllowAny
 from .serializers import UserSerializer
 from .models import User, CustomUser
 from rest_framework.authtoken.models import Token
+import string, random
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -59,11 +60,11 @@ class UserViewSet(viewsets.ModelViewSet):
                 customuser.save()
 
                 print(user.__dict__)
-                return Response({ "id": user.id, "username": user.username, "email": user.email, "hasSubscribed": customuser.hasSubscribed, "topics": customuser.topics })
+                return Response({ "id": user.id, "username": user.username, "email": user.email, "hasSubscribed": customuser.hasSubscribed, "topics": customuser.topics }, status=200)
             else:
-                return Response({ "detail": "Incorrect password." })
+                return Response({ "detail": "Incorrect password." }, status=401)
         else:
-            return Response({ "detail": "Authentication credentials were not provided." })
+            return Response({ "detail": "Authentication credentials were not provided." }, status=401)
 
     # 유저 삭제
     def destroy(self, request, pk=None):
@@ -86,5 +87,53 @@ class UserViewSet(viewsets.ModelViewSet):
         if self.action == 'list':
             permission_classes = [IsAdminUser]
         else:
-            permission_classes = [IsAuthenticated]
+            permission_classes = [AllowAny]
+        return [permission() for permission in permission_classes]
+
+
+class LostFindViewSet(viewsets.ModelViewSet):
+    serializer_class = UserSerializer
+    queryset = User.objects.all()
+
+    def retrieve(self, request, pk=None):
+        queryset = User.objects.all()
+        
+        # ID 찾기
+        if pk == "find-id":
+            user = get_object_or_404(queryset, email=request.data.get('email'))
+            if user:
+                return Response({"username": user.username})
+            else:
+                return Response({ "detail": "Not Found." }, status=404)
+        
+        # 비밀번호 찾기 (임시 비밀번호 만들기)
+        elif pk == "find-password":
+            user = get_object_or_404(queryset, username=request.data.get('username'))
+            if user and user.email == request.data.get('email'):
+
+                LENGTH = 10
+                string_pool = string.ascii_lowercase
+                randStr = ""
+                for i in range(LENGTH):
+                    randStr += random.choice(string_pool)
+
+                user.password = make_password(randStr)
+                user.save()
+
+                # 임시로 Response로 전송함.
+                return Response({"newpassword": randStr})
+
+            else:
+                return Response({"detail": "Not Found."}, status=404)
+        
+        # 알 수 없는 경우
+        else:
+            return Response({ "detail": "Bad Request." }, status=400)
+
+    # 권한 설정
+    def get_permissions(self):
+        if self.action == 'retrieve':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
