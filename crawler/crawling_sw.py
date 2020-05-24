@@ -96,7 +96,7 @@ def crawler_sw():
     # Header : 데이터에 관한 설명
     headers = {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'   # Token 추가
+        'Authorization': 'Token 9ae516d4f24b43b0712ad0c6159a9386c9f6b8b7'   # Superuser의 Token 추가
     }
 
     # URL : 목적지 URL
