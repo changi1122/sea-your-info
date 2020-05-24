@@ -2,7 +2,7 @@ import requests
 import json
 
 # user 정보를 읽어오는 코드 샘플입니다.
-# 실행전 확인 : URL 설정, username
+# 실행전 확인 : URL 설정, token 설정, username
 
 # Header : 데이터에 관한 설명
 headers = {
@@ -19,7 +19,7 @@ username = "normaluser"
 
 integratedURL = URL + username + "/"
 
-# Request POST
+# Request GET
 response = requests.get(URL, headers=headers)
 
 # 응답 코드, 텍스트 출력
