@@ -1,5 +1,7 @@
 import tkinter as tk
 import GUI_get_posts as Gposts
+import Create_User
+import Login
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -16,8 +18,8 @@ class Apps(tk.Tk):
         font_logintext = tkfont.Font(family='Helvetica', size=15)
         global font_startpageinfo
         font_startpageinfo = tkfont.Font(family='Helvetica', size=18)
-        global font_radiobuttontext
-        font_radiobuttontext = tkfont.Font(family='Helvetica', size=12)
+        global FB
+        FB = tkfont.Font(family='Helvetica', size=10)
         global font_hypertext
         font_hypertext = tkfont.Font(size=10, underline=True)
         global font_Cheack_B
@@ -72,11 +74,21 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            # 아무것도 입력하지 않았을때 오류 발생문 필요
-
-            messagebox.showinfo("Button CLicked", str1.get())
-            messagebox.showinfo("Button CLicked", str2.get())
-            controller.show_frame("main")
+            string=[]
+            user_ID=str1.get()
+            user_PW=str2.get()
+            display1.delete(0, tk.END)
+            display3.delete(0, tk.END)
+            Lg=Login.Login(user_ID, user_PW)
+            Lg.Check(string)
+            print(string)
+            if string[0] == 200:
+                controller.show_frame("main")
+            else:
+                txt = ""
+                for i in range(1, len(string)):
+                    txt += string[i] + '\n'
+                messagebox.showwarning("Error", txt)
 
         # 첫 화면 텍스트 부분
         label4 = tk.Label(self,
@@ -94,7 +106,7 @@ class StartPage(tk.Frame):
         label3.place(x=40, y=135)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=font_logintext)
+        LabelWidget1 = tk.Label(self, text="ID", background='white', font=font_logintext)
         LabelWidget1.place(x=40, y=240)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=115, y=245)
@@ -102,7 +114,7 @@ class StartPage(tk.Frame):
         str2 = StringVar()
         LabelWidget3 = tk.Label(self, text="PW", background='white', font=font_logintext)
         LabelWidget3.place(x=40, y=280)
-        display3 = tk.Entry(self, width=20, textvariable=str2)
+        display3 = tk.Entry(self, width=20, textvariable=str2, show="")
         display3.place(x=115, y=285)
 
         log_B = PhotoImage(file='imagefile/OP_button3.png')
@@ -125,16 +137,14 @@ class main(tk.Frame):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(background='white')
+
         # 맨 위에 Sea your Info 가 보이는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
         global frame_department_notice
         global frame_school_notice
-        global button_list, url
-
-        button_list = []
-        url = []
-
+        global type_list
+        type_list=[]
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
@@ -149,41 +159,66 @@ class main(tk.Frame):
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         button2.place(x=145, y=185)
 
-        # 라디오 버튼 들어가는 부분, Radiobutton에 command추가 해야 한다.
-        radio_scholar = Radiobutton(self, text="장학금", background='white', value=1, font=font_radiobuttontext)
+        #라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
+        self.var0 = IntVar()
+        radio_scholar = Checkbutton(self, text="장학금", background='white', font=FB, onvalue=1,
+                                    variable=self.var0, command=self.convert)
+        # font_radiobutton == FB로, Make_List==M_L로 변경
         radio_scholar.place(x=30, y=290)
 
-        radio_job = Radiobutton(self, text="학내 행사", background='white', value=2, font=font_radiobuttontext)
+        self.var1 = IntVar()
+        radio_job = Checkbutton(self, text="대회", background='white', font=FB, onvalue=2, variable=self.var1,
+                                command=self.convert)
         radio_job.place(x=130, y=290)
 
-        radio_event = Radiobutton(self, text="취업", background='white', value=3, font=font_radiobuttontext)
+        self.var2 = IntVar()
+        radio_event = Checkbutton(self, text="교환학생", background='white', font=FB, onvalue=3, variable=self.var2,
+                                  command=self.convert)
         radio_event.place(x=230, y=290)
 
-        radio_text1 = Radiobutton(self, text="txt1", background='white', value=4, font=font_radiobuttontext)
+        self.var3 = IntVar()
+        radio_text1 = Checkbutton(self, text="계절수업", background='white', font=FB, onvalue=4, variable=self.var3,
+                                  command=self.convert)
         radio_text1.place(x=30, y=360)
 
-        radio_text2 = Radiobutton(self, text="txt2", background='white', value=5, font=font_radiobuttontext)
+        self.var4 = IntVar()
+        radio_text2 = Checkbutton(self, text="등록금", background='white', font=FB, onvalue=5, variable=self.var4,
+                                  command=self.convert)
         radio_text2.place(x=130, y=360)
 
-        radio_text3 = Radiobutton(self, text="txt3", background='white', value=6, font=font_radiobuttontext)
+        self.var5 = IntVar()
+        radio_text3 = Checkbutton(self, text="신입생", background='white', font=FB, onvalue=6, variable=self.var5,
+                                  command=self.convert)
         radio_text3.place(x=230, y=360)
 
-        radio_text4 = Radiobutton(self, text="txt4", background='white', value=7, font=font_radiobuttontext)
+        self.var6 = IntVar()
+        radio_text4 = Checkbutton(self, text="외국어", background='white', font=FB, onvalue=7,
+                                  variable=self.var6, command=self.convert)
         radio_text4.place(x=30, y=430)
 
-        radio_text5 = Radiobutton(self, text="txt5", background='white', value=8, font=font_radiobuttontext)
+        self.var7 = IntVar()
+        radio_text5 = Checkbutton(self, text="인턴쉽,채용", background='white', font=FB, onvalue=8,
+                                  variable=self.var7, command=self.convert)
         radio_text5.place(x=130, y=430)
 
-        radio_text6 = Radiobutton(self, text="txt6", background='white', value=9, font=font_radiobuttontext)
+        self.var8 = IntVar()
+        radio_text6 = Checkbutton(self, text="특강", background='white', font=FB, onvalue=9,
+                                  variable=self.var8, command=self.convert)
         radio_text6.place(x=230, y=430)
 
-        radio_text7 = Radiobutton(self, text="txt7", background='white', value=10, font=font_radiobuttontext)
+        self.var9 = IntVar()
+        radio_text7 = Checkbutton(self, text="캡스톤", background='white', font=FB, onvalue=10,
+                                  variable=self.var9, command=self.convert)
         radio_text7.place(x=30, y=500)
 
-        radio_text8 = Radiobutton(self, text="txt8", background='white', value=11, font=font_radiobuttontext)
+        self.var10 = IntVar()
+        radio_text8 = Checkbutton(self, text="이외", background='white', font=FB, onvalue=11,
+                                  variable=self.var10, command=self.convert)
         radio_text8.place(x=130, y=500)
 
-        radio_text9 = Radiobutton(self, text="txt9", background='white', value=12, font=font_radiobuttontext)
+        self.var11 = IntVar()
+        radio_text9 = Checkbutton(self, text="None", background='white', font=FB, onvalue=12,
+                                  variable=self.var11, command=self.convert)
         radio_text9.place(x=230, y=500)
 
         # 탭 부분 - notebook 이용하면 됨
@@ -195,91 +230,132 @@ class main(tk.Frame):
 
         frame_department_notice = Frame(self)
         notebook_main.add(frame_department_notice, text="  학과 공지  ")
-        label_frame1_1 = Label(frame_department_notice, text="소프트웨어학과 최우수 학과 선정")
-        label_frame1_1.place(x=20, y=20)
 
         # 두 번째 프레임 설정 부분
         frame_school_notice = Frame(self)
         notebook_main.add(frame_school_notice, text="  학교 공지  ")
-        label_sn_1 = Label(frame_school_notice, text="충북대학교 등록금 전액 환불 추진")
-        label_sn_1.place(x=20, y=20)
 
+        # Updated upstream
+        scrollbar = tk.Scrollbar(frame_school_notice)
+        scrollbar.pack(side="right", fill="y")
+        listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460)
+
+        scrollbar2 = tk.Scrollbar(frame_department_notice)
+        scrollbar2.pack(side="right", fill="y")
+        listbox2 = tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set, width=660, height=460,
+                              selectmode="extended")
+
+
+        def Show_data():
+            global type_list
+            global url_list
+            if listbox.size() != 0:
+                listbox.delete(0,listbox.size())
+
+            print(listbox.size())
+            a = []
+            singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
+            https_pos = []  # 각 singly 인덱스에서 https가 시작하는 위치를 알기 위한 배열
+            address = []  # 각 주소(하이퍼링크)들을 저장
+            Gposts.Get_Department(a)
+
+            # Stashed changes
+
+            txt = ""
+            url_list = []
+            j = 0
+            matching=[]
+            print("-----------")
+            print(a)
+            print(type_list)
+            print("-----------")
+            for i in range(0, len(a), 5):
+                # Updated upstream
+                if a[i+4] in type_list:
+                    for k in range(i, i + 4):
+                        if k % 5 == 3:
+                            url_list.append(a[k])
+                        elif k % 5 == 0:
+                            if j < 9:
+                                txt += " " + "0"
+                            else:
+                                txt += " "
+                            txt += str(j + 1) + " | "
+                        elif k % 5 != 2:
+                            txt += " " + str(a[k]) + " | "
+                        else:
+                            txt += " " + str(a[k][0:10])
+                    # Stashed changes
+                    listbox.insert(j, txt)
+                    j += 1
+                    matching = []
+                    txt = ""
+
+            listbox.pack()
+            listbox2.pack()
+            print(url_list)
+
+            # 클릭되면 특정 사이트로 넘어가게 하는 코드 => 클릭된 특정 위치를 찾아서 넘겨줘야하는데 클릭된 위치 찾기가 힘듬
+            # 이것만하면 더블클릭했을때 특정 사이트로 넘어감
+            # link = Label(text="https://software.cbnu.ac.kr/")
+            listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection()))  # 더블클릭 감지하는 코드
+
+            # Updated upstream
+            scrollbar["command"] = listbox.yview
+
+        # url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
+
+        def openweb(Data):
+            global url_list
+            url = Data[0]
+            webbrowser.open(url_list[url])
+
+        def Delet_data():
+            listbox.pack()
+            Show_data()
+
+        # Stashed changes
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
-        global listbox
-        listbox = tk.Listbox()
+
+
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
-                           background="#00b0f0", font=font_Cheack_B, command=Show_data)
+                           background="#00b0f0", font=font_Cheack_B, command=Delet_data)
         button.place(x=230, y=560)
 
+    # cheack box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
+    def convert(self):
+        global type_list
+        title=["scholarship","contest","exchange","vacation","tuition","freshman",
+               "foreign","job","lecture","capstone", "other"]
 
-# NoteBook에 Enter 클릭시 data 출력 부분
-def Show_data():
-    global frame_department_notice
-    global frame_school_notice
-    global url_list
+        type_list=[]
+        if self.var0.get() == 1:
+            type_list.append(title[self.var0.get()-1])
+        if self.var1.get() == 2:
+            type_list.append(title[self.var1.get() - 1])
+        if self.var2.get() == 3:
+            type_list.append(title[self.var2.get() - 1])
+        if self.var3.get() == 4:
+            type_list.append(title[self.var3.get() - 1])
+        if self.var4.get() == 5:
+            type_list.append(title[self.var4.get() - 1])
+        if self.var5.get() == 6:
+            type_list.append(title[self.var5.get() - 1])
+        if self.var6.get() == 7:
+            type_list.append(title[self.var6.get() - 1])
+        if self.var7.get() == 8:
+            type_list.append(title[self.var7.get() - 1])
+        if self.var8.get() == 9:
+            type_list.append(title[self.var8.get() - 1])
+        if self.var9.get() == 10:
+            type_list.append(title[self.var9.get() - 1])
+        if self.var10.get() == 11:
+            type_list.append(title[self.var10.get() - 1])
+        if self.var11.get() == 12:
+            for i in range(0, 11):
+                type_list.append(title[i])
 
-    a = []
-    singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
-    https_pos = []  # 각 singly 인덱스에서 https가 시작하는 위치를 알기 위한 배열
-    address = []  # 각 주소(하이퍼링크)들을 저장
-    Gposts.Get_Department(a)
-# Updated upstream
-    scrollbar = tk.Scrollbar(frame_school_notice)
-    scrollbar.pack(side="right", fill="y")
-    listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460)
-
-    scrollbar2=tk.Scrollbar(frame_department_notice)
-    scrollbar2.pack(side="right", fill ="y")
-    listbox2=tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set,width=660, height=460 , selectmode="extended")
-# Stashed changes
-
-    txt = ""
-    url_list=[]
-    j = 0
-    for i in range(0, len(a), 5):
-# Updated upstream
-        for k in range(i,i+4):
-            if k%5 == 3:
-                url_list.append(a[k])
-            elif k%5==0 :
-                if j < 9:
-                    txt+=" "+"0"
-                else :
-                    txt+=" "
-                txt+=str(j+1)+" | "
-            elif k%5 != 2 :
-                txt+=" "+str(a[k])+" | "
-            else :
-                txt+=" "+str(a[k][0:10])
-# Stashed changes
-        listbox.insert(j, txt)
-        #singly.append(txt)  # a에서 넘겨받은 것을 하나씩 나눠서 b배열에 저장
-        j += 1
-        txt = ""
-
-    listbox.pack()
-    listbox2.pack()
-    print(url_list)
-    # 링크 가져와서 address배열에 저장하는 코드
-    #for i in range(0, len(singly)):
-    #    https_pos.append(singly[i].find("https://"))  # https:// 부분을 찾아서 시작점 반환해서 https_pos에 저장해줌
-    #    address.append(singly[i][https_pos[i]:(len(singly[i]) - 6)])  # 각 주소들을 address배열에 저장함
-
-    #print(listbox.curselection())
-
-    #클릭되면 특정 사이트로 넘어가게 하는 코드 => 클릭된 특정 위치를 찾아서 넘겨줘야하는데 클릭된 위치 찾기가 힘듬
-    #이것만하면 더블클릭했을때 특정 사이트로 넘어감
-    #link = Label(text="https://software.cbnu.ac.kr/")
-    listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection()))  # 더블클릭 감지하는 코드
-
-# Updated upstream
-    scrollbar["command"] = listbox.yview
-# url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
-def openweb(Data):
-    global url_list
-    url = Data[0]
-    webbrowser.open(url_list[url])
-# Stashed changes
+        print(type_list)
 
 
 class Make_User_page(tk.Frame):
@@ -290,10 +366,22 @@ class Make_User_page(tk.Frame):
         self.configure(background='white')
 
         def clickMe():
-            messagebox.showinfo("Button CLicked", str1.get())
-            messagebox.showinfo("Button CLicked", str2.get())
-            messagebox.showinfo("Button CLicked", str3.get())
-            controller.show_frame("Mk_U_Suss")
+            string=[]
+            user_ID = str1.get()
+            user_Email=str2.get()
+            user_PW=str3.get()
+            Mk=Create_User.Make_user(user_ID, user_Email, user_PW)
+            Mk.make(string)
+            print(string)
+            if string[0] ==201:
+                controller.show_frame("Mk_U_Suss")
+            else :
+                txt=""
+                for i in range(1,len(string)):
+                    txt+=string[i]+'\n'
+                messagebox.showwarning(
+                    "Error", txt)
+
 
         # 회원가입 뒤 배경 추가
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -309,19 +397,19 @@ class Make_User_page(tk.Frame):
         label2.place(x=375, y=230)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=font_radiobuttontext)
+        LabelWidget1 = tk.Label(self, text="ID(user name)", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=475, y=290)
 
         str2 = StringVar()
-        LabelWidget2 = tk.Label(self, text="Name", background='white', font=font_radiobuttontext)
+        LabelWidget2 = tk.Label(self, text="E-mail", background='white', font=FB)
         LabelWidget2.place(x=375, y=360)
         display2 = tk.Entry(self, width=20, textvariable=str2)
         display2.place(x=475, y=360)
 
         str3 = StringVar()
-        LabelWidget3 = tk.Label(self, text="Password", background='white', font=font_radiobuttontext)
+        LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
         Label_PW_Rool = tk.Label(self,
                                  text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
                                  background="white")
@@ -333,6 +421,8 @@ class Make_User_page(tk.Frame):
         button = tk.Button(self, borderwidth=3, relief="flat", text="Sing up for Sea Your Info", command=clickMe,
                            fg="white", background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
+
+        #button_back = tk.Button(self, borderwidth=3, )
 
 
 class Change_User_Info(tk.Frame):
@@ -362,19 +452,19 @@ class Change_User_Info(tk.Frame):
         label2.place(x=375, y=230)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=font_radiobuttontext)
+        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=475, y=290)
 
         str2 = StringVar()
-        LabelWidget2 = tk.Label(self, text="Name", background='white', font=font_radiobuttontext)
+        LabelWidget2 = tk.Label(self, text="Name", background='white', font=FB)
         LabelWidget2.place(x=375, y=360)
         display2 = tk.Entry(self, width=20, textvariable=str2)
         display2.place(x=475, y=360)
 
         str3 = StringVar()
-        LabelWidget3 = tk.Label(self, text="Password", background='white', font=font_radiobuttontext)
+        LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
         Label_PW_Rool = tk.Label(self,
                                  text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
                                  background="white")
@@ -467,6 +557,7 @@ class Mk_U_Suss(tk.Frame):
                             command=lambda: controller.show_frame("StartPage"), fg="white", background="#00b0f0",
                             font=font_Cheack_B)
         button1.place(x=700, y=500)
+
 
 
 class ch_U_Suss(tk.Frame):

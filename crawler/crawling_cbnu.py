@@ -40,23 +40,23 @@ def crawler_cbnu():
         title_cbnu[i] = title_cbnu[i].text.strip()
 
         # Type 구분
-        if title_cbnu[i].find('장학생' or '장학금') > -1:
+        if title_cbnu[i].count('장학생') or title_cbnu[i].count('장학금'):
             type_cbnu.append('scholarship')
-        elif title_cbnu[i].find('대회' or '모집' or '콘테스트') > -1:
+        elif title_cbnu[i].count('대회') or title_cbnu[i].count('모집') or title_cbnu[i].count('콘테스트'):
             type_cbnu.append('contest')
-        elif title_cbnu[i].find('교환학생') > -1:
+        elif title_cbnu[i].count('교환학생'):
             type_cbnu.append('exchange')
-        elif title_cbnu[i].find('계절수업') > -1:
+        elif title_cbnu[i].count('계절수업'):
             type_cbnu.append('vacation')
-        elif title_cbnu[i].find('등록금') > -1:
+        elif title_cbnu[i].count('등록금'):
             type_cbnu.append('tuition')
-        elif title_cbnu[i].find('신입생') > -1:
+        elif title_cbnu[i].count('신입생'):
             type_cbnu.append('freshman')
-        elif title_cbnu[i].find('외국어') > -1:
+        elif title_cbnu[i].count('외국어'):
             type_cbnu.append('foreign')
-        elif title_cbnu[i].find('채용' or '인턴쉽' or '인턴십') > -1:
+        elif title_cbnu[i].count('채용') or title_cbnu[i].count('인턴쉽') or title_cbnu[i].count('인턴십'):
             type_cbnu.append('job')
-        elif title_cbnu[i].find('특강') > -1:
+        elif title_cbnu[i].count('특강'):
             type_cbnu.append('lecture')
         else:
             type_cbnu.append('other')
@@ -67,7 +67,7 @@ def crawler_cbnu():
     print(uploadDate_cbnu)
     print()
 
-    today = '2020-05-12'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
     for i in range(0, len(uploadDate_cbnu)):
@@ -87,7 +87,8 @@ def crawler_cbnu():
 
     # Header : 데이터에 관한 설명
     headers = {
-        'Content-Type': 'application/json; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'   # Token 추가
     }
 
     # URL : 목적지 URL

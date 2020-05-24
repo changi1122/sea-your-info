@@ -41,26 +41,26 @@ def crawler_sw():
         title_sw[i] = title_sw[i].text
 
         # Type 구분
-        if title_sw[i].find('장학생' or '장학금') > -1:
+        if title_sw[i].count('장학생') or title_sw[i].count('장학금'):
             type_sw.append('scholarship')
-        elif title_sw[i].find('대회' or '모집' or '콘테스트') > -1:
+        elif title_sw[i].count('대회') or title_sw[i].count('모집') or title_sw[i].count('콘테스트'):
             type_sw.append('contest')
-        elif title_sw[i].find('교환학생') > -1:
+        elif title_sw[i].count('교환학생'):
             type_sw.append('exchange')
-        elif title_sw[i].find('계절수업') > -1:
+        elif title_sw[i].count('계절수업'):
             type_sw.append('vacation')
-        elif title_sw[i].find('등록금') > -1:
+        elif title_sw[i].count('등록금'):
             type_sw.append('tuition')
-        elif title_sw[i].find('신입생') > -1:
+        elif title_sw[i].count('신입생'):
             type_sw.append('freshman')
-        elif title_sw[i].find('외국어') > -1:
+        elif title_sw[i].count('외국어'):
             type_sw.append('foreign')
-        elif title_sw[i].find('채용' or '인턴쉽' or '인턴십') > -1:
+        elif title_sw[i].count('채용') or title_sw[i].count('인턴쉽') or title_sw[i].count('인턴십'):
             type_sw.append('job')
-        elif title_sw[i].find('특강') > -1:
+        elif title_sw[i].count('특강'):
             type_sw.append('lecture')
-        elif title_sw[i].find('캡스톤') > -1:
-            type_sw.append('capstone')
+        elif title_sw[i].count('캡스톤'):
+            type_sw[i].append('capstone')
         else:
             type_sw.append('other')
 
@@ -95,7 +95,8 @@ def crawler_sw():
 
     # Header : 데이터에 관한 설명
     headers = {
-        'Content-Type': 'application/json; charset=utf-8'
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'   # Token 추가
     }
 
     # URL : 목적지 URL
