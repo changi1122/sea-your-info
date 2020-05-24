@@ -21,13 +21,14 @@ from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
 from posts.views import PostViewSet, PostSWViewSet
-from user.views import UserViewSet
+from user.views import UserViewSet, LostFindViewSet
 
 # Router
 router = routers.DefaultRouter()
 router.register('posts', PostViewSet) # prefix = posts , viewset = PostViewSet
 router.register('posts_sw', PostSWViewSet) # prefix = posts_sw, viewset = PostSWViewSet
 router.register('user', UserViewSet)
+router.register('lost-find', LostFindViewSet)
 
 # URL Patterns
 urlpatterns = [

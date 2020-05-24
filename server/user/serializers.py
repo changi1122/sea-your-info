@@ -3,6 +3,7 @@ from .models import CustomUser
 from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password
 from rest_framework.authtoken.models import Token
+from rest_framework.response import Response
 
 
 class UserSerializer(serializers.ModelSerializer):
