@@ -37,13 +37,14 @@ class Login():
         # JSON 형식 문자열을 Dictionary 타입(Dictionary 타입 배열)으로 변환
         response_dict = json.loads(response.text)
 
-        #string.append(response_dict['token'])   # 토큰을 받아오는 방법 해결 필요
         num = response.status_code
         string.append(num)
         for key in response_dict.keys():
-            if( key != "token"):
+            if key != "token":
                 response_dict[key] = str(response_dict[key]).replace("[\'", "")
                 response_dict[key] = str(response_dict[key]).replace("\']", "")
                 string.append(key+" : "+response_dict[key])
 
         # 토큰
+        if 'token' in list(response_dict.keys()):  # response_dict에 'token' 키를 가진 쌍이 있는지 확인
+            string.append(response_dict['token'])
