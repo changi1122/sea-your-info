@@ -550,13 +550,15 @@ class Find_User_Info(tk.Frame):
         user_image.place(x=230, y=115)
 
         # 아이디 찾기
-        #str1 = StringVar()
-        display1 = tk.Entry(self, width=20)
+        FU_ID_Email = StringVar()
+        display1 = tk.Entry(self, width=20,textvariable=FU_ID_Email)
         display1.place(x=470, y=227)
         # 비번 찾기
-        display2 = tk.Entry(self, width=20)
+        FU_PW_ID = StringVar()
+        display2 = tk.Entry(self, width=20, textvariable=FU_PW_ID)
         display2.place(x=470, y=457)
-        display3 = tk.Entry(self, width=20)
+        FU_PW_Email = StringVar()
+        display3 = tk.Entry(self, width=20, textvariable=FU_PW_Email)
         display3.place(x=470, y=517)
 
         button1 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_ID"))
