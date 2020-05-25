@@ -164,8 +164,17 @@ class main(tk.Frame):
         user_image.image = image_user
         user_image.place(x=25, y=120)
 
+        def Logout():
+            if listbox.size() != 0:
+                listbox.delete(0, listbox.size())
+
+            if listbox2.size() != 0:
+                listbox2.delete(0, listbox2.size())
+
+            controller.show_frame("StartPage")
+
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
-        button1 = tk.Button(self, text="로그아웃", command=lambda: controller.show_frame("StartPage"), borderwidth=0,
+        button1 = tk.Button(self, text="로그아웃", command=Logout, borderwidth=0,
                             background='white', font=font_hypertext, fg="#0000FF")
         button1.place(x=145, y=160)
         button2 = tk.Button(self, text="회원정보 수정", command=lambda: controller.show_frame("Change_User_Info"),
@@ -535,30 +544,31 @@ class Find_User_Info(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_user = PhotoImage(file="imagefile/KakaoTalk_20200510_195325903.png")
+        image_user = PhotoImage(file="imagefile/OP_FIND_PWID2.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
-        user_image.place(x=230, y=120)
+        user_image.place(x=230, y=115)
 
         # 아이디 찾기
+        #str1 = StringVar()
         display1 = tk.Entry(self, width=20)
-        display1.place(x=470, y=232)
+        display1.place(x=470, y=227)
+        # 비번 찾기
         display2 = tk.Entry(self, width=20)
-        display2.place(x=470, y=291)
-
+        display2.place(x=470, y=457)
         display3 = tk.Entry(self, width=20)
-        display3.place(x=470, y=522)
+        display3.place(x=470, y=517)
 
         button1 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_ID"))
-        button1.place(x=720, y=330)
+        button1.place(x=720, y=270)
         button2 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_PW"))
-        button2.place(x=720, y=567)
+        button2.place(x=720, y=557)
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=lambda: controller.show_frame("StartPage"), padx=10, pady=10, image=image_back)
         button_back.image = image_back
-        button_back.place(x=185, y=570)
+        button_back.place(x=170, y=570)
 
 
 class Find_ID(tk.Frame):
