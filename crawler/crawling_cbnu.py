@@ -67,7 +67,7 @@ def crawler_cbnu():
     print(uploadDate_cbnu)
     print()
 
-    today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    today = '2020-05-21'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
     for i in range(0, len(uploadDate_cbnu)):
@@ -88,7 +88,7 @@ def crawler_cbnu():
     # Header : 데이터에 관한 설명
     headers = {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'   # Token 추가
+        'Authorization': 'Token 9ae516d4f24b43b0712ad0c6159a9386c9f6b8b7'   # Superuser의 Token 추가
     }
 
     # URL : 목적지 URL
