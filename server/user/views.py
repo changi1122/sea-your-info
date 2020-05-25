@@ -137,3 +137,11 @@ class LostFindViewSet(viewsets.ModelViewSet):
         else:
             permission_classes = [IsAdminUser]
         return [permission() for permission in permission_classes]
+
+
+class CheckSuperuserViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAuthenticated]
+    queryset = User.objects.all()
+
+    def create(self, request):
+        return Response({ "is_super": request.user.is_superuser })
