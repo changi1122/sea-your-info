@@ -67,7 +67,7 @@ def crawler_cbnu():
     print(uploadDate_cbnu)
     print()
 
-    today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    today = '2020-05-21'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
     for i in range(0, len(uploadDate_cbnu)):

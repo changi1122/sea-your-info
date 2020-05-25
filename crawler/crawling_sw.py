@@ -75,7 +75,7 @@ def crawler_sw():
     print(uploadDate_sw)
     print()
 
-    today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    #today = '2020-05-15'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 작성된 게시글의 정보 저장
     for i in range(0, len(title_sw)):
