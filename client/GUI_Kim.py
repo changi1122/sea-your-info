@@ -3,6 +3,7 @@ import GUI_get_posts as Gposts
 import Create_User
 import Login
 import Find_User
+import Update_User
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -10,7 +11,7 @@ from tkinter import messagebox
 import webbrowser
 
 UserInfo = []
-
+User_token=[]
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -60,8 +61,6 @@ class Apps(tk.Tk):
         frame.tkraise()
 
 
-
-
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -84,22 +83,23 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            string = []
+            global User_token
             user_ID = str1.get()
             user_PW = str2.get()
             display1.delete(0, tk.END)
             display3.delete(0, tk.END)
             Lg = Login.Login(user_ID, user_PW)
-            Lg.Check(string)
-            print(string)
-            if string[0] == 1:
+            Lg.Check(User_token)
+            print(User_token)
+            if User_token[0] == 1:
                 pass  #이부분에 슈퍼유저 페이지 삽입
-            elif string[1] == 200:
+            elif User_token[1] == 200:
                 controller.show_frame("main")
             else:
                 txt = ""
-                for i in range(2, len(string)):
-                    txt += string[i] + '\n'
+                for i in range(2, len(User_token)):
+                    txt += User_token[i] + '\n'
+                User_token=[]
                 messagebox.showwarning("Error", txt)
 
         # 비밀번호 별표로 안보이게 가리는 부분
@@ -569,6 +569,7 @@ class Make_User_page(tk.Frame):
 class Change_User_Info(tk.Frame):
 
     def __init__(self, parent, controller):
+        global User_token
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(background='white')
@@ -576,9 +577,14 @@ class Change_User_Info(tk.Frame):
         label.place(x=100, y=35)
 
         def clickMe():
-            messagebox.showinfo("Button CLicked", str1.get())
-            messagebox.showinfo("Button CLicked", str2.get())
-            messagebox.showinfo("Button CLicked", str3.get())
+            message=[]
+            #messagebox.showinfo("Button CLicked", str1.get())
+            #messagebox.showinfo("Button CLicked", str2.get())
+            #messagebox.showinfo("Button CLicked", str3.get())
+            print(User_token[2])
+            CH=Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
+            CH.UUD_INFO(message)
+            print(message)
             controller.show_frame("ch_U_Suss")
 
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -593,34 +599,45 @@ class Change_User_Info(tk.Frame):
         label2.place(x=375, y=230)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="E-mail", background='white', font=FB)
+        LabelWidget1 = tk.Label(self, text="ID", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=475, y=290)
 
         str2 = StringVar()
-        LabelWidget2 = tk.Label(self, text="Name", background='white', font=FB)
-        LabelWidget2.place(x=375, y=360)
+        LabelWidget2 = tk.Label(self, text="Email", background='white', font=FB)
+        LabelWidget2.place(x=375, y=350)
         display2 = tk.Entry(self, width=20, textvariable=str2)
-        display2.place(x=475, y=360)
+        display2.place(x=475, y=350)
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
+        LabelWidget3.place(x=375, y=410)
+        display3 = tk.Entry(self, width=20, textvariable=str3)
+        display3.place(x=475, y=410)
+
+        str4 = StringVar()
+        LabelWidget4 = tk.Label(self, text="New_Password", background='white', font=FB)
+        LabelWidget4.place(x=375, y=470)
+        display4 = tk.Entry(self, width=20, textvariable=str4)
+        display4.place(x=475, y=470)
         Label_PW_Rool = tk.Label(self,
                                  text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
                                  background="white")
-        LabelWidget3.place(x=375, y=430)
-        Label_PW_Rool.place(x=475, y=450)
-        display3 = tk.Entry(self, width=20, textvariable=str3)
-        display3.place(x=475, y=430)
+        Label_PW_Rool.place(x=475, y=490)
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=clickMe, fg="white",
                            background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
+        def Empty():
+            global User_token
+            User_token=[]
+            controller.show_frame("main")
+
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
-                                command=lambda: controller.show_frame("main"), padx=10, pady=10, image=image_back)
+                                command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=235, y=550)
 
@@ -655,9 +672,14 @@ class Find_User_Info(tk.Frame):
         button2 = tk.Button(self, text="   Enter   ", command=lambda:self.onReturn23(FU_PW_ID.get(), FU_PW_Email.get()))
         button2.place(x=720, y=557)
 
+        def Empty():
+            global UserInfo
+            UserInfo=[]
+            controller.show_frame("StartPage")
+
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
-                                command=lambda: controller.show_frame("StartPage"), padx=10, pady=10, image=image_back)
+                                command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=170, y=570)
 
@@ -678,7 +700,6 @@ class Find_User_Info(tk.Frame):
         FU_ID.find_ID(UserInfo)
         print(1111111111)
         self.controller.show_frame("Find_ID")
-
 
 
 class Find_ID(tk.Frame):
@@ -790,11 +811,15 @@ class ch_U_Suss(tk.Frame):
         label2 = tk.Label(self, text="회원정보 변경에 성공했습니다.", font=controller.title_font, background='white')
         label2.place(x=250, y=300)
 
-        button1 = tk.Button(self, text="돌아가기", command=lambda: controller.show_frame("main"))
+        def Empty():
+            global User_token
+            User_token=[]
+            controller.show_frame("main")
+
+        button1 = tk.Button(self, text="돌아가기", command=Empty)
         button1.place(x=700, y=500)
 
 
 if __name__ == "__main__":
     app = Apps()
     app.mainloop()
-
