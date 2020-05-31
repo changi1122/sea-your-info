@@ -12,6 +12,7 @@ import webbrowser
 
 UserInfo = []
 User_token=[]
+
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
@@ -59,7 +60,6 @@ class Apps(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
-
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -170,7 +170,6 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
-
 class main(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -190,13 +189,14 @@ class main(tk.Frame):
         user_image.image = image_user
         user_image.place(x=25, y=120)
 
-        def Logout():
+        def Logout():  # 로그인 했을때 listbox에 남아있는 ID, PW기록 지우기
+            global User_token
             if listbox.size() != 0:
                 listbox.delete(0, listbox.size())
 
             if listbox2.size() != 0:
                 listbox2.delete(0, listbox2.size())
-
+            User_token=[] # 유저 정보 저장하는 리스트 초기화
             controller.show_frame("StartPage")
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
@@ -432,7 +432,6 @@ class main(tk.Frame):
 
         print(type_list)
 
-
 class Make_User_page(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -451,6 +450,9 @@ class Make_User_page(tk.Frame):
             Mk.make(string)
             print(string)
             if string[0] == 201:
+                display1.delete(0, tk.END)  # 엔트리에 있는 정보 삭제
+                display2.delete(0, tk.END)
+                display3.delete(0, tk.END)
                 controller.show_frame("Mk_U_Suss")
             else:
                 txt = ""
@@ -478,6 +480,7 @@ class Make_User_page(tk.Frame):
             if len(chk_pw) < 8 or len(chk_pw) >= 15:  # 비밀번호의 길이가 8자 미만이거나 15자 이상이면 안된다.
                 chk = False
             if chk is False:
+                display3.delete(0, tk.END)
                 Error_Messagebox()
             elif chk is True:
                 clickMe()
@@ -565,7 +568,6 @@ class Make_User_page(tk.Frame):
         button_back.image = image_back
         button_back.place(x=235, y=550)
 
-
 class Change_User_Info(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -585,6 +587,10 @@ class Change_User_Info(tk.Frame):
             CH=Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
             CH.UUD_INFO(message)
             print(message)
+            display1.delete(0, tk.END)
+            display2.delete(0, tk.END)
+            display3.delete(0, tk.END)
+            display4.delete(0, tk.END)
             controller.show_frame("ch_U_Suss")
 
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -610,25 +616,92 @@ class Change_User_Info(tk.Frame):
         display2 = tk.Entry(self, width=20, textvariable=str2)
         display2.place(x=475, y=350)
 
+        # 비밀번호 별표로 안보이게 가리는 부분
+        def toggle_password():
+            if checkbutton1.var.get():
+                display3['show'] = "•"
+            else:
+                display3['show'] = ""
+
+            if checkbutton2.var.get():
+                display4['show'] = "•"
+            else:
+                display4['show'] = ""
+
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
         LabelWidget3.place(x=375, y=410)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=410)
+        #비번 안보이게 하는 부분
+        display3.default_show_val = display3['show']
+        display3['show'] = "•"
+        checkbutton1 = tk.Checkbutton(self, text="Hide password", onvalue=True, offvalue=False, command=toggle_password,
+                                     background='white')
+        checkbutton1.var = tk.BooleanVar(value=True)
+        checkbutton1['variable'] = checkbutton1.var
+        checkbutton1.place(x=620, y=405)
 
         str4 = StringVar()
         LabelWidget4 = tk.Label(self, text="New_Password", background='white', font=FB)
         LabelWidget4.place(x=375, y=470)
         display4 = tk.Entry(self, width=20, textvariable=str4)
         display4.place(x=475, y=470)
-        Label_PW_Rool = tk.Label(self,
-                                 text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
-                                 background="white")
-        Label_PW_Rool.place(x=475, y=490)
 
-        button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=clickMe, fg="white",
+        #비번 안보이게 하는 부분
+        display4.default_show_val = display4['show']
+        display4['show'] = "•"
+        checkbutton2 = tk.Checkbutton(self, text="Hide password", onvalue=True, offvalue=False, command=toggle_password,
+                                     background='white')
+        checkbutton2.var = tk.BooleanVar(value=True)
+        checkbutton2['variable'] = checkbutton2.var
+        checkbutton2.place(x=620, y=465)
+
+        def Error_Messagebox():  # 비밀번호가 조건에 맞지 않을 때 띄우는 에러
+            messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 다시 확인해 주세요. |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")  # 메시지 다시 만들기
+
+        #비번 조건 확인
+        def button_hit():  # Sign up for SYI 눌렸을 때 반응하는 함수
+            # 암호가 조건에 맞는지 확인하는 것
+            chk_pw = str4.get()
+            chk = True
+            sum = 0
+            for i in range(len(chk_pw)):
+                if 'a' <= chk_pw[i] <= 'z' or 'A' <= chk_pw[i] <= 'Z':  # 암호가 모두 알파벳으로 돼 있다면
+                    sum += 1
+            if sum is len(chk_pw):
+                chk = False  # False로 바꿈
+            if len(chk_pw) < 8 or len(chk_pw) >= 15:  # 비밀번호의 길이가 8자 미만이거나 15자 이상이면 안된다.
+                chk = False
+            if chk is False:
+                display4.delete(0, tk.END)
+                Error_Messagebox()
+            elif chk is True:
+                clickMe()
+
+        # 물음표 이미지 띄우는 부분
+        def on_enter(event):
+            label5.configure(text="Make it at least 8 characters.\nMake it at most 15 characters.\nAdd punctuation.")
+
+        def on_leave(event):
+            label5.configure(text="")
+
+        que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
+        label_Queimage = tk.Label(self, image=que_image, borderwidth=0)
+        label_Queimage.image = que_image
+        label_Queimage.place(x=600, y=490)
+
+        label5 = tk.Label(self, text="", width=0, background='white')
+        label5.place(x=625, y=490)
+
+        label_Queimage.bind("<Enter>", on_enter)
+        label_Queimage.bind("<Leave>", on_leave)
+
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=button_hit, fg="white",
                            background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
+
 
         def Empty():
             global User_token
@@ -640,7 +713,6 @@ class Change_User_Info(tk.Frame):
                                 command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=235, y=550)
-
 
 class Find_User_Info(tk.Frame):
     def __init__(self, parent, controller):
@@ -667,14 +739,31 @@ class Find_User_Info(tk.Frame):
         display3 = tk.Entry(self, width=20, textvariable=FU_PW_Email)
         display3.place(x=470, y=517)
 
-        button1 = tk.Button(self, text="   Enter   ", command=lambda:self.onReturn1(FU_ID_Email.get()))
+        def Call_OR1():
+            Email = FU_ID_Email.get()
+            Delet()
+            self.onReturn1(Email)
+
+        def Call_OR2():
+            ID = FU_PW_ID.get()
+            Email = FU_PW_Email.get()
+            Delet()
+            self.onReturn23(ID,Email)
+
+        button1 = tk.Button(self, text="   Enter   ", command=lambda:Call_OR1())
         button1.place(x=720, y=270)
-        button2 = tk.Button(self, text="   Enter   ", command=lambda:self.onReturn23(FU_PW_ID.get(), FU_PW_Email.get()))
+        button2 = tk.Button(self, text="   Enter   ", command=lambda:Call_OR2())
         button2.place(x=720, y=557)
+
+        def Delet():
+            display1.delete(0, tk.END)
+            display2.delete(0, tk.END)
+            display3.delete(0, tk.END)
 
         def Empty():
             global UserInfo
             UserInfo=[]
+            Delet()
             controller.show_frame("StartPage")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
@@ -691,6 +780,7 @@ class Find_User_Info(tk.Frame):
         self.controller.show_frame("Find_PW")
         FU_PW = Find_User.Find_User(PW_id, PW_Email)
         FU_PW.find_PW(UserInfo)
+
         self.controller.show_frame("Find_PW")
         #clickMe() clickme처럼 이곳에 작동해야 하는 함수 추가하면 됨
 
@@ -700,7 +790,6 @@ class Find_User_Info(tk.Frame):
         FU_ID.find_ID(UserInfo)
         print(1111111111)
         self.controller.show_frame("Find_ID")
-
 
 class Find_ID(tk.Frame):
     def __init__(self, parent, controller):
@@ -740,7 +829,6 @@ class Find_ID(tk.Frame):
         button1 = tk.Button(self, text="    확인    ", command=Empty)
         button1.place(x=800, y=500)
 
-
 class Find_PW(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -779,7 +867,6 @@ class Find_PW(tk.Frame):
         button1 = tk.Button(self, text="    확인     ", command=Empty)
         button1.place(x=800, y=500)
 
-
 class Mk_U_Suss(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -799,7 +886,6 @@ class Mk_U_Suss(tk.Frame):
                             font=font_Cheack_B)
         button1.place(x=700, y=500)
 
-
 class ch_U_Suss(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -818,7 +904,6 @@ class ch_U_Suss(tk.Frame):
 
         button1 = tk.Button(self, text="돌아가기", command=Empty)
         button1.place(x=700, y=500)
-
 
 if __name__ == "__main__":
     app = Apps()
