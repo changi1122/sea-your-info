@@ -32,7 +32,7 @@ class Apps(tk.Tk):
         global font_Cheack_B
         font_Cheack_B = tkfont.Font(size=11, weight="bold", family='Helvetica')
         global font_listbox_content
-        font_listbox_content = tkfont.Font(size=13, family='바른고딕')
+        font_listbox_content = tkfont.Font(size=13, family='휴먼모음T')
         global font_radiobutton
         font_radiobutton = tkfont.Font(size=12, family='바른고딕', weight="bold")
 
@@ -268,7 +268,7 @@ class main(tk.Frame):
         radio_text8.place(x=130, y=500)
 
         self.var11 = IntVar()
-        radio_text9 = Checkbutton(self, text="None", background='white', font=FB, onvalue=12,
+        radio_text9 = Checkbutton(self, text="모두보기", background='white', font=FB, onvalue=12,
                                   variable=self.var11, command=self.convert)
         radio_text9.place(x=230, y=500)
 
@@ -308,7 +308,9 @@ class main(tk.Frame):
                 listbox2.delete(0, listbox2.size())
 
             print(listbox.size())
+            global a
             a = []
+            global b
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
@@ -327,7 +329,14 @@ class main(tk.Frame):
 
             arr1 = []
             arr2 = []
-            listbox_order = int(len(a)/5)+1
+            listbox_order = int(len(a) / 5) + 1
+
+            global cnt
+            cnt = 0
+            for i in range(0, len(a), 5):
+                if a[i + 4] in type_list:
+                    cnt += 1
+
             for i in range(0, len(a), 5):
                 # Updated upstream
                 if a[i + 4] in type_list:
@@ -335,9 +344,9 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list.append(a[k])
                         elif k % 5 == 0:
-                            if listbox_order - (j+1) < 10:
+                            if cnt - j < 10:  # 이 조건문은 숫자 앞에 0을 붙여 주기 위한 조건문이다.
                                 txt += " " + "0" + "0"
-                            elif listbox_order - (j+1) < 100:
+                            elif cnt - j < 100:
                                 txt += " 0"
                             else:
                                 txt += " "
@@ -345,9 +354,10 @@ class main(tk.Frame):
                             #     txt += " " + "0"
                             # else:
                             #     txt += " "
-                            #txt += str(j + 1) + " | "
-                            txt += str(listbox_order - (j+1)) + " | "
-                            #listbox_order += 1
+                            # txt += str(j + 1) + " | "
+                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
+                            txt += str(cnt - j) + " | "
+                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
@@ -359,12 +369,18 @@ class main(tk.Frame):
                     j += 1
                     txt = ""
 
-
-            for i in range(len(arr1) - 1, 0, -1):
+            for i in range(len(arr1) - 1, -1, -1):
                 listbox.insert(j, arr1[i])
                 j += 1
 
-            listbox_order = int(len(b)/5)+1
+            # 여기서부터 b 배열
+            global cnt2
+            cnt2 = 0
+            for i in range(0, len(b), 5):
+                if b[i + 4] in type_list:
+                    cnt2 += 1
+
+            listbox_order = int(len(b) / 5) + 1
             j = 0
             for i in range(0, len(b), 5):
                 # Updated upstream
@@ -373,30 +389,36 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            if listbox_order - (j+1) < 10:
+                            # if listbox_order - (j + 1) < 10:
+                            if cnt2 - j < 10:
                                 txt_sw += " " + "0" + "0"
-                            elif listbox_order - (j+1) < 100:
+                            # elif listbox_order - (j + 1) < 100:
+                            elif cnt2 - j < 100:
                                 txt_sw += " 0"
                             else:
                                 txt_sw += " "
+
                             # if j < 9:
                             #     txt_sw += " " + "0"
                             # else:
                             #     txt_sw += " "
-                            #txt_sw += str(j + 1) + " | "
-                            txt_sw += str(listbox_order - (j+1)) + " | "
+                            # txt_sw += str(j + 1) + " | "
+                            # txt_sw += str(listbox_order - (j + 1)) + " | "
+
+                            txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
+
                         else:
                             txt_sw += " " + str(b[k][0:10])
                     # Stashed changes
-                    #listbox2.insert(j, txt_sw)
+                    # listbox2.insert(j, txt_sw)
                     arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
 
             j = 0
-            for i in range(len(arr2) - 1, 0, -1):
+            for i in range(len(arr2) - 1, -1, -1):
                 listbox2.insert(j, arr2[i])
                 j += 1
 
@@ -417,8 +439,12 @@ class main(tk.Frame):
             global url_list, url_list_sw
             url = Data[0]
             if sep == 1:
+                # url = int(len(a) / 5) - 1 - url
+                url = cnt - 1 - url
                 webbrowser.open(url_list[url])
             else:
+                # url = int(len(b) / 5) - 1 - url
+                url = cnt2 - 1 - url
                 webbrowser.open(url_list_sw[url])
 
         def Delet_data():
@@ -499,7 +525,7 @@ class Make_User_page(tk.Frame):
                     "Error", txt)
 
         def Error_Messagebox():  # 비밀번호가 조건에 맞지 않을 때 띄우는 에러
-            messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 다시 확인해 주세요. |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
+            messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 비밀번호 조건을 다시 확인해 주세요.  |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
 
         def Error_Fill():  # 창에 값이 모두 입력되지 않았을 때 띄우는 에러
             messagebox.showinfo("Error", "Please fill out all of the spaces.")
