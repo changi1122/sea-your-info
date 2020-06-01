@@ -327,7 +327,7 @@ class main(tk.Frame):
 
             arr1 = []
             arr2 = []
-
+            listbox_order = int(len(a)/5)+1
             for i in range(0, len(a), 5):
                 # Updated upstream
                 if a[i + 4] in type_list:
@@ -335,11 +335,19 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list.append(a[k])
                         elif k % 5 == 0:
-                            if j < 9:
-                                txt += " " + "0"
+                            if listbox_order - (j+1) < 10:
+                                txt += " " + "0" + "0"
+                            elif listbox_order - (j+1) < 100:
+                                txt += " 0"
                             else:
                                 txt += " "
-                            txt += str(j + 1) + " | "
+                            # if j < 9:
+                            #     txt += " " + "0"
+                            # else:
+                            #     txt += " "
+                            #txt += str(j + 1) + " | "
+                            txt += str(listbox_order - (j+1)) + " | "
+                            #listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
@@ -351,11 +359,12 @@ class main(tk.Frame):
                     j += 1
                     txt = ""
 
+
             for i in range(len(arr1) - 1, 0, -1):
-                print(arr1[i])
                 listbox.insert(j, arr1[i])
                 j += 1
 
+            listbox_order = int(len(b)/5)+1
             j = 0
             for i in range(0, len(b), 5):
                 # Updated upstream
@@ -364,11 +373,18 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            if j < 9:
-                                txt_sw += " " + "0"
+                            if listbox_order - (j+1) < 10:
+                                txt_sw += " " + "0" + "0"
+                            elif listbox_order - (j+1) < 100:
+                                txt_sw += " 0"
                             else:
                                 txt_sw += " "
-                            txt_sw += str(j + 1) + " | "
+                            # if j < 9:
+                            #     txt_sw += " " + "0"
+                            # else:
+                            #     txt_sw += " "
+                            #txt_sw += str(j + 1) + " | "
+                            txt_sw += str(listbox_order - (j+1)) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
                         else:
@@ -381,7 +397,6 @@ class main(tk.Frame):
 
             j = 0
             for i in range(len(arr2) - 1, 0, -1):
-                print(arr2[i])
                 listbox2.insert(j, arr2[i])
                 j += 1
 
