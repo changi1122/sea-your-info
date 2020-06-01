@@ -67,7 +67,7 @@ def crawler_cbnu():
     print(uploadDate_cbnu)
     print()
 
-    today = '2020-05-21'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
+    #today = '2020-05-26'  # test case <<48행을 지우고 실행하면 각자 실행시키고 있는 날짜를 기준으로 (주말이라 아무것도 없어서 임의로 지정)
 
     # 당일 올라온 게시글의 제목, url, 작성일을 튜플 형태로 묶어 리스트에 저장
     for i in range(0, len(uploadDate_cbnu)):
@@ -88,7 +88,7 @@ def crawler_cbnu():
     # Header : 데이터에 관한 설명
     headers = {
         'Content-Type': 'application/json; charset=utf-8',
-        'Authorization': 'Token 9ae516d4f24b43b0712ad0c6159a9386c9f6b8b7'   # Superuser의 Token 추가
+        'Authorization': 'Token 76042b6aa0deb34d25aa58eafb82a0425f07f433'   # Superuser의 Token 추가
     }
 
     # URL : 목적지 URL
@@ -105,13 +105,13 @@ def crawler_cbnu():
         }
 
         # 현재 DB에 들어있는 게시글 정보와 중복된 것이 있는지 확인
-        i = 0
-        for i in range(0, len(get.response_dict)):
-            if get.response_dict[i]['title'] == data['title']:
+        k = 0
+        for k in range(0, len(get.response_dict)):
+            if get.response_dict[k]['title'] == data['title']:
                 break
-        if get.response_dict[i]['title'] == data['title']:
+        if get.response_dict[k]['title'] == data['title']:
             print('해당 공지사항의 정보는 이미 DB에 저장되어 있습니다.\n')   # 추후 삭제
-            break
+            continue
 
         # Request POST
         response = requests.post(URL, data=json.dumps(data), headers=headers)
@@ -119,17 +119,14 @@ def crawler_cbnu():
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201
         print("response text : ", response.text)       # 응답 텍스트 : JSON 형식 문자열
-
-schedule.every(10).seconds.do(crawler_cbnu)            # scheduler Test
+crawler_cbnu()
+#schedule.every(10).seconds.do(crawler_cbnu)            # scheduler Test
 
 # crawler를 실행시킬 특정 시간을 정한 뒤 pending으로 예약한 작업 실행
 '''
-schedule.every().day.at("12:00").do(crawler_cbnu)
-schedule.every().day.at("16:00").do(crawler_cbnu)
-schedule.every().day.at("21:00").do(crawler_cbnu)
-'''
+schedule.every().hour.do(crawler_cbnu)
 
 while True:
     schedule.run_pending()
     time.sleep(1)
-
+'''
