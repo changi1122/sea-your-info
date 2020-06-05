@@ -49,7 +49,7 @@ class Apps(tk.Tk):
         self.frames = {}
         for F in (
                 StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID,
-                Find_PW):
+                Find_PW, SuperPage):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -94,7 +94,7 @@ class StartPage(tk.Frame):
             Lg.Check(User_token)
             print(User_token)
             if User_token[0] == 1:
-                pass  # 이부분에 슈퍼유저 페이지 삽입
+                controller.show_frame("SuperPage")
             elif User_token[1] == 200:
                 controller.show_frame("main")
             else:
@@ -171,6 +171,328 @@ class StartPage(tk.Frame):
         button1.place(x=40, y=570)
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
+
+
+class SuperPage(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.configure(background='white')
+
+        # 맨 위에 Sea your Info 가 보이는 부분
+        label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
+        label.place(x=100, y=35)
+        global frame_department_notice
+        global frame_school_notice
+        global type_list
+        type_list = []
+        # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
+        image_user = PhotoImage(file="imagefile/user_image.gif")
+        user_image = Label(self, image=image_user, borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=25, y=120)
+
+        def Logout():  # 로그인 했을때 listbox에 남아있는 ID, PW기록 지우기
+            global User_token
+            if listbox.size() != 0:
+                listbox.delete(0, listbox.size())
+
+            if listbox2.size() != 0:
+                listbox2.delete(0, listbox2.size())
+            User_token = []  # 유저 정보 저장하는 리스트 초기화
+            controller.show_frame("StartPage")
+
+        # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
+        button1 = tk.Button(self, text="로그아웃", command=Logout, borderwidth=0,
+                            background='white', font=font_hypertext, fg="#0000FF")
+        button1.place(x=145, y=160)
+        button2 = tk.Button(self, text="회원정보 수정", command=lambda: controller.show_frame("Change_User_Info"),
+                            borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
+        button2.place(x=145, y=185)
+
+        # 라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
+        self.var0 = IntVar()
+        radio_scholar = Checkbutton(self, text="장학금", background='white', font=FB, onvalue=1,
+                                    variable=self.var0, command=self.convert)
+        # font_radiobutton == FB로, Make_List==M_L로 변경
+        radio_scholar.place(x=30, y=290)
+
+        self.var1 = IntVar()
+        radio_job = Checkbutton(self, text="대회", background='white', font=FB, onvalue=2, variable=self.var1,
+                                command=self.convert)
+        radio_job.place(x=130, y=290)
+
+        self.var2 = IntVar()
+        radio_event = Checkbutton(self, text="교환학생", background='white', font=FB, onvalue=3, variable=self.var2,
+                                  command=self.convert)
+        radio_event.place(x=230, y=290)
+
+        self.var3 = IntVar()
+        radio_text1 = Checkbutton(self, text="계절수업", background='white', font=FB, onvalue=4, variable=self.var3,
+                                  command=self.convert)
+        radio_text1.place(x=30, y=360)
+
+        self.var4 = IntVar()
+        radio_text2 = Checkbutton(self, text="등록금", background='white', font=FB, onvalue=5, variable=self.var4,
+                                  command=self.convert)
+        radio_text2.place(x=130, y=360)
+
+        self.var5 = IntVar()
+        radio_text3 = Checkbutton(self, text="신입생", background='white', font=FB, onvalue=6, variable=self.var5,
+                                  command=self.convert)
+        radio_text3.place(x=230, y=360)
+
+        self.var6 = IntVar()
+        radio_text4 = Checkbutton(self, text="외국어", background='white', font=FB, onvalue=7,
+                                  variable=self.var6, command=self.convert)
+        radio_text4.place(x=30, y=430)
+
+        self.var7 = IntVar()
+        radio_text5 = Checkbutton(self, text="인턴쉽,채용", background='white', font=FB, onvalue=8,
+                                  variable=self.var7, command=self.convert)
+        radio_text5.place(x=130, y=430)
+
+        self.var8 = IntVar()
+        radio_text6 = Checkbutton(self, text="특강", background='white', font=FB, onvalue=9,
+                                  variable=self.var8, command=self.convert)
+        radio_text6.place(x=230, y=430)
+
+        self.var9 = IntVar()
+        radio_text7 = Checkbutton(self, text="캡스톤", background='white', font=FB, onvalue=10,
+                                  variable=self.var9, command=self.convert)
+        radio_text7.place(x=30, y=500)
+
+        self.var10 = IntVar()
+        radio_text8 = Checkbutton(self, text="이외", background='white', font=FB, onvalue=11,
+                                  variable=self.var10, command=self.convert)
+        radio_text8.place(x=130, y=500)
+
+        self.var11 = IntVar()
+        radio_text9 = Checkbutton(self, text="모두보기", background='white', font=FB, onvalue=12,
+                                  variable=self.var11, command=self.convert)
+        radio_text9.place(x=230, y=500)
+
+        # 탭 부분 - notebook 이용하면 됨
+        notebook_main = ttk.Notebook(self, width=670, height=470, padding=10)
+        notebook_main.place(x=330, y=115)
+
+        # 탭 부분 중에서 각 프레임 설정 부분
+        # 첫 번째 프레임 설정 부분
+
+        frame_department_notice = Frame(self)
+        notebook_main.add(frame_department_notice, text="  학과 공지  ")
+
+        # 두 번째 프레임 설정 부분
+        frame_school_notice = Frame(self)
+        notebook_main.add(frame_school_notice, text="  학교 공지  ")
+
+        # Updated upstream
+        scrollbar = tk.Scrollbar(frame_school_notice)
+        scrollbar.pack(side="right", fill="y")
+        listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460,
+                             font=font_listbox_content)
+
+        scrollbar2 = tk.Scrollbar(frame_department_notice)
+        scrollbar2.pack(side="right", fill="y")
+        listbox2 = tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set, width=660, height=460,
+                              selectmode="extended", font=font_listbox_content)
+
+        def Show_data():
+            global type_list
+            global url_list, url_list_sw
+            # 리스트 박스 1,2에 문자열이 있을 경우 이전 data 삭제
+            if listbox.size() != 0:
+                listbox.delete(0, listbox.size())
+
+            if listbox2.size() != 0:
+                listbox2.delete(0, listbox2.size())
+
+            print(listbox.size())
+            global a
+            a = []
+            global b
+            b = []
+            Gposts.Get_Department(a)
+            Gposts.Get_SW(b)
+            # Stashed changes
+
+            txt = ""
+            txt_sw = ""
+            url_list = []
+            url_list_sw = []
+            j = 0
+            print("-----------")
+            print(a)
+            print(b)
+            print(type_list)
+            print("-----------")
+
+            arr1 = []
+            arr2 = []
+            listbox_order = int(len(a) / 5) + 1
+
+            global cnt
+            cnt = 0
+            for i in range(0, len(a), 5):
+                if a[i + 4] in type_list:
+                    cnt += 1
+
+            for i in range(0, len(a), 5):
+                # Updated upstream
+                if a[i + 4] in type_list:
+                    for k in range(i, i + 4):
+                        if k % 5 == 3:
+                            url_list.append(a[k])
+                        elif k % 5 == 0:
+                            if cnt - j < 10:  # 이 조건문은 숫자 앞에 0을 붙여 주기 위한 조건문이다.
+                                txt += " " + "0" + "0"
+                            elif cnt - j < 100:
+                                txt += " 0"
+                            else:
+                                txt += " "
+                            # if j < 9:
+                            #     txt += " " + "0"
+                            # else:
+                            #     txt += " "
+                            # txt += str(j + 1) + " | "
+                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
+                            txt += str(cnt - j) + " | "
+                            # listbox_order += 1
+                        elif k % 5 != 2:
+                            txt += " " + str(a[k]) + " | "
+                        else:
+                            txt += " " + str(a[k][0:10])
+                    # Stashed changes
+                    # listbox.insert(j, txt)
+                    arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
+                    # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
+                    j += 1
+                    txt = ""
+
+            for i in range(len(arr1) - 1, -1, -1):
+                listbox.insert(j, arr1[i])
+                j += 1
+
+            # 여기서부터 b 배열
+            global cnt2
+            cnt2 = 0
+            for i in range(0, len(b), 5):
+                if b[i + 4] in type_list:
+                    cnt2 += 1
+
+            listbox_order = int(len(b) / 5) + 1
+            j = 0
+            for i in range(0, len(b), 5):
+                # Updated upstream
+                if b[i + 4] in type_list:
+                    for k in range(i, i + 4):
+                        if k % 5 == 3:
+                            url_list_sw.append(b[k])
+                        elif k % 5 == 0:
+                            # if listbox_order - (j + 1) < 10:
+                            if cnt2 - j < 10:
+                                txt_sw += " " + "0" + "0"
+                            # elif listbox_order - (j + 1) < 100:
+                            elif cnt2 - j < 100:
+                                txt_sw += " 0"
+                            else:
+                                txt_sw += " "
+
+                            # if j < 9:
+                            #     txt_sw += " " + "0"
+                            # else:
+                            #     txt_sw += " "
+                            # txt_sw += str(j + 1) + " | "
+                            # txt_sw += str(listbox_order - (j + 1)) + " | "
+
+                            txt_sw += str(cnt2 - j) + " | "
+                        elif k % 5 != 2:
+                            txt_sw += " " + str(b[k]) + " | "
+
+                        else:
+                            txt_sw += " " + str(b[k][0:10])
+                    # Stashed changes
+                    # listbox2.insert(j, txt_sw)
+                    arr2.append(txt_sw)
+                    j += 1
+                    txt_sw = ""
+
+            j = 0
+            for i in range(len(arr2) - 1, -1, -1):
+                listbox2.insert(j, arr2[i])
+                j += 1
+
+            listbox.pack()
+            listbox2.pack()
+            print(url_list)
+            print(url_list_sw)
+
+            listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection(), 1))  # 더블클릭 감지하는 코드
+            listbox2.bind("<Double-Button>", lambda event: openweb(listbox2.curselection(), 2))
+
+            scrollbar["command"] = listbox.yview
+            scrollbar["command"] = listbox2.yview
+
+        # url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
+
+        def openweb(Data, sep):
+            global url_list, url_list_sw
+            url = Data[0]
+            if sep == 1:
+                # url = int(len(a) / 5) - 1 - url
+                url = cnt - 1 - url
+                webbrowser.open(url_list[url])
+            else:
+                # url = int(len(b) / 5) - 1 - url
+                url = cnt2 - 1 - url
+                webbrowser.open(url_list_sw[url])
+
+        def Delet_data():
+            listbox.pack()
+            listbox2.pack()
+            Show_data()
+
+        # Stashed changes
+        # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
+                           background="#00b0f0", font=font_Cheack_B, command=Delet_data)
+        button.place(x=230, y=560)
+
+    # cheack box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
+    def convert(self):
+        global type_list
+        title = ["scholarship", "contest", "exchange", "vacation", "tuition", "freshman",
+                 "foreign", "job", "lecture", "capstone", "other"]
+
+        type_list = []
+        if self.var0.get() == 1:
+            type_list.append(title[self.var0.get() - 1])
+        if self.var1.get() == 2:
+            type_list.append(title[self.var1.get() - 1])
+        if self.var2.get() == 3:
+            type_list.append(title[self.var2.get() - 1])
+        if self.var3.get() == 4:
+            type_list.append(title[self.var3.get() - 1])
+        if self.var4.get() == 5:
+            type_list.append(title[self.var4.get() - 1])
+        if self.var5.get() == 6:
+            type_list.append(title[self.var5.get() - 1])
+        if self.var6.get() == 7:
+            type_list.append(title[self.var6.get() - 1])
+        if self.var7.get() == 8:
+            type_list.append(title[self.var7.get() - 1])
+        if self.var8.get() == 9:
+            type_list.append(title[self.var8.get() - 1])
+        if self.var9.get() == 10:
+            type_list.append(title[self.var9.get() - 1])
+        if self.var10.get() == 11:
+            type_list.append(title[self.var10.get() - 1])
+        if self.var11.get() == 12:
+            for i in range(0, 11):
+                type_list.append(title[i])
+
+        print(type_list)
 
 
 class main(tk.Frame):
