@@ -11,7 +11,8 @@ from tkinter import messagebox
 import webbrowser
 
 UserInfo = []
-User_token=[]
+User_token = []
+
 
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -31,7 +32,7 @@ class Apps(tk.Tk):
         global font_Cheack_B
         font_Cheack_B = tkfont.Font(size=11, weight="bold", family='Helvetica')
         global font_listbox_content
-        font_listbox_content = tkfont.Font(size=13, family='바른고딕')
+        font_listbox_content = tkfont.Font(size=13, family='휴먼모음T')
         global font_radiobutton
         font_radiobutton = tkfont.Font(size=12, family='바른고딕', weight="bold")
 
@@ -60,6 +61,7 @@ class Apps(tk.Tk):
     def show_frame(self, page_name):
         frame = self.frames[page_name]
         frame.tkraise()
+
 
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -92,14 +94,14 @@ class StartPage(tk.Frame):
             Lg.Check(User_token)
             print(User_token)
             if User_token[0] == 1:
-                pass  #이부분에 슈퍼유저 페이지 삽입
+                pass  # 이부분에 슈퍼유저 페이지 삽입
             elif User_token[1] == 200:
                 controller.show_frame("main")
             else:
                 txt = ""
                 for i in range(2, len(User_token)):
                     txt += User_token[i] + '\n'
-                User_token=[]
+                User_token = []
                 messagebox.showwarning("Error", txt)
 
         # 비밀번호 별표로 안보이게 가리는 부분
@@ -170,6 +172,7 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
+
 class main(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -196,7 +199,7 @@ class main(tk.Frame):
 
             if listbox2.size() != 0:
                 listbox2.delete(0, listbox2.size())
-            User_token=[] # 유저 정보 저장하는 리스트 초기화
+            User_token = []  # 유저 정보 저장하는 리스트 초기화
             controller.show_frame("StartPage")
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
@@ -265,7 +268,7 @@ class main(tk.Frame):
         radio_text8.place(x=130, y=500)
 
         self.var11 = IntVar()
-        radio_text9 = Checkbutton(self, text="None", background='white', font=FB, onvalue=12,
+        radio_text9 = Checkbutton(self, text="모두보기", background='white', font=FB, onvalue=12,
                                   variable=self.var11, command=self.convert)
         radio_text9.place(x=230, y=500)
 
@@ -305,7 +308,9 @@ class main(tk.Frame):
                 listbox2.delete(0, listbox2.size())
 
             print(listbox.size())
+            global a
             a = []
+            global b
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
@@ -321,6 +326,17 @@ class main(tk.Frame):
             print(b)
             print(type_list)
             print("-----------")
+
+            arr1 = []
+            arr2 = []
+            listbox_order = int(len(a) / 5) + 1
+
+            global cnt
+            cnt = 0
+            for i in range(0, len(a), 5):
+                if a[i + 4] in type_list:
+                    cnt += 1
+
             for i in range(0, len(a), 5):
                 # Updated upstream
                 if a[i + 4] in type_list:
@@ -328,20 +344,43 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list.append(a[k])
                         elif k % 5 == 0:
-                            if j < 9:
-                                txt += " " + "0"
+                            if cnt - j < 10:  # 이 조건문은 숫자 앞에 0을 붙여 주기 위한 조건문이다.
+                                txt += " " + "0" + "0"
+                            elif cnt - j < 100:
+                                txt += " 0"
                             else:
                                 txt += " "
-                            txt += str(j + 1) + " | "
+                            # if j < 9:
+                            #     txt += " " + "0"
+                            # else:
+                            #     txt += " "
+                            # txt += str(j + 1) + " | "
+                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
+                            txt += str(cnt - j) + " | "
+                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
                             txt += " " + str(a[k][0:10])
                     # Stashed changes
-                    listbox.insert(j, txt)
+                    # listbox.insert(j, txt)
+                    arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
+                    # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
                     j += 1
                     txt = ""
 
+            for i in range(len(arr1) - 1, -1, -1):
+                listbox.insert(j, arr1[i])
+                j += 1
+
+            # 여기서부터 b 배열
+            global cnt2
+            cnt2 = 0
+            for i in range(0, len(b), 5):
+                if b[i + 4] in type_list:
+                    cnt2 += 1
+
+            listbox_order = int(len(b) / 5) + 1
             j = 0
             for i in range(0, len(b), 5):
                 # Updated upstream
@@ -350,19 +389,38 @@ class main(tk.Frame):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            if j < 9:
-                                txt_sw += " " + "0"
+                            # if listbox_order - (j + 1) < 10:
+                            if cnt2 - j < 10:
+                                txt_sw += " " + "0" + "0"
+                            # elif listbox_order - (j + 1) < 100:
+                            elif cnt2 - j < 100:
+                                txt_sw += " 0"
                             else:
                                 txt_sw += " "
-                            txt_sw += str(j + 1) + " | "
+
+                            # if j < 9:
+                            #     txt_sw += " " + "0"
+                            # else:
+                            #     txt_sw += " "
+                            # txt_sw += str(j + 1) + " | "
+                            # txt_sw += str(listbox_order - (j + 1)) + " | "
+
+                            txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
+
                         else:
                             txt_sw += " " + str(b[k][0:10])
                     # Stashed changes
-                    listbox2.insert(j, txt_sw)
+                    # listbox2.insert(j, txt_sw)
+                    arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
+
+            j = 0
+            for i in range(len(arr2) - 1, -1, -1):
+                listbox2.insert(j, arr2[i])
+                j += 1
 
             listbox.pack()
             listbox2.pack()
@@ -381,8 +439,12 @@ class main(tk.Frame):
             global url_list, url_list_sw
             url = Data[0]
             if sep == 1:
+                # url = int(len(a) / 5) - 1 - url
+                url = cnt - 1 - url
                 webbrowser.open(url_list[url])
             else:
+                # url = int(len(b) / 5) - 1 - url
+                url = cnt2 - 1 - url
                 webbrowser.open(url_list_sw[url])
 
         def Delet_data():
@@ -432,6 +494,7 @@ class main(tk.Frame):
 
         print(type_list)
 
+
 class Make_User_page(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -462,7 +525,7 @@ class Make_User_page(tk.Frame):
                     "Error", txt)
 
         def Error_Messagebox():  # 비밀번호가 조건에 맞지 않을 때 띄우는 에러
-            messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 다시 확인해 주세요. |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
+            messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 비밀번호 조건을 다시 확인해 주세요.  |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")
 
         def Error_Fill():  # 창에 값이 모두 입력되지 않았을 때 띄우는 에러
             messagebox.showinfo("Error", "Please fill out all of the spaces.")
@@ -568,6 +631,7 @@ class Make_User_page(tk.Frame):
         button_back.image = image_back
         button_back.place(x=235, y=550)
 
+
 class Change_User_Info(tk.Frame):
 
     def __init__(self, parent, controller):
@@ -579,12 +643,12 @@ class Change_User_Info(tk.Frame):
         label.place(x=100, y=35)
 
         def clickMe():
-            message=[]
-            #messagebox.showinfo("Button CLicked", str1.get())
-            #messagebox.showinfo("Button CLicked", str2.get())
-            #messagebox.showinfo("Button CLicked", str3.get())
+            message = []
+            # messagebox.showinfo("Button CLicked", str1.get())
+            # messagebox.showinfo("Button CLicked", str2.get())
+            # messagebox.showinfo("Button CLicked", str3.get())
             print(User_token[2])
-            CH=Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
+            CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
             CH.UUD_INFO(message)
             print(message)
             display1.delete(0, tk.END)
@@ -633,11 +697,11 @@ class Change_User_Info(tk.Frame):
         LabelWidget3.place(x=375, y=410)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=410)
-        #비번 안보이게 하는 부분
+        # 비번 안보이게 하는 부분
         display3.default_show_val = display3['show']
         display3['show'] = "•"
         checkbutton1 = tk.Checkbutton(self, text="Hide password", onvalue=True, offvalue=False, command=toggle_password,
-                                     background='white')
+                                      background='white')
         checkbutton1.var = tk.BooleanVar(value=True)
         checkbutton1['variable'] = checkbutton1.var
         checkbutton1.place(x=620, y=405)
@@ -648,11 +712,11 @@ class Change_User_Info(tk.Frame):
         display4 = tk.Entry(self, width=20, textvariable=str4)
         display4.place(x=475, y=470)
 
-        #비번 안보이게 하는 부분
+        # 비번 안보이게 하는 부분
         display4.default_show_val = display4['show']
         display4['show'] = "•"
         checkbutton2 = tk.Checkbutton(self, text="Hide password", onvalue=True, offvalue=False, command=toggle_password,
-                                     background='white')
+                                      background='white')
         checkbutton2.var = tk.BooleanVar(value=True)
         checkbutton2['variable'] = checkbutton2.var
         checkbutton2.place(x=620, y=465)
@@ -660,7 +724,7 @@ class Change_User_Info(tk.Frame):
         def Error_Messagebox():  # 비밀번호가 조건에 맞지 않을 때 띄우는 에러
             messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 다시 확인해 주세요. |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")  # 메시지 다시 만들기
 
-        #비번 조건 확인
+        # 비번 조건 확인
         def button_hit():  # Sign up for SYI 눌렸을 때 반응하는 함수
             # 암호가 조건에 맞는지 확인하는 것
             chk_pw = str4.get()
@@ -697,15 +761,13 @@ class Change_User_Info(tk.Frame):
         label_Queimage.bind("<Enter>", on_enter)
         label_Queimage.bind("<Leave>", on_leave)
 
-
         button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=button_hit, fg="white",
                            background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
-
         def Empty():
             global User_token
-            User_token=[]
+            User_token = []
             controller.show_frame("main")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
@@ -713,6 +775,7 @@ class Change_User_Info(tk.Frame):
                                 command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=235, y=550)
+
 
 class Find_User_Info(tk.Frame):
     def __init__(self, parent, controller):
@@ -748,11 +811,11 @@ class Find_User_Info(tk.Frame):
             ID = FU_PW_ID.get()
             Email = FU_PW_Email.get()
             Delet()
-            self.onReturn23(ID,Email)
+            self.onReturn23(ID, Email)
 
-        button1 = tk.Button(self, text="   Enter   ", command=lambda:Call_OR1())
+        button1 = tk.Button(self, text="   Enter   ", command=lambda: Call_OR1())
         button1.place(x=720, y=270)
-        button2 = tk.Button(self, text="   Enter   ", command=lambda:Call_OR2())
+        button2 = tk.Button(self, text="   Enter   ", command=lambda: Call_OR2())
         button2.place(x=720, y=557)
 
         def Delet():
@@ -762,7 +825,7 @@ class Find_User_Info(tk.Frame):
 
         def Empty():
             global UserInfo
-            UserInfo=[]
+            UserInfo = []
             Delet()
             controller.show_frame("StartPage")
 
@@ -775,6 +838,7 @@ class Find_User_Info(tk.Frame):
         # 아이디찾기 부분에서 enter눌렀을 때 작동해야 하는 함수
 
         # PW찾기 부분에서 etner눌렀을때 작동해야 하는 함수
+
     def onReturn23(self, PW_id, PW_Email):
         global UserInfo
         self.controller.show_frame("Find_PW")
@@ -782,7 +846,7 @@ class Find_User_Info(tk.Frame):
         FU_PW.find_PW(UserInfo)
 
         self.controller.show_frame("Find_PW")
-        #clickMe() clickme처럼 이곳에 작동해야 하는 함수 추가하면 됨
+        # clickMe() clickme처럼 이곳에 작동해야 하는 함수 추가하면 됨
 
     def onReturn1(self, ID_Email):
         global UserInfo
@@ -790,6 +854,7 @@ class Find_User_Info(tk.Frame):
         FU_ID.find_ID(UserInfo)
         print(1111111111)
         self.controller.show_frame("Find_ID")
+
 
 class Find_ID(tk.Frame):
     def __init__(self, parent, controller):
@@ -808,14 +873,15 @@ class Find_ID(tk.Frame):
                 print(UserInfo)
                 if UserInfo[0] != 'None':
                     print(22222222)
-                    label2 = tk.Label(self, text="등록하신 아이디는 %s 입니다."%(UserInfo[0]), font=controller.title_font, background='white')
+                    label2 = tk.Label(self, text="등록하신 아이디는 %s 입니다." % (UserInfo[0]), font=controller.title_font,
+                                      background='white')
                     label2.place(x=250, y=300)
                 else:
                     label3 = tk.Label(self, text="   유저가 존제하지 않습니다                       ", font=controller.title_font,
                                       background='white')
                     label3.place(x=250, y=300)
 
-        _widget = tk.LabelFrame(self, bg='white',bd=0)      # 화면에 user의 아이디 혹은 존제하지 않음을 출력하기 위해 사용하는 Event를 사용하기 위해 추가
+        _widget = tk.LabelFrame(self, bg='white', bd=0)  # 화면에 user의 아이디 혹은 존제하지 않음을 출력하기 위해 사용하는 Event를 사용하기 위해 추가
         _widget.pack(fill=BOTH, expand=1)
         _widget.bind("<Enter>", Show)
 
@@ -823,11 +889,12 @@ class Find_ID(tk.Frame):
 
         def Empty():
             global UserInfo
-            UserInfo=[]
+            UserInfo = []
             controller.show_frame("StartPage")
 
         button1 = tk.Button(self, text="    확인    ", command=Empty)
         button1.place(x=800, y=500)
+
 
 class Find_PW(tk.Frame):
     def __init__(self, parent, controller):
@@ -844,7 +911,8 @@ class Find_PW(tk.Frame):
                 print(UserInfo)
                 if UserInfo[0] != 'None':
                     print(22222222)
-                    label2 = tk.Label(self, text="임시 비밀번호가 발급되었습니다.\n 접속후 PW를 변경해 주세요\n 임시비밀번호 : %s"%(UserInfo[0]), font=controller.title_font,
+                    label2 = tk.Label(self, text="임시 비밀번호가 발급되었습니다.\n 접속후 PW를 변경해 주세요\n 임시비밀번호 : %s" % (UserInfo[0]),
+                                      font=controller.title_font,
                                       background='white')
                     label2.place(x=250, y=300)
                 else:
@@ -867,6 +935,7 @@ class Find_PW(tk.Frame):
         button1 = tk.Button(self, text="    확인     ", command=Empty)
         button1.place(x=800, y=500)
 
+
 class Mk_U_Suss(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -886,6 +955,7 @@ class Mk_U_Suss(tk.Frame):
                             font=font_Cheack_B)
         button1.place(x=700, y=500)
 
+
 class ch_U_Suss(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -899,11 +969,12 @@ class ch_U_Suss(tk.Frame):
 
         def Empty():
             global User_token
-            User_token=[]
+            User_token = []
             controller.show_frame("main")
 
         button1 = tk.Button(self, text="돌아가기", command=Empty)
         button1.place(x=700, y=500)
+
 
 if __name__ == "__main__":
     app = Apps()
