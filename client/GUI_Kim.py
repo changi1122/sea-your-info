@@ -49,7 +49,7 @@ class Apps(tk.Tk):
         self.frames = {}
         for F in (
                 StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID,
-                Find_PW, SuperPage):
+                Find_PW, SuperPage, SuperShowUserINFO, SuperChangeListINFO):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -62,7 +62,7 @@ class Apps(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
-
+# 시작 페이지
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -172,7 +172,7 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
-
+#슈퍼유저 관련 페이지
 class SuperPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -206,8 +206,9 @@ class SuperPage(tk.Frame):
         button1 = tk.Button(self, text="로그아웃", command=Logout, borderwidth=0,
                             background='white', font=font_hypertext, fg="#0000FF")
         button1.place(x=145, y=160)
-        button2 = tk.Button(self, text="회원정보 수정", command=lambda: controller.show_frame("Change_User_Info"),
+        button2 = tk.Button(self, text="회원정보 관리", command=lambda: controller.show_frame("SuperShowUserINFO"),
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
+        # 유저들이 나오는 페이지로 넘어가는 부분
         button2.place(x=145, y=185)
 
         # 라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
@@ -436,16 +437,17 @@ class SuperPage(tk.Frame):
         # url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
 
         def openweb(Data, sep):
+            # 이부분에 스토리 보드와 같이 정보수정으로 넘어가는 페이지 구현 필요
             global url_list, url_list_sw
             url = Data[0]
             if sep == 1:
                 # url = int(len(a) / 5) - 1 - url
                 url = cnt - 1 - url
-                webbrowser.open(url_list[url])
             else:
                 # url = int(len(b) / 5) - 1 - url
                 url = cnt2 - 1 - url
-                webbrowser.open(url_list_sw[url])
+            controller.show_frame("SuperChangeListINFO")
+
 
         def Delet_data():
             listbox.pack()
@@ -494,7 +496,50 @@ class SuperPage(tk.Frame):
 
         print(type_list)
 
+class SuperShowUserINFO(tk.Frame):   # 스토리 보드상 가입된 유저 목록 출력하는 화면 부분
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.configure(background='white')
+        label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
+        label.place(x=100, y=35)
 
+
+        image_user = PhotoImage(file="imagefile/user_image.gif")
+        user_image = Label(self, image=image_user, borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=25, y=120)
+
+        # 밑에 추가로 구현 필요
+        notebook_main = ttk.Notebook(self, width=670, height=470, padding=10)
+        notebook_main.place(x=330, y=115)
+
+        userpage = Frame(self)
+        notebook_main.add(userpage, text="  유저 정보  ")
+
+        scrollbar = tk.Scrollbar(userpage)
+        scrollbar.pack(side="right", fill="y")
+        listbox = tk.Listbox(userpage, yscrollcommand=scrollbar.set, width=660, height=460,
+                             font=font_listbox_content)
+
+        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
+                                command=lambda: controller.show_frame("SuperPage"), padx=10, pady=10, image=image_back)
+        button_back.image = image_back
+        button_back.place(x=25, y=550)
+
+
+class SuperChangeListINFO(tk.Frame):   # 스토리 보드상 리스트의 항복 변경하는 부분
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.configure(background='white')
+        label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
+        label.place(x=100, y=35)
+        #밑에 추가로 구현 필요
+# DB쪽 put-post사용해야함, 이거는 제가 구현 할께요 - 김성욱 ( ㅇ우창ㅇ이랑 얘기가 필요해요 )
+
+#일반 유져 관련 페이지
 class main(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
