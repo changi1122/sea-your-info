@@ -20,13 +20,15 @@ from django.conf.urls import url, include
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
 
-from posts.views import PostViewSet, PostSWViewSet
+from posts.views import PostViewSet, PostSWViewSet, PostCountViewSet, PostSWCountViewSet
 from user.views import UserViewSet, LostFindViewSet, CheckSuperuserViewSet
 
 # Router
 router = routers.DefaultRouter()
 router.register('posts', PostViewSet) # prefix = posts , viewset = PostViewSet
 router.register('posts_sw', PostSWViewSet) # prefix = posts_sw, viewset = PostSWViewSet
+router.register('posts_count', PostCountViewSet)
+router.register('posts_sw_count', PostSWCountViewSet)
 router.register('user', UserViewSet)
 router.register('lost-find', LostFindViewSet)
 router.register('issuperuser', CheckSuperuserViewSet)
