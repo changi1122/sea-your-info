@@ -76,7 +76,6 @@ class StartPage(tk.Frame):
         self.configure(background='white')
         # 맨 위의 Sea Your Info 들어가는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
-        # label.pack(side="top", fill="x", pady=10)
         label.place(x=100, y=35)
 
         image_mainlogo = PhotoImage(file='imagefile/logo2_color.gif')
@@ -141,9 +140,6 @@ class StartPage(tk.Frame):
         str2 = StringVar()
         LabelWidget3 = tk.Label(self, text="PW", background='white', font=font_logintext)
         LabelWidget3.place(x=40, y=280)
-        # bullet = "\u2022"
-        # display3 = tk.Entry(self, width=20, textvariable=str2, show=bullet)
-        # bullet = "\u2022"
         display3 = tk.Entry(self, width=20, textvariable=str2)
         display3.place(x=115, y=285)
 
@@ -326,7 +322,6 @@ class SuperPage(tk.Frame):
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
-            # Stashed changes
 
             txt = ""
             txt_sw = ""
@@ -362,20 +357,11 @@ class SuperPage(tk.Frame):
                                 txt += " 0"
                             else:
                                 txt += " "
-                            # if j < 9:
-                            #     txt += " " + "0"
-                            # else:
-                            #     txt += " "
-                            # txt += str(j + 1) + " | "
-                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
                             txt += str(cnt - j) + " | "
-                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
                             txt += " " + str(a[k][0:10])
-                    # Stashed changes
-                    # listbox.insert(j, txt)
                     arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
                     # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
                     j += 1
@@ -401,30 +387,18 @@ class SuperPage(tk.Frame):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            # if listbox_order - (j + 1) < 10:
                             if cnt2 - j < 10:
                                 txt_sw += " " + "0" + "0"
-                            # elif listbox_order - (j + 1) < 100:
                             elif cnt2 - j < 100:
                                 txt_sw += " 0"
                             else:
                                 txt_sw += " "
-
-                            # if j < 9:
-                            #     txt_sw += " " + "0"
-                            # else:
-                            #     txt_sw += " "
-                            # txt_sw += str(j + 1) + " | "
-                            # txt_sw += str(listbox_order - (j + 1)) + " | "
-
                             txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
 
                         else:
                             txt_sw += " " + str(b[k][0:10])
-                    # Stashed changes
-                    # listbox2.insert(j, txt_sw)
                     arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
@@ -452,10 +426,8 @@ class SuperPage(tk.Frame):
             global url_list, url_list_sw
             url = Data[0]
             if sep == 1:
-                # url = int(len(a) / 5) - 1 - url
                 url = cnt - 1 - url
             else:
-                # url = int(len(b) / 5) - 1 - url
                 url = cnt2 - 1 - url
 
             controller.show_frame("SuperChangeListINFO")
@@ -464,8 +436,6 @@ class SuperPage(tk.Frame):
             listbox.pack()
             listbox2.pack()
             Show_data()
-
-        # Stashed changes
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
@@ -554,15 +524,7 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         a = []
         userlist = []
         newuserlist = []
-        # print("--------------")
         userlist = Getalluser.Getuser.Getuser(a)
-        # print(userlist)
-        # print("--------------")
-        # for i in range(len(userlist)):
-        #     if i % 5 == 0:
-        #         print()
-        #     print(userlist[i])
-        # print(len(userlist))
 
         k = 0
         subcnt = 0
@@ -575,7 +537,6 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
                     string += " | " + str(userlist[j])
                 if userlist[j] == True:  # 만약 구독을 한 사람이라면 subcnt+=1해준다.
                     subcnt += 1
-                # newuserlist.append(userlist[j])
             newuserlist.append(string)
             print(newuserlist[k])
             listbox.insert(k, newuserlist[k])
@@ -765,7 +726,6 @@ class main(tk.Frame):
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
-            # Stashed changes
 
             txt = ""
             txt_sw = ""
@@ -780,7 +740,6 @@ class main(tk.Frame):
 
             arr1 = []
             arr2 = []
-            listbox_order = int(len(a) / 5) + 1
 
             global cnt
             cnt = 0
@@ -789,7 +748,6 @@ class main(tk.Frame):
                     cnt += 1
 
             for i in range(0, len(a), 5):
-                # Updated upstream
                 if a[i + 4] in type_list:
                     for k in range(i, i + 4):
                         if k % 5 == 3:
@@ -801,20 +759,11 @@ class main(tk.Frame):
                                 txt += " 0"
                             else:
                                 txt += " "
-                            # if j < 9:
-                            #     txt += " " + "0"
-                            # else:
-                            #     txt += " "
-                            # txt += str(j + 1) + " | "
-                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
                             txt += str(cnt - j) + " | "
-                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
                             txt += " " + str(a[k][0:10])
-                    # Stashed changes
-                    # listbox.insert(j, txt)
                     arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
                     # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
                     j += 1
@@ -834,36 +783,23 @@ class main(tk.Frame):
             listbox_order = int(len(b) / 5) + 1
             j = 0
             for i in range(0, len(b), 5):
-                # Updated upstream
                 if b[i + 4] in type_list:
                     for k in range(i, i + 4):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            # if listbox_order - (j + 1) < 10:
                             if cnt2 - j < 10:
                                 txt_sw += " " + "0" + "0"
-                            # elif listbox_order - (j + 1) < 100:
                             elif cnt2 - j < 100:
                                 txt_sw += " 0"
                             else:
                                 txt_sw += " "
-
-                            # if j < 9:
-                            #     txt_sw += " " + "0"
-                            # else:
-                            #     txt_sw += " "
-                            # txt_sw += str(j + 1) + " | "
-                            # txt_sw += str(listbox_order - (j + 1)) + " | "
-
                             txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
 
                         else:
                             txt_sw += " " + str(b[k][0:10])
-                    # Stashed changes
-                    # listbox2.insert(j, txt_sw)
                     arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
@@ -1044,18 +980,10 @@ class Make_User_page(tk.Frame):
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
-        # Label_PW_Rool = tk.Label(self,
-        #                          text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
-        #                          background="white")
         LabelWidget3.place(x=375, y=430)
         # Label_PW_Rool.place(x=475, y=450)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=430)
-
-        # button = tk.Button(self, borderwidth=3, relief="flat", text="Sign up for Sea Your Info",
-        #                        command=clickMe,
-        #                        fg="white", background="#00b0f0", font=font_Cheack_B)
-        # button.place(x=475, y=560)
 
         # 물음표 이미지 띄우는 부분
         que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
@@ -1101,9 +1029,6 @@ class Change_User_Info(tk.Frame):
 
         def clickMe():
             message = []
-            # messagebox.showinfo("Button CLicked", str1.get())
-            # messagebox.showinfo("Button CLicked", str2.get())
-            # messagebox.showinfo("Button CLicked", str3.get())
             print(User_token[2])
             CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
             CH.UUD_INFO(message)
