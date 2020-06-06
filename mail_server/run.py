@@ -1,6 +1,8 @@
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from mail_server.select_user import *
+from mail_server.select_post import *
 
 def sender(recidpients, sw_post, department_post):
     server = smtplib.SMTP('smtp.gmail.com', 587)
@@ -28,4 +30,8 @@ if __name__ == '__main__':
     list_json = []
     sw_post=[]
     department_post=[]
+    School(department_post)
+    Software(sw_post)
+    selectUser(list_json)
+
     sender(list_json, sw_post, department_post)

@@ -22,7 +22,7 @@ def School(lst_Dep=[]):
     for i in range(0, len(response_dict)):
         for key in response_dict[i].keys():
             if response_dict[i]['isSent'] == False:
-                print(response_dict[i][key])
+                #print(response_dict[i][key])
                 lst_Dep.append(response_dict[i][key])
 
     return lst_Dep
