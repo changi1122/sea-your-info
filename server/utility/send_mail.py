@@ -6,7 +6,7 @@ from email.mime.text import MIMEText
 
 # 발신 계정 설정 (Gmail)
 # 계정 설정에서 보안 수준이 낮은 앱의 액세스를 허용하여야 합니다!!!
-GMAIL_ID = "a@gmail.com"
+GMAIL_ID = "syi.superuser@gmail.com"
 GMAIL_PASSWORD = "password"
 
 
@@ -51,7 +51,7 @@ def send_new_password(destination, new_password, username) :
             </div>
             <div style="margin: 40px 20px;">
                 <p style="color: gray; margin: 0;">비밀번호를 재설정한 적이 없는데 메일을 받았다면 다른 사람이 내 계정 정보를 알아내어 접근했을 수 있습니다. 비밀번호를 다시 설정하세요.</p>
-                <p style="margin: 0; margin-top: 10px; color: gray"><b>정보바다(Sea your info)</b>에 가입한 적이 없거나, 수신 차단, 탈퇴하고 싶다면 <a href="mailto:changi112242@gmail.com">changi112242@gmail.com</a>으로 문의하세요.</p>
+                <p style="margin: 0; margin-top: 10px; color: gray"><b>정보바다(Sea your info)</b>에 가입한 적이 없거나, 수신 차단, 탈퇴하고 싶다면 <a href="mailto:syi.superuser@gmail.com">syi.superuser@gmail.com</a>으로 문의하세요.</p>
             </div>
         </body>
     </html>
