@@ -24,6 +24,8 @@ class Apps(tk.Tk):
         font_logintext = tkfont.Font(family='Helvetica', size=15)
         global font_startpageinfo
         font_startpageinfo = tkfont.Font(family='여기어때 잘난체 OTF', size=18)
+        global font_superuser_finduser
+        font_superuser_finduser = tkfont.Font(family='여기어때 잘난체 OTF', size=14)
         # 여기어때 잘난체 OTF 다른 컴퓨터에서도 잘 작동하는지 확인 필요
         # 없다면 폰트 파일 공유해야할듯
         global FB
@@ -34,6 +36,8 @@ class Apps(tk.Tk):
         font_Cheack_B = tkfont.Font(size=11, weight="bold", family='Helvetica')
         global font_listbox_content
         font_listbox_content = tkfont.Font(size=13, family='휴먼모음T')
+        global font_listbox_content2
+        font_listbox_content2 = tkfont.Font(size=16, family='휴먼모음T')
         global font_radiobutton
         font_radiobutton = tkfont.Font(size=12, family='바른고딕', weight="bold")
 
@@ -216,7 +220,7 @@ class SuperPage(tk.Frame):
         button3 = tk.Button(self, text="통계랑 보기", command=lambda: controller.show_frame("SuperShowUserINFO"),
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         button3.place(x=145, y=210)
-        #TODO 통계량 보기 부분 프레임 추가해야함
+        # TODO 통계량 보기 부분 프레임 추가해야함
 
         # 라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
         self.var0 = IntVar()
@@ -514,6 +518,16 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
+        def highlight_searched(*args):
+            search = search_var.get()
+            for i, item in enumerate(all_listbox_items):
+                if search.lower() in item.lower():
+                    listbox.selection_set(i)
+                else:
+                    listbox.selection_clear(i)
+            if search == '':
+                listbox.selection_clear(0, END)
+
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
@@ -529,7 +543,7 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         scrollbar = tk.Scrollbar(userpage)
         scrollbar.pack(side="right", fill="y")
         listbox = tk.Listbox(userpage, yscrollcommand=scrollbar.set, width=660, height=460,
-                             font=font_listbox_content)
+                             font=font_listbox_content2)
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
@@ -559,7 +573,7 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
                     continue
                 else:
                     string += " | " + str(userlist[j])
-                if userlist[j] == True:#만약 구독을 한 사람이라면 subcnt+=1해준다.
+                if userlist[j] == True:  # 만약 구독을 한 사람이라면 subcnt+=1해준다.
                     subcnt += 1
                 # newuserlist.append(userlist[j])
             newuserlist.append(string)
@@ -578,7 +592,17 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         # button1 = Button(self, text="type별 검색 통계량 보기", command=lambda: controller.show_frame("Make_User_page"),
         #                  # TODO 이거 make user page로 넘어가면 안되고 통계량 보는 새로운 frame만들어줘야한다.
         #                  background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
-        #button1.place(x=30, y=280)
+        # button1.place(x=30, y=280)
+
+        all_listbox_items = listbox.get(0, END)
+
+        search_label = tk.Label(self, text="사용자 검색", font=font_superuser_finduser, background='white')
+        search_label.place(x=30, y=300)
+
+        search_var = StringVar()
+        search_var.trace('w', highlight_searched)
+        search_entry = Entry(self, textvariable=search_var)
+        search_entry.place(x=145, y=303)
 
 
 class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 변경하는 부분
