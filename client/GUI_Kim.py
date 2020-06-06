@@ -5,6 +5,7 @@ import Login
 import Find_User
 import Update_User
 import Getalluser
+import Post_ch
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -331,12 +332,12 @@ class SuperPage(tk.Frame):
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
 
-            SpUser_dept =a
-            SpUser_sw =b
             txt = ""
             txt_sw = ""
             url_list = []
             url_list_sw = []
+            SpUser_dept=[]
+            SpUser_sw=[]
             j = 0
             print("-----------")
             print(a)
@@ -352,6 +353,7 @@ class SuperPage(tk.Frame):
             cnt = 0
             for i in range(0, len(a), 5):
                 if a[i + 4] in type_list:
+                    SpUser_dept += a[i:i+5]
                     cnt += 1
 
             for i in range(0, len(a), 5):
@@ -386,6 +388,7 @@ class SuperPage(tk.Frame):
             cnt2 = 0
             for i in range(0, len(b), 5):
                 if b[i + 4] in type_list:
+                    SpUser_sw += b[i:i + 5]
                     cnt2 += 1
 
             listbox_order = int(len(b) / 5) + 1
@@ -587,9 +590,24 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
         label.place(x=100, y=35)
         # 밑에 추가로 구현 필요
 
+        def Delete():
+            global SpUser_dept,SpUser_sw
+            display1.delete(0, tk.END)
+            display2.delete(0, tk.END)
+            display3.delete(0, tk.END)
+            display4.delete(0, tk.END)
+            display5.delete(0, tk.END)
+            self.txt1.set(" ")
+            self.txt2.set(" ")
+            self.txt3.set(" ")
+            self.txt4.set(" ")
+            SpUser_sw=[]
+            SpUser_dept=[]
+            controller.show_frame("SuperPage")
+
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
-                                command=lambda: controller.show_frame("SuperPage"), padx=10, pady=10, image=image_back)
+                                command=Delete, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=25, y=550)  # 뒤로가기버튼
 
@@ -598,33 +616,124 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
         user_image.image = image_user
         user_image.place(x=120, y=130)
 
+        LIST_INFO = []
+
         def Cheak():
             global a
             a = RadioVariety_1.get()
 
+        def DeleteData():  # 이거 질문 필요
+            pass
+
         def Search():
-            global a, SpUser_sw, SpUser_dept
-            LIST_INFO=[]
-            num= str1.get()-1
+            global a, SpUser_sw, SpUser_dept, LIST_INFO
+            self.txt2.set(" ")
+            self.txt3.set(" ")
+            self.txt4.set(" ")
+            print("SpUser_sw")
+            print(SpUser_sw)
+            print("SpUser_dept")
+            print(SpUser_dept)
+
+            num= str1.get()
             if a == 1:
-                LIST_INFO = SpUser_dept[num*5:num*5+5]
+                url1 = cnt - num
+                LIST_INFO = SpUser_dept[url1*5:url1*5+5]
             else:
-                LIST_INFO = SpUser_sw[num * 5:num * 5 + 5]
+                url2 = cnt2 - num
+                LIST_INFO = SpUser_sw[url2 * 5:url2 * 5 + 5]
 
             print(LIST_INFO)
-            txt1= "제목 : "+LIST_INFO[1]+" 날짜 : "+LIST_INFO[2]
-            txt2= "타입 : "+LIST_INFO[4]
-            self.txt1.set(txt1)
-            self.txt2.set(txt2)
+            try:
+                if LIST_INFO :
+                    text1= "제목 : "+LIST_INFO[1]+" 날짜 : "+LIST_INFO[2]
+                    text2= "타입 : "+LIST_INFO[4]
+                else :
+                    text1 = "Data가 없습니다"
+                    text2 = " "
+            except:
+                text1 = "Data가 없습니다"
+                text2 = " "
+
+            self.txt1.set(text1)
+            self.txt2.set(text2)
+
+
+        def openweb():
+            global LIST_INFO
+
+            try:
+                if LIST_INFO:
+                    print(LIST_INFO)
+                    webbrowser.open(LIST_INFO[3])
+                else:
+                    txt = "[ Error : No Data ]"
+                    messagebox.showwarning("Error", txt)
+            except:
+                txt = "[ Error : No Data ]"
+                messagebox.showwarning("Error", txt)
+
+        def UpData_LIST():
+            global LIST_INFO
+            if str2.get():
+                title =str2.get()
+            else:
+                title=LIST_INFO[1]
+
+            if str3.get():
+                date = str3.get()
+            else:
+                date=LIST_INFO[2]
+
+            if str4.get():
+                type = str4.get()
+            else:
+                type = LIST_INFO[4]
+
+            if str5.get():
+                URL = str5.get()
+            else:
+                URL = LIST_INFO[3]
+            # ID, Token, title, date, URL, tpye
+            string=[]
+            print(str(LIST_INFO[0])+str(User_token[2])+str(title)+str(date)+str(URL)+str(type))
+            POST = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], title, date, URL, type)
+            POST.update_list(string)
+            print("string :"+str(string[0]))
+            if string[0] == 200:
+                display2.delete(0, tk.END)
+                display3.delete(0, tk.END)
+                display4.delete(0, tk.END)
+                display5.delete(0, tk.END)
+                self.txt4.set("Data를 성공적으로 변경했습니다")
+                self.txt3.set(" ")
+                #성공
+            elif string[0] == 404:
+                self.txt4.set("수정하고자 하는 List의 ID값이 다릅니다. 다시 확인해 주세요")
+                 # 아이디 잘못 됬을떄
+            elif string[0] == 401:
+                self.txt4.set("권한이 없습니다. 관리자에 문의해 토큰을 확인해 주세요.")
+                # 리스트의 토큰이 잘못 됬을때
+            elif string[0] == 400:
+                self.txt3.set("날짜 형식을 확인해 주세요")
+                # 날짜 형식이 잘못됬을때
 
         self.txt1 = StringVar()
         self.txt2 = StringVar()
+        self.txt3 = StringVar()
+        self.txt4 = StringVar()
         self.txt1.set(" ")
         self.txt2.set(" ")
+        self.txt3.set(" ")
+        self.txt4.set(" ")
         GetText1 = tk.Label(self, textvariable=self.txt1, background='white', font=font_SuperButton)
         GetText1.place(x=200, y=280)
         GetText2 = tk.Label(self, textvariable=self.txt2, background='white', font=font_SuperButton)
         GetText2.place(x=200, y=300)
+        GetText3 = tk.Label(self, textvariable=self.txt3, background='white', font=font_SuperButton)
+        GetText3.place(x=360, y=370)
+        GetText4 = tk.Label(self, textvariable=self.txt4, background='white', font=font_SuperButton)
+        GetText4.place(x=200, y=425)
 
         RadioVariety_1 = IntVar()
 
@@ -650,13 +759,13 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
         LabelWidget2.place(x=200, y=330)
 
         LabelWidget3 = tk.Label(self, text="날짜", background='white', font=font_SuperButton)
-        LabelWidget3.place(x=350, y=330)
+        LabelWidget3.place(x=355, y=330)
 
         LabelWidget4 = tk.Label(self, text="타입", background='white', font=font_SuperButton)
-        LabelWidget4.place(x=500, y=330)
+        LabelWidget4.place(x=510, y=330)
 
         LabelWidget5 = tk.Label(self, text="URL", background='white', font=font_SuperButton)
-        LabelWidget5.place(x=650, y=330)
+        LabelWidget5.place(x=665, y=330)
 
         str2 = StringVar()
         display2 = tk.Entry(self, width=20, textvariable=str2)
@@ -664,15 +773,27 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
 
         str3 = StringVar()
         display3 = tk.Entry(self, width=20, textvariable=str3)
-        display3.place(x=355, y=350)
+        display3.place(x=360, y=350)
 
         str4 = StringVar()
         display4 = tk.Entry(self, width=20, textvariable=str4)
-        display4.place(x=505, y=350)
+        display4.place(x=515, y=350)
 
         str5 = StringVar()
         display5 = tk.Entry(self, width=20, textvariable=str5)
-        display5.place(x=655, y=350)
+        display5.place(x=670, y=350)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   Open Web   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=openweb)
+        button.place(x=205, y=500)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   UplodeData   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=UpData_LIST)
+        button.place(x=355, y=500)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   DeleteData   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=DeleteData)
+        button.place(x=505, y=500)
 
 
 # DB쪽 put-post사용해야함, 이거는 제가 구현 할께요 - 김성욱 ( ㅇ우창ㅇ이랑 얘기가 필요해요 )
