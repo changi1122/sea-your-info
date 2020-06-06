@@ -106,7 +106,12 @@ class StartPage(tk.Frame):
             else:
                 txt = ""
                 for i in range(2, len(User_token)):
-                    txt += User_token[i] + '\n'
+                    if 'password' in User_token[i]:
+                        txt += "비밀번호를 확인해 주세요\n"
+                    if 'username' in User_token[i]:
+                        txt += "아이디를 확인해 주세요\n"
+                    if 'non_field_errors' in User_token[i]:
+                        txt += "존제하지 않는 유저입니다\n"
                 User_token = []
                 messagebox.showwarning("Error", txt)
 
@@ -977,7 +982,10 @@ class Make_User_page(tk.Frame):
             else:
                 txt = ""
                 for i in range(1, len(string)):
-                    txt += string[i] + '\n'
+                    if 'email' in string[i]:
+                        txt += "이메일 형식을 확인해주세요\n"
+                    if 'username' in string[i]:
+                        txt += "이미 존제하는 ID입니다\n"
                 messagebox.showwarning(
                     "Error", txt)
 
