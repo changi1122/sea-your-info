@@ -8,7 +8,10 @@ from .serializers import UserSerializer
 from .models import User, CustomUser
 from rest_framework.authtoken.models import Token
 import string, random
-from ..utility.send_mail import send_new_password
+
+import sys
+sys.path.append("..")
+from utility.send_mail import send_new_password
 
 
 class UserViewSet(viewsets.ModelViewSet):
