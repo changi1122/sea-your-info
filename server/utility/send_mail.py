@@ -14,7 +14,7 @@ GMAIL_PASSWORD = "password"
 # 매개변수 : destination = 수신자의 메일, new_password = 새로운 비밀번호, username = 로그인 아이디
 def send_new_password(destination, new_password, username) :
 
-    sender = "changi112242@gmail.com"
+    sender = GMAIL_ID
 
     # Create message container - the correct MIME type is multipart/alternative.
     msg = MIMEMultipart('alternative')
