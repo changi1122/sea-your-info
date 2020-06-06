@@ -1,4 +1,3 @@
-# 이원중
 def School(lst_Dep=[]):
     import requests
     import json
@@ -6,8 +5,12 @@ def School(lst_Dep=[]):
     # 실행전 확인 : URL 설정
     # URL : 목적지 URL
 
+    headers = {
+        'Content-Type': 'application/json; charset=utf-8',
+        'Authorization': 'Token 76042b6aa0deb34d25aa58eafb82a0425f07f433'  # 서버가 변경되면 토큰이 변경되므로 authorization 수정 필요합니다.
+    }
+
     URL = "http://ras.studio1122.net:8000/posts/"
-    # URL = "http://localhost:8000/posts/" 자기 컴퓨터에서 서버를 실행한 경우
 
     # Request GET
     response_Dep = requests.get(URL)
@@ -20,10 +23,19 @@ def School(lst_Dep=[]):
     response_dict = json.loads(response_Dep.text)
 
     for i in range(0, len(response_dict)):
-        for key in response_dict[i].keys():
-            if response_dict[i]['isSent'] == False:
-                #print(response_dict[i][key])
-                lst_Dep.append(response_dict[i][key])
+        if response_dict[i]['isSent'] == False:
+            lst_Dep.append(response_dict[i])
+
+    for i in range(len(lst_Dep)):
+        data = {  # 데이터 전송 후 isSent True로 바꿔주기 위한 코드
+            "title": lst_Dep[i]['title'],
+            "date": lst_Dep[i]['date'],
+            "url": lst_Dep[i]['url'],
+            "type": lst_Dep[i]['type'],
+            "isSent": "True"
+        }
+        integratedURL = URL + str(lst_Dep[i]['id']) + "/"  # 서버로 데이트 전송하는 코드
+        response = requests.put(integratedURL, data=json.dumps(data), headers=headers)  # 서버로 데이트 전송하는 코드
 
     return lst_Dep
 
@@ -42,7 +54,6 @@ def Software(lst_sw=[]):
     }
 
     URL = "http://ras.studio1122.net:8000/posts_sw/"
-    # URL = "http://localhost:8000/posts/" 자기 컴퓨터에서 서버를 실행한 경우
 
     # Request GET
     response_sw = requests.get(URL)
@@ -54,37 +65,19 @@ def Software(lst_sw=[]):
     # JSON 형식 문자열을 Dictionary 타입(Dictionary 타입 배열)으로 변환
     response_dict_sw = json.loads(response_sw.text)
 
-    # print("==========================================================\n\n")
     for i in range(0, len(response_dict_sw)):
-        for key in response_dict_sw[i].keys():
-            if response_dict_sw[i]['isSent'] == False:
-                # print(response_dict_sw[i][key])
-                lst_sw.append(response_dict_sw[i][key])
+        if response_dict_sw[i]['isSent'] == False:
+            lst_sw.append(response_dict_sw[i])
 
-    newarr = []
-    for i in range(0, len(response_dict_sw)):
-        newarr.append(response_dict_sw[i])
-
-    # #잘 작동하는지 확인하려면 아래 코드 주석 해제하면 됩니다.
-    # print("======================================================\n\n")
-    # for _ in range(len(newarr)):
-    #     # print(newarr[_]['title'])
-    #     print(newarr[_])
-    # print("======================================================\n\n")
-
-    for i in range(len(newarr)):
+    for i in range(len(lst_sw)):
         data = {  # 데이터 전송 후 isSent True로 바꿔주기 위한 코드
-            "title": newarr[i]['title'],
-            "date": newarr[i]['date'],
-            "url": newarr[i]['url'],
-            "type": newarr[i]['type'],
+            "title": lst_sw[i]['title'],
+            "date": lst_sw[i]['date'],
+            "url": lst_sw[i]['url'],
+            "type": lst_sw[i]['type'],
             "isSent": "True"
         }
-        integratedURL = URL + str(newarr[i]['id']) + "/"  # 서버로 데이트 전송하는 코드
+        integratedURL = URL + str(lst_sw[i]['id']) + "/"  # 서버로 데이트 전송하는 코드
         response = requests.put(integratedURL, data=json.dumps(data), headers=headers)  # 서버로 데이트 전송하는 코드
 
     return lst_sw
-
-
-a = []
-Software(a)

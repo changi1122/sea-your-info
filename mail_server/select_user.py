@@ -1,4 +1,3 @@
-# 유현진
 import pymysql
 
 def selectUser(subscribeUser = []):
@@ -7,7 +6,7 @@ def selectUser(subscribeUser = []):
       # 구독한 사람들의 이메일 저장
 
     # hasSubscribe의 값을 가져와 구독한 사람의 user_id를 저장
-    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='sori9899', db='seayourinfo',
+    db = pymysql.connect(host='localhost', port=3306, user='root', passwd='password', db='seayourinfo',
                          charset='utf8')
     cursor = db.cursor()
     cursor.execute("SELECT hasSubscribed, user_id FROM user_customuser")
