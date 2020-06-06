@@ -8,6 +8,11 @@ from .serializers import UserSerializer
 from .models import User, CustomUser
 from rest_framework.authtoken.models import Token
 import string, random
+from ..utility.send_mail import send_new_password
+
+import sys
+sys.path.append("..")
+from utility.send_mail import send_new_password
 
 
 class UserViewSet(viewsets.ModelViewSet):
@@ -95,11 +100,11 @@ class LostFindViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-    def retrieve(self, request, pk=None):
+    def retrieve(self, request, method=None):
         queryset = User.objects.all()
         
         # ID 찾기
-        if pk == "find-id":
+        if method == "find-id":
             user = get_object_or_404(queryset, email=request.data.get('email'))
             if user:
                 return Response({"username": user.username})
@@ -107,21 +112,27 @@ class LostFindViewSet(viewsets.ModelViewSet):
                 return Response({ "detail": "Not Found." }, status=404)
         
         # 비밀번호 찾기 (임시 비밀번호 만들기)
-        elif pk == "find-password":
+        elif method == "find-password":
             user = get_object_or_404(queryset, username=request.data.get('username'))
             if user and user.email == request.data.get('email'):
 
+                # 임시 비밀번호 생성
                 LENGTH = 10
                 string_pool = string.ascii_lowercase
-                randStr = ""
+                rand_string = ""
                 for i in range(LENGTH):
-                    randStr += random.choice(string_pool)
+                    rand_string += random.choice(string_pool)
 
-                user.password = make_password(randStr)
+                user.password = make_password(rand_string)
                 user.save()
 
-                # 임시로 Response로 전송함.
-                return Response({"newpassword": randStr})
+                # 등록된 이메일로 임시 비밀번호를 전송
+                send_status = send_new_password(destination=user.email, new_password=rand_string, username=user.username)
+
+                if send_status == 200:  # 성공
+                    return Response({"alert": "등록된 이메일로 임시비밀번호가 전송되었습니다."})
+                else:  # 실패
+                    return Response({"alert": "이메일을 전송하는데 실패하였습니다. 다시 시도하거나 관리자에 문의하세요."})
 
             else:
                 return Response({"detail": "Not Found."}, status=404)
