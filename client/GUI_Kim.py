@@ -4,6 +4,7 @@ import Create_User
 import Login
 import Find_User
 import Update_User
+import Getalluser
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -12,7 +13,8 @@ import webbrowser
 
 UserInfo = []
 User_token = []
-
+SpUser_sw=[]
+SpUser_dept=[]
 
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -23,6 +25,10 @@ class Apps(tk.Tk):
         font_logintext = tkfont.Font(family='Helvetica', size=15)
         global font_startpageinfo
         font_startpageinfo = tkfont.Font(family='여기어때 잘난체 OTF', size=18)
+        global font_SuperButton
+        font_SuperButton= tkfont.Font(family='여기어때 잘난체 OTF', size=10)
+        global font_superuser_finduser
+        font_superuser_finduser = tkfont.Font(family='여기어때 잘난체 OTF', size=14)
         # 여기어때 잘난체 OTF 다른 컴퓨터에서도 잘 작동하는지 확인 필요
         # 없다면 폰트 파일 공유해야할듯
         global FB
@@ -33,6 +39,8 @@ class Apps(tk.Tk):
         font_Cheack_B = tkfont.Font(size=11, weight="bold", family='Helvetica')
         global font_listbox_content
         font_listbox_content = tkfont.Font(size=13, family='휴먼모음T')
+        global font_listbox_content2
+        font_listbox_content2 = tkfont.Font(size=16, family='휴먼모음T')
         global font_radiobutton
         font_radiobutton = tkfont.Font(size=12, family='바른고딕', weight="bold")
 
@@ -62,6 +70,7 @@ class Apps(tk.Tk):
         frame = self.frames[page_name]
         frame.tkraise()
 
+
 # 시작 페이지
 class StartPage(tk.Frame):
     def __init__(self, parent, controller):
@@ -70,7 +79,6 @@ class StartPage(tk.Frame):
         self.configure(background='white')
         # 맨 위의 Sea Your Info 들어가는 부분
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
-        # label.pack(side="top", fill="x", pady=10)
         label.place(x=100, y=35)
 
         image_mainlogo = PhotoImage(file='imagefile/logo2_color.gif')
@@ -100,7 +108,12 @@ class StartPage(tk.Frame):
             else:
                 txt = ""
                 for i in range(2, len(User_token)):
-                    txt += User_token[i] + '\n'
+                    if 'password' in User_token[i]:
+                        txt += "비밀번호를 확인해 주세요\n"
+                    if 'username' in User_token[i]:
+                        txt += "아이디를 확인해 주세요\n"
+                    if 'non_field_errors' in User_token[i]:
+                        txt += "존제하지 않는 유저입니다\n"
                 User_token = []
                 messagebox.showwarning("Error", txt)
 
@@ -135,9 +148,6 @@ class StartPage(tk.Frame):
         str2 = StringVar()
         LabelWidget3 = tk.Label(self, text="PW", background='white', font=font_logintext)
         LabelWidget3.place(x=40, y=280)
-        # bullet = "\u2022"
-        # display3 = tk.Entry(self, width=20, textvariable=str2, show=bullet)
-        # bullet = "\u2022"
         display3 = tk.Entry(self, width=20, textvariable=str2)
         display3.place(x=115, y=285)
 
@@ -172,7 +182,8 @@ class StartPage(tk.Frame):
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
 
-#슈퍼유저 관련 페이지
+
+# 슈퍼유저 관련 페이지
 class SuperPage(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -210,6 +221,10 @@ class SuperPage(tk.Frame):
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         # 유저들이 나오는 페이지로 넘어가는 부분
         button2.place(x=145, y=185)
+        button3 = tk.Button(self, text="리스트 정보 수정", command=lambda: controller.show_frame("SuperChangeListINFO"),
+                            borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
+        button3.place(x=145, y=210)
+        # TODO 통계량 보기 부분 프레임 추가해야함
 
         # 라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
         self.var0 = IntVar()
@@ -300,7 +315,7 @@ class SuperPage(tk.Frame):
 
         def Show_data():
             global type_list
-            global url_list, url_list_sw
+            global url_list, url_list_sw, SpUser_dept, SpUser_sw
             # 리스트 박스 1,2에 문자열이 있을 경우 이전 data 삭제
             if listbox.size() != 0:
                 listbox.delete(0, listbox.size())
@@ -315,8 +330,9 @@ class SuperPage(tk.Frame):
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
-            # Stashed changes
 
+            SpUser_dept =a
+            SpUser_sw =b
             txt = ""
             txt_sw = ""
             url_list = []
@@ -351,20 +367,11 @@ class SuperPage(tk.Frame):
                                 txt += " 0"
                             else:
                                 txt += " "
-                            # if j < 9:
-                            #     txt += " " + "0"
-                            # else:
-                            #     txt += " "
-                            # txt += str(j + 1) + " | "
-                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
                             txt += str(cnt - j) + " | "
-                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
                             txt += " " + str(a[k][0:10])
-                    # Stashed changes
-                    # listbox.insert(j, txt)
                     arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
                     # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
                     j += 1
@@ -390,30 +397,18 @@ class SuperPage(tk.Frame):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            # if listbox_order - (j + 1) < 10:
                             if cnt2 - j < 10:
                                 txt_sw += " " + "0" + "0"
-                            # elif listbox_order - (j + 1) < 100:
                             elif cnt2 - j < 100:
                                 txt_sw += " 0"
                             else:
                                 txt_sw += " "
-
-                            # if j < 9:
-                            #     txt_sw += " " + "0"
-                            # else:
-                            #     txt_sw += " "
-                            # txt_sw += str(j + 1) + " | "
-                            # txt_sw += str(listbox_order - (j + 1)) + " | "
-
                             txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
 
                         else:
                             txt_sw += " " + str(b[k][0:10])
-                    # Stashed changes
-                    # listbox2.insert(j, txt_sw)
                     arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
@@ -438,23 +433,21 @@ class SuperPage(tk.Frame):
 
         def openweb(Data, sep):
             # 이부분에 스토리 보드와 같이 정보수정으로 넘어가는 페이지 구현 필요
-            global url_list, url_list_sw
+            global url_list, url_list_sw, SpUser_ch_L_I
             url = Data[0]
             if sep == 1:
-                # url = int(len(a) / 5) - 1 - url
                 url = cnt - 1 - url
+                webbrowser.open(url_list[url])
             else:
-                # url = int(len(b) / 5) - 1 - url
                 url = cnt2 - 1 - url
-            controller.show_frame("SuperChangeListINFO")
+                webbrowser.open(url_list_sw[url])
 
+            controller.show_frame("SuperChangeListINFO")
 
         def Delet_data():
             listbox.pack()
             listbox2.pack()
             Show_data()
-
-        # Stashed changes
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
@@ -496,7 +489,10 @@ class SuperPage(tk.Frame):
 
         print(type_list)
 
-class SuperShowUserINFO(tk.Frame):   # 스토리 보드상 가입된 유저 목록 출력하는 화면 부분
+
+# joong
+# 슈퍼유저가 회원정보 관리 창을 눌렀을 때 나오는 부분
+class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목록 출력하는 화면 부분
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -504,6 +500,15 @@ class SuperShowUserINFO(tk.Frame):   # 스토리 보드상 가입된 유저 목�
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
+        def highlight_searched(*args):
+            search = search_var.get()
+            for i, item in enumerate(all_listbox_items):
+                if search.lower() in item.lower():
+                    listbox.selection_set(i)
+                else:
+                    listbox.selection_clear(i)
+            if search == '':
+                listbox.selection_clear(0, END)
 
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
@@ -520,7 +525,7 @@ class SuperShowUserINFO(tk.Frame):   # 스토리 보드상 가입된 유저 목�
         scrollbar = tk.Scrollbar(userpage)
         scrollbar.pack(side="right", fill="y")
         listbox = tk.Listbox(userpage, yscrollcommand=scrollbar.set, width=660, height=460,
-                             font=font_listbox_content)
+                             font=font_listbox_content2)
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
@@ -528,18 +533,151 @@ class SuperShowUserINFO(tk.Frame):   # 스토리 보드상 가입된 유저 목�
         button_back.image = image_back
         button_back.place(x=25, y=550)
 
+        a = []
+        userlist = []
+        newuserlist = []
+        userlist = Getalluser.Getuser.Getuser(a)
 
-class SuperChangeListINFO(tk.Frame):   # 스토리 보드상 리스트의 항복 변경하는 부분
+        k = 0
+        subcnt = 0
+        for i in range(0, len(userlist), 5):
+            string = " " + str(k + 1) + ""
+            for j in range(i, i + 5):
+                if userlist[j] == "none" or j % 5 == 0:
+                    continue
+                else:
+                    string += " | " + str(userlist[j])
+                if userlist[j] == True:  # 만약 구독을 한 사람이라면 subcnt+=1해준다.
+                    subcnt += 1
+            newuserlist.append(string)
+            print(newuserlist[k])
+            listbox.insert(k, newuserlist[k])
+            k += 1
+        category = "CATEGORY => number | ID | E-Mail | Subscribed or not"
+        listbox.insert(0, category)
+        listbox.pack()
+
+        registered = tk.Label(self, text="총 가입인원 수 : " + str(k), font=font_startpageinfo, background='white')
+        registered.place(x=30, y=400)
+        subscribed = tk.Label(self, text="총 구독자 수 : " + str(subcnt), font=font_startpageinfo, background='white')
+        subscribed.place(x=30, y=440)
+
+        # button1 = Button(self, text="type별 검색 통계량 보기", command=lambda: controller.show_frame("Make_User_page"),
+        #                  # TODO 이거 make user page로 넘어가면 안되고 통계량 보는 새로운 frame만들어줘야한다.
+        #                  background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
+        # button1.place(x=30, y=280)
+
+        all_listbox_items = listbox.get(0, END)
+
+        search_label = tk.Label(self, text="사용자 검색", font=font_superuser_finduser, background='white')
+        search_label.place(x=30, y=300)
+
+        search_var = StringVar()
+        search_var.trace('w', highlight_searched)
+        search_entry = Entry(self, textvariable=search_var)
+        search_entry.place(x=145, y=303)
+
+
+class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 변경하는 부분
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
         self.configure(background='white')
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
-        #밑에 추가로 구현 필요
+        # 밑에 추가로 구현 필요
+
+        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
+                                command=lambda: controller.show_frame("SuperPage"), padx=10, pady=10, image=image_back)
+        button_back.image = image_back
+        button_back.place(x=25, y=550)  # 뒤로가기버튼
+
+        image_user = PhotoImage(file="imagefile/ChangListinfo.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=120, y=130)
+
+        def Cheak():
+            global a
+            a = RadioVariety_1.get()
+
+        def Search():
+            global a, SpUser_sw, SpUser_dept
+            LIST_INFO=[]
+            num= str1.get()-1
+            if a == 1:
+                LIST_INFO = SpUser_dept[num*5:num*5+5]
+            else:
+                LIST_INFO = SpUser_sw[num * 5:num * 5 + 5]
+
+            print(LIST_INFO)
+            txt1= "제목 : "+LIST_INFO[1]+" 날짜 : "+LIST_INFO[2]
+            txt2= "타입 : "+LIST_INFO[4]
+            self.txt1.set(txt1)
+            self.txt2.set(txt2)
+
+        self.txt1 = StringVar()
+        self.txt2 = StringVar()
+        self.txt1.set(" ")
+        self.txt2.set(" ")
+        GetText1 = tk.Label(self, textvariable=self.txt1, background='white', font=font_SuperButton)
+        GetText1.place(x=200, y=280)
+        GetText2 = tk.Label(self, textvariable=self.txt2, background='white', font=font_SuperButton)
+        GetText2.place(x=200, y=300)
+
+        RadioVariety_1 = IntVar()
+
+        radio_scholar = tk.Radiobutton(self, text="학교", background='white', font=font_SuperButton, value=1,
+                                    variable=RadioVariety_1, command=Cheak)
+        # font_radiobutton == FB로, Make_List==M_L로 변경
+        radio_scholar.place(x=230 , y=250)
+
+        radio_job = tk.Radiobutton(self, text="학과", background='white', font=font_SuperButton, value=2, variable=RadioVariety_1, command=Cheak)
+        radio_job.place(x=300, y=250)
+
+        str1 = IntVar()
+        LabelWidget1 = tk.Label(self, text="리스트 번호", background='white', font=font_SuperButton)
+        LabelWidget1.place(x=370, y=251)
+        display1 = tk.Entry(self, width=20, textvariable=str1)
+        display1.place(x=450, y=251)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="Search",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command = Search)
+        button.place(x=600, y=250)
+
+        LabelWidget2 = tk.Label(self, text="제목", background='white', font=font_SuperButton)
+        LabelWidget2.place(x=200, y=330)
+
+        LabelWidget3 = tk.Label(self, text="날짜", background='white', font=font_SuperButton)
+        LabelWidget3.place(x=350, y=330)
+
+        LabelWidget4 = tk.Label(self, text="타입", background='white', font=font_SuperButton)
+        LabelWidget4.place(x=500, y=330)
+
+        LabelWidget5 = tk.Label(self, text="URL", background='white', font=font_SuperButton)
+        LabelWidget5.place(x=650, y=330)
+
+        str2 = StringVar()
+        display2 = tk.Entry(self, width=20, textvariable=str2)
+        display2.place(x=205, y=350)
+
+        str3 = StringVar()
+        display3 = tk.Entry(self, width=20, textvariable=str3)
+        display3.place(x=355, y=350)
+
+        str4 = StringVar()
+        display4 = tk.Entry(self, width=20, textvariable=str4)
+        display4.place(x=505, y=350)
+
+        str5 = StringVar()
+        display5 = tk.Entry(self, width=20, textvariable=str5)
+        display5.place(x=655, y=350)
+
+
 # DB쪽 put-post사용해야함, 이거는 제가 구현 할께요 - 김성욱 ( ㅇ우창ㅇ이랑 얘기가 필요해요 )
 
-#일반 유져 관련 페이지
+# 일반 유져 관련 페이지
 class main(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
@@ -681,7 +819,6 @@ class main(tk.Frame):
             b = []
             Gposts.Get_Department(a)
             Gposts.Get_SW(b)
-            # Stashed changes
 
             txt = ""
             txt_sw = ""
@@ -696,7 +833,6 @@ class main(tk.Frame):
 
             arr1 = []
             arr2 = []
-            listbox_order = int(len(a) / 5) + 1
 
             global cnt
             cnt = 0
@@ -705,7 +841,6 @@ class main(tk.Frame):
                     cnt += 1
 
             for i in range(0, len(a), 5):
-                # Updated upstream
                 if a[i + 4] in type_list:
                     for k in range(i, i + 4):
                         if k % 5 == 3:
@@ -717,20 +852,11 @@ class main(tk.Frame):
                                 txt += " 0"
                             else:
                                 txt += " "
-                            # if j < 9:
-                            #     txt += " " + "0"
-                            # else:
-                            #     txt += " "
-                            # txt += str(j + 1) + " | "
-                            # txt += str(listbox_order - (j + 1)) + " | " #<=안되면 이부분 다시 주석 해제할것 improtatn
                             txt += str(cnt - j) + " | "
-                            # listbox_order += 1
                         elif k % 5 != 2:
                             txt += " " + str(a[k]) + " | "
                         else:
                             txt += " " + str(a[k][0:10])
-                    # Stashed changes
-                    # listbox.insert(j, txt)
                     arr1.append(txt)  # 이 부분에서 listbox에 바로 넣지 않고
                     # arr1에 넣는다. arr1에 넣어서 아래 for문에서 최신 날짜부터 뒤집어서 출력하기 위해서
                     j += 1
@@ -750,36 +876,23 @@ class main(tk.Frame):
             listbox_order = int(len(b) / 5) + 1
             j = 0
             for i in range(0, len(b), 5):
-                # Updated upstream
                 if b[i + 4] in type_list:
                     for k in range(i, i + 4):
                         if k % 5 == 3:
                             url_list_sw.append(b[k])
                         elif k % 5 == 0:
-                            # if listbox_order - (j + 1) < 10:
                             if cnt2 - j < 10:
                                 txt_sw += " " + "0" + "0"
-                            # elif listbox_order - (j + 1) < 100:
                             elif cnt2 - j < 100:
                                 txt_sw += " 0"
                             else:
                                 txt_sw += " "
-
-                            # if j < 9:
-                            #     txt_sw += " " + "0"
-                            # else:
-                            #     txt_sw += " "
-                            # txt_sw += str(j + 1) + " | "
-                            # txt_sw += str(listbox_order - (j + 1)) + " | "
-
                             txt_sw += str(cnt2 - j) + " | "
                         elif k % 5 != 2:
                             txt_sw += " " + str(b[k]) + " | "
 
                         else:
                             txt_sw += " " + str(b[k][0:10])
-                    # Stashed changes
-                    # listbox2.insert(j, txt_sw)
                     arr2.append(txt_sw)
                     j += 1
                     txt_sw = ""
@@ -887,7 +1000,10 @@ class Make_User_page(tk.Frame):
             else:
                 txt = ""
                 for i in range(1, len(string)):
-                    txt += string[i] + '\n'
+                    if 'email' in string[i]:
+                        txt += "이메일 형식을 확인해주세요\n"
+                    if 'username' in string[i]:
+                        txt += "이미 존제하는 ID입니다\n"
                 messagebox.showwarning(
                     "Error", txt)
 
@@ -954,18 +1070,10 @@ class Make_User_page(tk.Frame):
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
-        # Label_PW_Rool = tk.Label(self,
-        #                          text="Make sure it's at least 15 characters OR \nat lest 8 characters including a number",
-        #                          background="white")
         LabelWidget3.place(x=375, y=430)
         # Label_PW_Rool.place(x=475, y=450)
         display3 = tk.Entry(self, width=20, textvariable=str3)
         display3.place(x=475, y=430)
-
-        # button = tk.Button(self, borderwidth=3, relief="flat", text="Sign up for Sea Your Info",
-        #                        command=clickMe,
-        #                        fg="white", background="#00b0f0", font=font_Cheack_B)
-        # button.place(x=475, y=560)
 
         # 물음표 이미지 띄우는 부분
         que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
@@ -1011,9 +1119,6 @@ class Change_User_Info(tk.Frame):
 
         def clickMe():
             message = []
-            # messagebox.showinfo("Button CLicked", str1.get())
-            # messagebox.showinfo("Button CLicked", str2.get())
-            # messagebox.showinfo("Button CLicked", str3.get())
             print(User_token[2])
             CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
             CH.UUD_INFO(message)
