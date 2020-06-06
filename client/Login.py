@@ -1,7 +1,8 @@
 class Login():
     def __init__(self, id, pw):
-        self.id=id
-        self.pw=pw
+        self.id = id
+        self.pw = pw
+
     def Check_SuperUser(self):
         import requests
         import json
@@ -13,7 +14,7 @@ class Login():
         # Header : 데이터에 관한 설명
         headers = {
             'Content-Type': 'application/json; charset=utf-8',
-            'Authorization': 'Token '+str_token
+            'Authorization': 'Token ' + str_token
         }
 
         # URL : 목적지 URL
@@ -28,7 +29,7 @@ class Login():
         print("status code : ", response.status_code)  # 성공 : 200
         print("response text : ", response.text)  # 응답 텍스트 : JSON 형식 문자열
 
-        if(response_dict2["is_super"]): # 슈퍼유저인지 판단하는 코드
+        if response_dict2["is_super"]:  # 슈퍼유저인지 판단하는 코드
             return 1
         else:
             return 2
@@ -69,15 +70,15 @@ class Login():
 
         num = response.status_code
         string.append(num)
-        string.insert(0,2)
+        string.insert(0, 2)
         for key in response_dict.keys():
             if key != "token":
                 response_dict[key] = str(response_dict[key]).replace("[\'", "")
                 response_dict[key] = str(response_dict[key]).replace("\']", "")
-                string.append(key+" : "+response_dict[key])
+                string.append(key + " : " + response_dict[key])
 
         # 토큰
         if 'token' in list(response_dict.keys()):  # response_dict에 'token' 키를 가진 쌍이 있는지 확인
-            str_token=response_dict['token']
-            string[0]= self.Check_SuperUser()
+            str_token = response_dict['token']
+            string[0] = self.Check_SuperUser()
             string.append(str_token)
