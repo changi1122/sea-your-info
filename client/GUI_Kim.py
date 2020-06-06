@@ -24,6 +24,10 @@ class Apps(tk.Tk):
         font_hypertext = tkfont.Font(size=10, underline=True)
         global font_Cheack_B
         font_Cheack_B = tkfont.Font(size=11, weight="bold", family='Helvetica')
+        global font_listbox_content
+        font_listbox_content = tkfont.Font(size=13, family='바른고딕')
+        global font_radiobutton
+        font_radiobutton = tkfont.Font(size=12, family='바른고딕', weight="bold")
 
         self.title("Sea Your Info")
         self.geometry('1050x650')
@@ -74,12 +78,12 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            string=[]
-            user_ID=str1.get()
-            user_PW=str2.get()
+            string = []
+            user_ID = str1.get()
+            user_PW = str2.get()
             display1.delete(0, tk.END)
             display3.delete(0, tk.END)
-            Lg=Login.Login(user_ID, user_PW)
+            Lg = Login.Login(user_ID, user_PW)
             Lg.Check(string)
             print(string)
             if string[0] == 200:
@@ -114,7 +118,8 @@ class StartPage(tk.Frame):
         str2 = StringVar()
         LabelWidget3 = tk.Label(self, text="PW", background='white', font=font_logintext)
         LabelWidget3.place(x=40, y=280)
-        display3 = tk.Entry(self, width=20, textvariable=str2, show="")
+        bullet = "\u2022"
+        display3 = tk.Entry(self, width=20, textvariable=str2, show=bullet)
         display3.place(x=115, y=285)
 
         log_B = PhotoImage(file='imagefile/OP_button3.png')
@@ -126,6 +131,14 @@ class StartPage(tk.Frame):
         button3 = Button(self, borderwidth=3, relief="flat", background='white', command=clickMe, padx=10, pady=10,
                          image=log_B)
         button3.image = log_B  # 이미지 안될 때는 이렇게 재정의 해줘야 함
+
+        # 엔터 누르면 main프레임으로 넘어가는 것 구현
+        def onReturn(event):
+            value = display1.get()
+            clickMe()
+
+        display1.bind("<Return>", onReturn)
+        display3.bind("<Return>", onReturn)
 
         button1.place(x=40, y=570)
         button2.place(x=40, y=590)
@@ -144,7 +157,7 @@ class main(tk.Frame):
         global frame_department_notice
         global frame_school_notice
         global type_list
-        type_list=[]
+        type_list = []
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
         image_user = PhotoImage(file="imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
@@ -159,7 +172,7 @@ class main(tk.Frame):
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         button2.place(x=145, y=185)
 
-        #라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
+        # 라디오 버튼은 사용자가 한개만 선택 가능, 체크박스는 여러게 선택 가능
         self.var0 = IntVar()
         radio_scholar = Checkbutton(self, text="장학금", background='white', font=FB, onvalue=1,
                                     variable=self.var0, command=self.convert)
@@ -238,40 +251,44 @@ class main(tk.Frame):
         # Updated upstream
         scrollbar = tk.Scrollbar(frame_school_notice)
         scrollbar.pack(side="right", fill="y")
-        listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460)
+        listbox = tk.Listbox(frame_school_notice, yscrollcommand=scrollbar.set, width=660, height=460,
+                             font=font_listbox_content)
 
         scrollbar2 = tk.Scrollbar(frame_department_notice)
         scrollbar2.pack(side="right", fill="y")
         listbox2 = tk.Listbox(frame_department_notice, yscrollcommand=scrollbar2.set, width=660, height=460,
-                              selectmode="extended")
-
+                              selectmode="extended", font=font_listbox_content)
 
         def Show_data():
             global type_list
-            global url_list
+            global url_list, url_list_sw
+            # 리스트 박스 1,2에 문자열이 있을 경우 이전 data 삭제
             if listbox.size() != 0:
-                listbox.delete(0,listbox.size())
+                listbox.delete(0, listbox.size())
+
+            if listbox2.size() != 0:
+                listbox2.delete(0, listbox2.size())
 
             print(listbox.size())
             a = []
-            singly = []  # b는 a에 저장된 텍스틀 나눠서 순서대로 저장하기위함
-            https_pos = []  # 각 singly 인덱스에서 https가 시작하는 위치를 알기 위한 배열
-            address = []  # 각 주소(하이퍼링크)들을 저장
+            b = []
             Gposts.Get_Department(a)
-
+            Gposts.Get_SW(b)
             # Stashed changes
 
             txt = ""
+            txt_sw = ""
             url_list = []
+            url_list_sw= []
             j = 0
-            matching=[]
             print("-----------")
             print(a)
+            print(b)
             print(type_list)
             print("-----------")
             for i in range(0, len(a), 5):
                 # Updated upstream
-                if a[i+4] in type_list:
+                if a[i + 4] in type_list:
                     for k in range(i, i + 4):
                         if k % 5 == 3:
                             url_list.append(a[k])
@@ -288,35 +305,58 @@ class main(tk.Frame):
                     # Stashed changes
                     listbox.insert(j, txt)
                     j += 1
-                    matching = []
                     txt = ""
+
+            j = 0
+            for i in range(0, len(b), 5):
+                # Updated upstream
+                if b[i + 4] in type_list:
+                    for k in range(i, i + 4):
+                        if k % 5 == 3:
+                            url_list_sw.append(b[k])
+                        elif k % 5 == 0:
+                            if j < 9:
+                                txt_sw += " " + "0"
+                            else:
+                                txt_sw += " "
+                            txt_sw += str(j + 1) + " | "
+                        elif k % 5 != 2:
+                            txt_sw+= " " + str(b[k]) + " | "
+                        else:
+                            txt_sw += " " + str(b[k][0:10])
+                    # Stashed changes
+                    listbox2.insert(j, txt_sw)
+                    j += 1
+                    txt_sw = ""
 
             listbox.pack()
             listbox2.pack()
             print(url_list)
+            print(url_list_sw)
 
-            # 클릭되면 특정 사이트로 넘어가게 하는 코드 => 클릭된 특정 위치를 찾아서 넘겨줘야하는데 클릭된 위치 찾기가 힘듬
-            # 이것만하면 더블클릭했을때 특정 사이트로 넘어감
-            # link = Label(text="https://software.cbnu.ac.kr/")
-            listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection()))  # 더블클릭 감지하는 코드
+            listbox.bind("<Double-Button>", lambda event: openweb(listbox.curselection(), 1))  # 더블클릭 감지하는 코드
+            listbox2.bind("<Double-Button>", lambda event: openweb(listbox2.curselection(), 2))
 
-            # Updated upstream
             scrollbar["command"] = listbox.yview
+            scrollbar["command"] = listbox2.yview
 
         # url_list에 DB에서 가져온 순서대로 append후, listbox.curselection()이 클릭한 위치의 정보를 튜플로 반환하므로, 그에 첫번째 인덱스인 0,1,2,와 같은 값만 받아 그에 해당하는 URL을 리스트에서 찾아 여는 방식
 
-        def openweb(Data):
-            global url_list
+        def openweb(Data, sep):
+            global url_list, url_list_sw
             url = Data[0]
-            webbrowser.open(url_list[url])
+            if sep==1:
+                webbrowser.open(url_list[url])
+            else :
+                webbrowser.open(url_list_sw[url])
 
         def Delet_data():
             listbox.pack()
+            listbox2.pack()
             Show_data()
 
         # Stashed changes
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
-
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
                            background="#00b0f0", font=font_Cheack_B, command=Delet_data)
@@ -325,12 +365,12 @@ class main(tk.Frame):
     # cheack box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
     def convert(self):
         global type_list
-        title=["scholarship","contest","exchange","vacation","tuition","freshman",
-               "foreign","job","lecture","capstone", "other"]
+        title = ["scholarship", "contest", "exchange", "vacation", "tuition", "freshman",
+                 "foreign", "job", "lecture", "capstone", "other"]
 
-        type_list=[]
+        type_list = []
         if self.var0.get() == 1:
-            type_list.append(title[self.var0.get()-1])
+            type_list.append(title[self.var0.get() - 1])
         if self.var1.get() == 2:
             type_list.append(title[self.var1.get() - 1])
         if self.var2.get() == 3:
@@ -366,22 +406,21 @@ class Make_User_page(tk.Frame):
         self.configure(background='white')
 
         def clickMe():
-            string=[]
+            string = []
             user_ID = str1.get()
-            user_Email=str2.get()
-            user_PW=str3.get()
-            Mk=Create_User.Make_user(user_ID, user_Email, user_PW)
+            user_Email = str2.get()
+            user_PW = str3.get()
+            Mk = Create_User.Make_user(user_ID, user_Email, user_PW)
             Mk.make(string)
             print(string)
-            if string[0] ==201:
+            if string[0] == 201:
                 controller.show_frame("Mk_U_Suss")
-            else :
-                txt=""
-                for i in range(1,len(string)):
-                    txt+=string[i]+'\n'
+            else:
+                txt = ""
+                for i in range(1, len(string)):
+                    txt += string[i] + '\n'
                 messagebox.showwarning(
                     "Error", txt)
-
 
         # 회원가입 뒤 배경 추가
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -422,7 +461,11 @@ class Make_User_page(tk.Frame):
                            fg="white", background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
-        #button_back = tk.Button(self, borderwidth=3, )
+        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
+                                command=lambda: controller.show_frame("StartPage"), padx=10, pady=10, image=image_back)
+        button_back.image = image_back
+        button_back.place(x=235, y=550)
 
 
 class Change_User_Info(tk.Frame):
@@ -477,6 +520,12 @@ class Change_User_Info(tk.Frame):
                            background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
+        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
+                                command=lambda: controller.show_frame("main"), padx=10, pady=10, image=image_back)
+        button_back.image = image_back
+        button_back.place(x=235, y=550)
+
 
 class Find_User_Info(tk.Frame):
     def __init__(self, parent, controller):
@@ -504,6 +553,12 @@ class Find_User_Info(tk.Frame):
         button1.place(x=720, y=330)
         button2 = tk.Button(self, text="   Enter   ", command=lambda: controller.show_frame("Find_PW"))
         button2.place(x=720, y=567)
+
+        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
+                                command=lambda: controller.show_frame("StartPage"), padx=10, pady=10, image=image_back)
+        button_back.image = image_back
+        button_back.place(x=185, y=570)
 
 
 class Find_ID(tk.Frame):
@@ -557,7 +612,6 @@ class Mk_U_Suss(tk.Frame):
                             command=lambda: controller.show_frame("StartPage"), fg="white", background="#00b0f0",
                             font=font_Cheack_B)
         button1.place(x=700, y=500)
-
 
 
 class ch_U_Suss(tk.Frame):
