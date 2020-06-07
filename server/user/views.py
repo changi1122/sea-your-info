@@ -99,11 +99,11 @@ class LostFindViewSet(viewsets.ModelViewSet):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
-    def retrieve(self, request, method=None):
+    def retrieve(self, request, pk=None):
         queryset = User.objects.all()
         
         # ID 찾기
-        if method == "find-id":
+        if pk == "find-id":
             user = get_object_or_404(queryset, email=request.data.get('email'))
             if user:
                 return Response({"username": user.username})
@@ -111,7 +111,7 @@ class LostFindViewSet(viewsets.ModelViewSet):
                 return Response({ "detail": "Not Found." }, status=404)
         
         # 비밀번호 찾기 (임시 비밀번호 만들기)
-        elif method == "find-password":
+        elif pk == "find-password":
             user = get_object_or_404(queryset, username=request.data.get('username'))
             if user and user.email == request.data.get('email'):
 
