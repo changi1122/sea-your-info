@@ -10,7 +10,7 @@ class Post_ch():
         self.URL =URL
         self.type = tpye
 
-    def delete_list(self, string=[]):
+    def delete_list(self):
         # DB의 게시물을 삭제하는 코드 샘플입니다. 삭제할 게시물의 id가 필요합니다.
         # 실행전 확인 : URL 설정, ID 값 설정
 
@@ -32,9 +32,9 @@ class Post_ch():
         response = requests.delete(integratedURL, headers=headers)
 
         # 응답 코드, 텍스트 출력
+        print("response")
         print(response.text)
 
-        response_text = json.loads(response.text)
 
 
     def update_list(self, string):

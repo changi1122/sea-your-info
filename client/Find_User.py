@@ -65,7 +65,7 @@ class Find_User():
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 200
         print("response text : ", response.text)  # 응답 텍스트 : JSON 형식 문자열
-        if 'newpassword' in response_PW:
-            fPW.append(response_PW['newpassword'])
+        if 'alert' in response_PW:
+            fPW.append(response_PW['alert'])
         else:
             fPW.append('None')
