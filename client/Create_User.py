@@ -1,8 +1,9 @@
 class Make_user():
-    def __init__(self, id, emali, pw):
-        self.id=id
-        self.email=emali
-        self.pw=pw
+    def __init__(self, id, emali, pw, subscribe):
+        self.id = id
+        self.email = emali
+        self.pw = pw
+        self.subscribe = subscribe
 
     def make(self, string=[]):
         import requests
@@ -26,7 +27,7 @@ class Make_user():
             "username": self.id,
             "email": self.email,
             "password": self.pw,
-            "hasSubscribed": "false",  # 이메일을 구독했는지 여부 : true면 주기적으로 이메일 전송
+            "hasSubscribed": self.subscribe,  # 이메일을 구독했는지 여부 : true면 주기적으로 이메일 전송
             "topics": "none"  # 관심 있는 분야 (리스트를 문자열로 저장), 일단 빈 문자열로 전송
         }
 
@@ -43,5 +44,4 @@ class Make_user():
         for key in response_text.keys():
             response_text[key] = str(response_text[key]).replace("[\'", "")
             response_text[key] = str(response_text[key]).replace("\']", "")
-            string.append(key+" : "+response_text[key])
-
+            string.append(key + " : " + response_text[key])

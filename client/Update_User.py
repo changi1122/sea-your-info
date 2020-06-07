@@ -3,12 +3,13 @@ import json
 
 
 class Update_User():
-    def __init__(self, id, email, pw, new_pw, Token):
+    def __init__(self, id, email, pw, new_pw, Token, subscribe):
         self.username = id
         self.email = email
         self.pw = pw
         self.new_pw = new_pw
         self.token = Token
+        self.subscribe = subscribe
 
     def UUD_INFO(self, string=[]):
         # user 정보를 수정하는 코드 샘플입니다.
@@ -35,7 +36,7 @@ class Update_User():
             "email": self.email,
             "password": self.pw,  # 현재 비밀번호 : 필수
             "new_password": self.new_pw,  # 새로운 비밀번호 : 이 줄을 삭제하면 비밀번호 유지
-            "hasSubscribed": "false",  # 이메일을 구독했는지 여부 : true면 주기적으로 이메일 전송
+            "hasSubscribed": self.subscribe,  # 이메일을 구독했는지 여부 : true면 주기적으로 이메일 전송
             "topics": "none"  # 관심 있는 분야 (리스트를 문자열로 저장)
         }
 

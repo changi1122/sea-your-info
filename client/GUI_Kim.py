@@ -440,10 +440,10 @@ class SuperPage(tk.Frame):
             url = Data[0]
             if sep == 1:
                 url = cnt - 1 - url
-                webbrowser.open(url_list[url])
+                # webbrowser.open(url_list[url])
             else:
                 url = cnt2 - 1 - url
-                webbrowser.open(url_list_sw[url])
+                # webbrowser.open(url_list_sw[url])
 
             controller.show_frame("SuperChangeListINFO")
 

@@ -5,6 +5,7 @@ import Login
 import Find_User
 import Update_User
 import Getalluser
+import Post_ch
 from tkinter import ttk
 from tkinter import font as tkfont
 from tkinter import *
@@ -13,6 +14,8 @@ import webbrowser
 
 UserInfo = []
 User_token = []
+SpUser_sw = []
+SpUser_dept = []
 
 
 class Apps(tk.Tk):
@@ -24,6 +27,8 @@ class Apps(tk.Tk):
         font_logintext = tkfont.Font(family='Helvetica', size=15)
         global font_startpageinfo
         font_startpageinfo = tkfont.Font(family='여기어때 잘난체 OTF', size=18)
+        global font_SuperButton
+        font_SuperButton = tkfont.Font(family='여기어때 잘난체 OTF', size=10)
         global font_superuser_finduser
         font_superuser_finduser = tkfont.Font(family='여기어때 잘난체 OTF', size=14)
         # 여기어때 잘난체 OTF 다른 컴퓨터에서도 잘 작동하는지 확인 필요
@@ -110,7 +115,7 @@ class StartPage(tk.Frame):
                     if 'username' in User_token[i]:
                         txt += "아이디를 확인해 주세요\n"
                     if 'non_field_errors' in User_token[i]:
-                        txt += "존제하지 않는 유저입니다\n"
+                        txt += "존재하지 않는 유저입니다\n"
                 User_token = []
                 messagebox.showwarning("Error", txt)
 
@@ -218,7 +223,7 @@ class SuperPage(tk.Frame):
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         # 유저들이 나오는 페이지로 넘어가는 부분
         button2.place(x=145, y=185)
-        button3 = tk.Button(self, text="통계랑 보기", command=lambda: controller.show_frame("SuperShowUserINFO"),
+        button3 = tk.Button(self, text="리스트 정보 수정", command=lambda: controller.show_frame("SuperChangeListINFO"),
                             borderwidth=0, background='white', font=font_hypertext, fg="#0000FF")
         button3.place(x=145, y=210)
         # TODO 통계량 보기 부분 프레임 추가해야함
@@ -312,7 +317,7 @@ class SuperPage(tk.Frame):
 
         def Show_data():
             global type_list
-            global url_list, url_list_sw
+            global url_list, url_list_sw, SpUser_dept, SpUser_sw
             # 리스트 박스 1,2에 문자열이 있을 경우 이전 data 삭제
             if listbox.size() != 0:
                 listbox.delete(0, listbox.size())
@@ -332,6 +337,8 @@ class SuperPage(tk.Frame):
             txt_sw = ""
             url_list = []
             url_list_sw = []
+            SpUser_dept = []
+            SpUser_sw = []
             j = 0
             print("-----------")
             print(a)
@@ -347,6 +354,7 @@ class SuperPage(tk.Frame):
             cnt = 0
             for i in range(0, len(a), 5):
                 if a[i + 4] in type_list:
+                    SpUser_dept += a[i:i + 5]
                     cnt += 1
 
             for i in range(0, len(a), 5):
@@ -381,6 +389,7 @@ class SuperPage(tk.Frame):
             cnt2 = 0
             for i in range(0, len(b), 5):
                 if b[i + 4] in type_list:
+                    SpUser_sw += b[i:i + 5]
                     cnt2 += 1
 
             listbox_order = int(len(b) / 5) + 1
@@ -428,12 +437,14 @@ class SuperPage(tk.Frame):
 
         def openweb(Data, sep):
             # 이부분에 스토리 보드와 같이 정보수정으로 넘어가는 페이지 구현 필요
-            global url_list, url_list_sw
+            global url_list, url_list_sw, SpUser_ch_L_I
             url = Data[0]
             if sep == 1:
                 url = cnt - 1 - url
+                # webbrowser.open(url_list[url])
             else:
                 url = cnt2 - 1 - url
+                # webbrowser.open(url_list_sw[url])
 
             controller.show_frame("SuperChangeListINFO")
 
@@ -441,6 +452,7 @@ class SuperPage(tk.Frame):
             listbox.pack()
             listbox2.pack()
             Show_data()
+
         # DB에서 가져온 data를 학교 공지사항, sw 공지사항 별로 저장할 함수
 
         button = tk.Button(self, borderwidth=3, relief="flat", text="  Enter  ", fg="white",
@@ -543,7 +555,6 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
                 if userlist[j] == True:  # 만약 구독을 한 사람이라면 subcnt+=1해준다.
                     subcnt += 1
             newuserlist.append(string)
-            print(newuserlist[k])
             listbox.insert(k, newuserlist[k])
             k += 1
         category = "CATEGORY => number | ID | E-Mail | Subscribed or not"
@@ -555,10 +566,6 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         subscribed = tk.Label(self, text="총 구독자 수 : " + str(subcnt), font=font_startpageinfo, background='white')
         subscribed.place(x=30, y=440)
 
-        # button1 = Button(self, text="type별 검색 통계량 보기", command=lambda: controller.show_frame("Make_User_page"),
-        #                  # TODO 이거 make user page로 넘어가면 안되고 통계량 보는 새로운 frame만들어줘야한다.
-        #                  background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
-        # button1.place(x=30, y=280)
 
         all_listbox_items = listbox.get(0, END)
 
@@ -578,13 +585,213 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
         self.configure(background='white')
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
+
         # 밑에 추가로 구현 필요
+
+        def Delete():
+            global SpUser_dept, SpUser_sw
+            display1.delete(0, tk.END)
+            display2.delete(0, tk.END)
+            display3.delete(0, tk.END)
+            display4.delete(0, tk.END)
+            display5.delete(0, tk.END)
+            self.txt1.set(" ")
+            self.txt2.set(" ")
+            self.txt3.set(" ")
+            self.txt4.set(" ")
+            SpUser_sw = []
+            SpUser_dept = []
+            controller.show_frame("SuperPage")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
-                                command=lambda: controller.show_frame("SuperPage"), padx=10, pady=10, image=image_back)
+                                command=Delete, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=25, y=550)  # 뒤로가기버튼
+
+        image_user = PhotoImage(file="imagefile/ChangListinfo.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=120, y=130)
+
+        LIST_INFO = []
+
+        def Cheak():
+            global a
+            a = RadioVariety_1.get()
+
+        def DeleteData():  # 이거 질문 필요
+            pass
+
+        def Search():
+            global a, SpUser_sw, SpUser_dept, LIST_INFO
+            self.txt2.set(" ")
+            self.txt3.set(" ")
+            self.txt4.set(" ")
+            print("SpUser_sw")
+            print(SpUser_sw)
+            print("SpUser_dept")
+            print(SpUser_dept)
+
+            num = str1.get()
+            if a == 1:
+                url1 = cnt - num
+                LIST_INFO = SpUser_dept[url1 * 5:url1 * 5 + 5]
+            else:
+                url2 = cnt2 - num
+                LIST_INFO = SpUser_sw[url2 * 5:url2 * 5 + 5]
+
+            print(LIST_INFO)
+            try:
+                if LIST_INFO:
+                    text1 = "제목 : " + LIST_INFO[1] + " 날짜 : " + LIST_INFO[2]
+                    text2 = "타입 : " + LIST_INFO[4]
+                else:
+                    text1 = "Data가 없습니다"
+                    text2 = " "
+            except:
+                text1 = "Data가 없습니다"
+                text2 = " "
+
+            self.txt1.set(text1)
+            self.txt2.set(text2)
+
+        def openweb():
+            global LIST_INFO
+
+            try:
+                if LIST_INFO:
+                    print(LIST_INFO)
+                    webbrowser.open(LIST_INFO[3])
+                else:
+                    txt = "[ Error : No Data ]"
+                    messagebox.showwarning("Error", txt)
+            except:
+                txt = "[ Error : No Data ]"
+                messagebox.showwarning("Error", txt)
+
+        def UpData_LIST():
+            global LIST_INFO
+            if str2.get():
+                title = str2.get()
+            else:
+                title = LIST_INFO[1]
+
+            if str3.get():
+                date = str3.get()
+            else:
+                date = LIST_INFO[2]
+
+            if str4.get():
+                type = str4.get()
+            else:
+                type = LIST_INFO[4]
+
+            if str5.get():
+                URL = str5.get()
+            else:
+                URL = LIST_INFO[3]
+            # ID, Token, title, date, URL, tpye
+            string = []
+            print(str(LIST_INFO[0]) + str(User_token[2]) + str(title) + str(date) + str(URL) + str(type))
+            POST = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], title, date, URL, type)
+            POST.update_list(string)
+            print("string :" + str(string[0]))
+            if string[0] == 200:
+                display2.delete(0, tk.END)
+                display3.delete(0, tk.END)
+                display4.delete(0, tk.END)
+                display5.delete(0, tk.END)
+                self.txt4.set("Data를 성공적으로 변경했습니다")
+                self.txt3.set(" ")
+                # 성공
+            elif string[0] == 404:
+                self.txt4.set("수정하고자 하는 List의 ID값이 다릅니다. 다시 확인해 주세요")
+                # 아이디 잘못 됬을떄
+            elif string[0] == 401:
+                self.txt4.set("권한이 없습니다. 관리자에 문의해 토큰을 확인해 주세요.")
+                # 리스트의 토큰이 잘못 됬을때
+            elif string[0] == 400:
+                self.txt3.set("날짜 형식을 확인해 주세요")
+                # 날짜 형식이 잘못됬을때
+
+        self.txt1 = StringVar()
+        self.txt2 = StringVar()
+        self.txt3 = StringVar()
+        self.txt4 = StringVar()
+        self.txt1.set(" ")
+        self.txt2.set(" ")
+        self.txt3.set(" ")
+        self.txt4.set(" ")
+        GetText1 = tk.Label(self, textvariable=self.txt1, background='white', font=font_SuperButton)
+        GetText1.place(x=200, y=280)
+        GetText2 = tk.Label(self, textvariable=self.txt2, background='white', font=font_SuperButton)
+        GetText2.place(x=200, y=300)
+        GetText3 = tk.Label(self, textvariable=self.txt3, background='white', font=font_SuperButton)
+        GetText3.place(x=360, y=370)
+        GetText4 = tk.Label(self, textvariable=self.txt4, background='white', font=font_SuperButton)
+        GetText4.place(x=200, y=425)
+
+        RadioVariety_1 = IntVar()
+
+        radio_scholar = tk.Radiobutton(self, text="학교", background='white', font=font_SuperButton, value=1,
+                                       variable=RadioVariety_1, command=Cheak)
+        # font_radiobutton == FB로, Make_List==M_L로 변경
+        radio_scholar.place(x=230, y=250)
+
+        radio_job = tk.Radiobutton(self, text="학과", background='white', font=font_SuperButton, value=2,
+                                   variable=RadioVariety_1, command=Cheak)
+        radio_job.place(x=300, y=250)
+
+        str1 = IntVar()
+        LabelWidget1 = tk.Label(self, text="리스트 번호", background='white', font=font_SuperButton)
+        LabelWidget1.place(x=370, y=251)
+        display1 = tk.Entry(self, width=20, textvariable=str1)
+        display1.place(x=450, y=251)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="Search",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=Search)
+        button.place(x=600, y=250)
+
+        LabelWidget2 = tk.Label(self, text="제목", background='white', font=font_SuperButton)
+        LabelWidget2.place(x=200, y=330)
+
+        LabelWidget3 = tk.Label(self, text="날짜", background='white', font=font_SuperButton)
+        LabelWidget3.place(x=355, y=330)
+
+        LabelWidget4 = tk.Label(self, text="타입", background='white', font=font_SuperButton)
+        LabelWidget4.place(x=510, y=330)
+
+        LabelWidget5 = tk.Label(self, text="URL", background='white', font=font_SuperButton)
+        LabelWidget5.place(x=665, y=330)
+
+        str2 = StringVar()
+        display2 = tk.Entry(self, width=20, textvariable=str2)
+        display2.place(x=205, y=350)
+
+        str3 = StringVar()
+        display3 = tk.Entry(self, width=20, textvariable=str3)
+        display3.place(x=360, y=350)
+
+        str4 = StringVar()
+        display4 = tk.Entry(self, width=20, textvariable=str4)
+        display4.place(x=515, y=350)
+
+        str5 = StringVar()
+        display5 = tk.Entry(self, width=20, textvariable=str5)
+        display5.place(x=670, y=350)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   Open Web   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=openweb)
+        button.place(x=205, y=500)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   UplodeData   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=UpData_LIST)
+        button.place(x=355, y=500)
+
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   DeleteData   ",
+                           fg="white", background="#00b0f0", font=font_SuperButton, command=DeleteData)
+        button.place(x=505, y=500)
 
 
 # DB쪽 put-post사용해야함, 이거는 제가 구현 할께요 - 김성욱 ( ㅇ우창ㅇ이랑 얘기가 필요해요 )
@@ -839,12 +1046,6 @@ class main(tk.Frame):
                 url = cnt2 - 1 - url
                 webbrowser.open(url_list_sw[url])
 
-            image_back = PhotoImage(file='imagefile/OP_button3_back.png')
-            button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
-                                    command=Empty, padx=10, pady=10, image=image_back)
-            button_back.image = image_back
-            button_back.place(x=170, y=570)
-
         def Delet_data():
             listbox.pack()
             listbox2.pack()
@@ -901,13 +1102,20 @@ class Make_User_page(tk.Frame):
         self.configure(background='white')
 
         global display3, checkbutton
+        subVar = IntVar(value=1)
 
         def clickMe():
             string = []
             user_ID = str1.get()
             user_Email = str2.get()
             user_PW = str3.get()
-            Mk = Create_User.Make_user(user_ID, user_Email, user_PW)
+            if subVar.get() == 1:
+                print("hi")
+                user_Subscribe = "true"
+            else:
+                print("bye")
+                user_Subscribe = "false"
+            Mk = Create_User.Make_user(user_ID, user_Email, user_PW, user_Subscribe)
             Mk.make(string)
             print(string)
             if string[0] == 201:
@@ -921,7 +1129,7 @@ class Make_User_page(tk.Frame):
                     if 'email' in string[i]:
                         txt += "이메일 형식을 확인해주세요\n"
                     if 'username' in string[i]:
-                        txt += "이미 존제하는 ID입니다\n"
+                        txt += "이미 존재하는 ID입니다\n"
                 messagebox.showwarning(
                     "Error", txt)
 
@@ -1024,6 +1232,13 @@ class Make_User_page(tk.Frame):
         button_back.image = image_back
         button_back.place(x=235, y=550)
 
+        LabelWidget4 = tk.Label(self, text="Subscribe", background='white', font=FB)
+        LabelWidget4.place(x=375, y=500)
+        # subVar = IntVar(value=1)
+        subscribe_checkbutton = tk.Checkbutton(self, background='white', variable=subVar)
+        # subscribe_checkbutton.var = tk.BooleanVar(value=True)
+        subscribe_checkbutton.place(x=475, y=500)
+
 
 class Change_User_Info(tk.Frame):
 
@@ -1035,16 +1250,25 @@ class Change_User_Info(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
+        subVar2 = IntVar(value=1)
+
         def clickMe():
+            if subVar2.get() == 1:
+                user_Subscribe = "true"
+                print("got true")
+            else:
+                user_Subscribe = "false"
+                print("got false")
             message = []
             print(User_token[2])
-            CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2])
+            CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
             CH.UUD_INFO(message)
             print(message)
             display1.delete(0, tk.END)
             display2.delete(0, tk.END)
             display3.delete(0, tk.END)
             display4.delete(0, tk.END)
+            subVar = IntVar(value=1)
             controller.show_frame("ch_U_Suss")
 
         image_user = PhotoImage(file="imagefile/OP_make_user.png")
@@ -1066,9 +1290,9 @@ class Change_User_Info(tk.Frame):
 
         str2 = StringVar()
         LabelWidget2 = tk.Label(self, text="Email", background='white', font=FB)
-        LabelWidget2.place(x=375, y=350)
+        LabelWidget2.place(x=375, y=340)
         display2 = tk.Entry(self, width=20, textvariable=str2)
-        display2.place(x=475, y=350)
+        display2.place(x=475, y=340)
 
         # 비밀번호 별표로 안보이게 가리는 부분
         def toggle_password():
@@ -1084,9 +1308,9 @@ class Change_User_Info(tk.Frame):
 
         str3 = StringVar()
         LabelWidget3 = tk.Label(self, text="Password", background='white', font=FB)
-        LabelWidget3.place(x=375, y=410)
+        LabelWidget3.place(x=375, y=390)
         display3 = tk.Entry(self, width=20, textvariable=str3)
-        display3.place(x=475, y=410)
+        display3.place(x=475, y=390)
         # 비번 안보이게 하는 부분
         display3.default_show_val = display3['show']
         display3['show'] = "•"
@@ -1094,13 +1318,13 @@ class Change_User_Info(tk.Frame):
                                       background='white')
         checkbutton1.var = tk.BooleanVar(value=True)
         checkbutton1['variable'] = checkbutton1.var
-        checkbutton1.place(x=620, y=405)
+        checkbutton1.place(x=620, y=385)
 
         str4 = StringVar()
         LabelWidget4 = tk.Label(self, text="New_Password", background='white', font=FB)
-        LabelWidget4.place(x=375, y=470)
+        LabelWidget4.place(x=375, y=440)
         display4 = tk.Entry(self, width=20, textvariable=str4)
-        display4.place(x=475, y=470)
+        display4.place(x=475, y=440)
 
         # 비번 안보이게 하는 부분
         display4.default_show_val = display4['show']
@@ -1109,7 +1333,7 @@ class Change_User_Info(tk.Frame):
                                       background='white')
         checkbutton2.var = tk.BooleanVar(value=True)
         checkbutton2['variable'] = checkbutton2.var
-        checkbutton2.place(x=620, y=465)
+        checkbutton2.place(x=620, y=435)
 
         def Error_Messagebox():  # 비밀번호가 조건에 맞지 않을 때 띄우는 에러
             messagebox.showinfo("에러", "ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ\n| 다시 확인해 주세요. |\nㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ")  # 메시지 다시 만들기
@@ -1143,17 +1367,25 @@ class Change_User_Info(tk.Frame):
         que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
         label_Queimage = tk.Label(self, image=que_image, borderwidth=0)
         label_Queimage.image = que_image
-        label_Queimage.place(x=600, y=490)
+        label_Queimage.place(x=600, y=460)
 
         label5 = tk.Label(self, text="", width=0, background='white')
-        label5.place(x=625, y=490)
+        label5.place(x=625, y=460)
 
         label_Queimage.bind("<Enter>", on_enter)
         label_Queimage.bind("<Leave>", on_leave)
 
+        LabelWidget4 = tk.Label(self, text="Subscribe", background='white', font=FB)
+        LabelWidget4.place(x=375, y=490)
+
+        # subVar = IntVar(value=1)
+        subscribe_checkbutton = tk.Checkbutton(self, onvalue=True, offvalue=False, background='white', variable=subVar2)
+        # subscribe_checkbutton.var = tk.BooleanVar(value=True)
+        subscribe_checkbutton.place(x=470, y=490)
+
         button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=button_hit, fg="white",
                            background="#00b0f0", font=font_Cheack_B)
-        button.place(x=475, y=560)
+        button.place(x=475, y=540)
 
         def Empty():
             global User_token
@@ -1164,7 +1396,7 @@ class Change_User_Info(tk.Frame):
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
-        button_back.place(x=235, y=550)
+        button_back.place(x=235, y=540)
 
 
 class Find_User_Info(tk.Frame):
@@ -1267,7 +1499,7 @@ class Find_ID(tk.Frame):
                                       background='white')
                     label2.place(x=250, y=300)
                 else:
-                    label3 = tk.Label(self, text="   유저가 존제하지 않습니다                       ", font=controller.title_font,
+                    label3 = tk.Label(self, text="   유저가 존재하지 않습니다                       ", font=controller.title_font,
                                       background='white')
                     label3.place(x=250, y=300)
 
@@ -1306,7 +1538,7 @@ class Find_PW(tk.Frame):
                                       background='white')
                     label2.place(x=250, y=300)
                 else:
-                    label2 = tk.Label(self, text="유저가 존제하지 않습니다", font=controller.title_font,
+                    label2 = tk.Label(self, text="유저가 존재하지 않습니다", font=controller.title_font,
                                       background='white')
                     label2.place(x=250, y=300)
 
