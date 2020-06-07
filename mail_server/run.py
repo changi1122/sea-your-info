@@ -26,7 +26,7 @@ def sender(recidpients, sw_post, department_post):
             department_body += '''\
                 <div style="margin: 10px 0">
                     <p style="font-size: 20px; margin: 0; font-weight: bold; margin-bottom: 2px;"><a style="color: black;" href="''' + department_post[i]['url'] + '''"target="_blank">''' + department_post[i]['title'] + '''</a></p>
-                    <p style="margin: 0;"><span style="background-color: gray; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + str(department_post[i]['date'])[:str(department_post[i]['date']).index('T')] + '''</span><span style="margin-left: 16px; background-color: #92234e; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + department_post[i]['type'] + '''</span></p>
+                    <p style="margin: 0;"><span style="background-color: gray; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + str(department_post[i]['date'])[:str(department_post[i]['date']).index('T')] + '''</span> <span style="margin-left: 16px; background-color: #92234e; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + department_post[i]['type'] + '''</span></p>
                 </div>
             '''
 
@@ -36,7 +36,7 @@ def sender(recidpients, sw_post, department_post):
             sw_body += '''\
                 <div style="margin: 10px 0">
                     <p style="font-size: 20px; margin: 0; font-weight: bold; margin-bottom: 2px;"><a style="color: black;" href="''' + sw_post[i]['url'] + '''"target="_blank">''' + sw_post[i]['title'] + '''</a></p>
-                    <p style="margin: 0;"><span style="background-color: gray; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + str(sw_post[i]['date'])[:str(sw_post[i]['date']).index('T')] + '''</span><span style="margin-left: 16px; background-color: #92234e; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + sw_post[i]['type'] + '''</span></p>
+                    <p style="margin: 0;"><span style="background-color: gray; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + str(sw_post[i]['date'])[:str(sw_post[i]['date']).index('T')] + '''</span> <span style="margin-left: 16px; background-color: #92234e; font-size: 14px; color: white; padding: 1px 4px; border-radius: 3px;">''' + sw_post[i]['type'] + '''</span></p>
                 </div>
             '''
         department_body_with_header = ''
