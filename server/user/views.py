@@ -51,19 +51,20 @@ class UserViewSet(viewsets.ModelViewSet):
             customuser = get_object_or_404(customqueryset, user_id=user.id)
 
             # Password 확인
-            if check_password(request.data['password'], user.password) or request.user.is_superuser:
+            if check_password(request.data.get('password'), user.password) or request.user.is_superuser:
                 if request.data.get('email'):
                     user.email = request.data['email']
                 if request.data.get('new_password'):
                     user.password = make_password(request.data['new_password'])
-                if request.data.get('hasSubscribed') == True or request.data.get('hasSubscribed') == False:
-                    customuser.hasSubscribed = request.data['hasSubscribed']
+                if request.data.get('hasSubscribed') == "true" or request.data.get('hasSubscribed') == "True":
+                    customuser.hasSubscribed = True
+                if request.data.get('hasSubscribed') == "false" or request.data.get('hasSubscribed') == "False":
+                    customuser.hasSubscribed = False
                 if request.data.get('topics'):
                     customuser.topics = request.data['topics']
                 user.save()
                 customuser.save()
 
-                print(user.__dict__)
                 return Response({ "id": user.id, "username": user.username, "email": user.email, "hasSubscribed": customuser.hasSubscribed, "topics": customuser.topics }, status=200)
             else:
                 return Response({ "detail": "Incorrect password." }, status=401)
