@@ -628,10 +628,17 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             print(LIST_INFO)
             POST2 = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], LIST_INFO[1], LIST_INFO[2], LIST_INFO[3],
                                     LIST_INFO[4])
+            string=[]
             if a ==1:
-                POST2.delete_list_dept()
+                POST2.delete_list_dept(string)
             else :
-                POST2.delete_list_sw()
+                POST2.delete_list_sw(string)
+
+            if string[0] == 'OK':
+                self.txt4.set("Data를 성공적으로 삭제했습니다")
+            else:
+                self.txt4.set("Data 삭제에 실패했습니다")
+
 
         def Search():
             global a, SpUser_sw, SpUser_dept, LIST_INFO

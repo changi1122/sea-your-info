@@ -10,7 +10,7 @@ class Post_ch():
         self.URL =URL
         self.type = tpye
 
-    def delete_list_dept(self):
+    def delete_list_dept(self, string):
         # DB의 게시물을 삭제하는 코드 샘플입니다. 삭제할 게시물의 id가 필요합니다.
         # 실행전 확인 : URL 설정, ID 값 설정
 
@@ -35,8 +35,13 @@ class Post_ch():
         print("response")
         print(response.text)
 
+        if not (response.text):
+            string.append('OK')
+        else :
+            string.append('Fail')
 
-    def delete_list_sw(self):
+
+    def delete_list_sw(self, string):
         # DB의 게시물을 삭제하는 코드 샘플입니다. 삭제할 게시물의 id가 필요합니다.
         # 실행전 확인 : URL 설정, ID 값 설정
 
@@ -61,6 +66,10 @@ class Post_ch():
         print("response")
         print(response.text)
 
+        if not (response.text):
+            string.append('OK')
+        else :
+            string.append('Fail')
 
 
     def update_list_sw(self, string):
