@@ -622,11 +622,16 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             a = RadioVariety_1.get()
 
         def DeleteData():  # 이거 질문 필요
-            global LIST_INFO
+            global LIST_INFO, a
+            num = str1.get()
             print("DDDDDD")
             print(LIST_INFO)
-            POST2 = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], LIST_INFO[1], LIST_INFO[2], LIST_INFO[3], LIST_INFO[4])
-            POST2.delete_list()
+            POST2 = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], LIST_INFO[1], LIST_INFO[2], LIST_INFO[3],
+                                    LIST_INFO[4])
+            if a ==1:
+                POST2.delete_list_dept()
+            else :
+                POST2.delete_list_sw()
 
         def Search():
             global a, SpUser_sw, SpUser_dept, LIST_INFO
@@ -638,8 +643,8 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             print("SpUser_dept")
             print(SpUser_dept)
 
-            num = str1.get()
             try:
+                num = str1.get()
                 if num != 0:
                     if a == 1:
                         cnt = len(SpUser_dept) // 5
@@ -654,12 +659,10 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             except:
                 pass
 
-            print("LIST_INFO")
-            print(LIST_INFO)
             try:
                 if LIST_INFO:
-                    text1 = "제목 : " + LIST_INFO[1] + " 날짜 : " + LIST_INFO[2]
-                    text2 = "타입 : " + LIST_INFO[4]
+                    text1 = "제목 : " + LIST_INFO[1]
+                    text2 = "날짜 : " + LIST_INFO[2]+" 타입 : " + LIST_INFO[4]
                 else:
                     text1 = "Data가 없습니다"
                     text2 = " "
@@ -685,7 +688,7 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
                 messagebox.showwarning("Error", txt)
 
         def UpData_LIST():
-            global LIST_INFO
+            global LIST_INFO,a
             if str2.get():
                 title = str2.get()
             else:
@@ -709,7 +712,12 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             string = []
             print(str(LIST_INFO[0]) + str(User_token[2]) + str(title) + str(date) + str(URL) + str(type))
             POST = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], title, date, URL, type)
-            POST.update_list(string)
+
+            if a==1:
+                POST.update_list_dept(string)
+            else :
+                POST.update_list_sw(string)
+
             print("string :" + str(string[0]))
             if string[0] == 200:
                 display2.delete(0, tk.END)
