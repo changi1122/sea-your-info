@@ -16,7 +16,7 @@ UserInfo = []
 User_token = []
 SpUser_sw = []
 SpUser_dept = []
-
+user_ID=[]
 
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
@@ -97,12 +97,12 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            global User_token
-            user_ID = str1.get()
+            global User_token, user_ID
+            user_ID.append(str1.get())
             user_PW = str2.get()
             display1.delete(0, tk.END)
             display3.delete(0, tk.END)
-            Lg = Login.Login(user_ID, user_PW)
+            Lg = Login.Login(user_ID[0], user_PW)
             Lg.Check(User_token)
             print(User_token)
             if User_token[0] == 1:
@@ -846,13 +846,14 @@ class main(tk.Frame):
         user_image.place(x=25, y=120)
 
         def Logout():  # 로그인 했을때 listbox에 남아있는 ID, PW기록 지우기
-            global User_token
+            global User_token, user_ID
             if listbox.size() != 0:
                 listbox.delete(0, listbox.size())
 
             if listbox2.size() != 0:
                 listbox2.delete(0, listbox2.size())
             User_token = []  # 유저 정보 저장하는 리스트 초기화
+            user_ID=[]
             controller.show_frame("StartPage")
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
@@ -1290,10 +1291,10 @@ class Change_User_Info(tk.Frame):
                 print("got false")
             message = []
             print(User_token[2])
-            CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
+            CH = Update_User.Update_User(user_ID[0], str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
             CH.UUD_INFO(message)
             print(message)
-            display1.delete(0, tk.END)
+            self.str1.set(" ")
             display2.delete(0, tk.END)
             display3.delete(0, tk.END)
             display4.delete(0, tk.END)
@@ -1311,11 +1312,19 @@ class Change_User_Info(tk.Frame):
         label2 = tk.Label(self, text="Change User Info", background='white', font=font_startpageinfo)
         label2.place(x=375, y=230)
 
-        str1 = StringVar()
+        def Show(event):
+            print(1122)
+            self.str1.set(user_ID[0])
+
+        self.bind("<Enter>", Show)
+
+        self.str1 = StringVar()
+        self.str1.set(" ")
         LabelWidget1 = tk.Label(self, text="ID", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
-        display1 = tk.Entry(self, width=20, textvariable=str1)
-        display1.place(x=475, y=290)
+        show_ID = tk.Label(self, textvariable=self.str1, background='white', font=FB)
+        show_ID.place(x=475, y=290)
+
 
         str2 = StringVar()
         LabelWidget2 = tk.Label(self, text="Email", background='white', font=FB)
@@ -1417,8 +1426,6 @@ class Change_User_Info(tk.Frame):
         button.place(x=475, y=540)
 
         def Empty():
-            global User_token
-            User_token = []
             controller.show_frame("main")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
@@ -1651,17 +1658,18 @@ class ch_U_Suss(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        label2 = tk.Label(self, text="회원정보 변경에 성공했습니다.", font=controller.title_font, background='white')
-        label2.place(x=250, y=300)
+        image_user = PhotoImage(file="imagefile/CH_USER_S.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=150)
 
         def Empty():
-            global User_token
-            User_token = []
             controller.show_frame("main")
 
-        button1 = tk.Button(self, text="돌아가기", command=Empty)
-        button1.place(x=700, y=500)
-
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+                            command=Empty,
+                            fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1.place(x=500, y=520)
 
 if __name__ == "__main__":
     app = Apps()
