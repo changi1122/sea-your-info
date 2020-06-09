@@ -16,13 +16,15 @@ UserInfo = []
 User_token = []
 SpUser_sw = []
 SpUser_dept = []
-
+user_ID=[]
 
 class Apps(tk.Tk):
     def __init__(self, *args, **kwargs):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.title_font = tkfont.Font(family='Helvetica', size=30, weight="bold", slant="italic")
+        global font_ID
+        font_ID = tkfont.Font(family='여기어때 잘난체 OTF', size=50)
         global font_logintext
         font_logintext = tkfont.Font(family='Helvetica', size=15)
         global font_startpageinfo
@@ -59,7 +61,7 @@ class Apps(tk.Tk):
         self.frames = {}
         for F in (
                 StartPage, Make_User_page, Find_User_Info, main, Change_User_Info, Mk_U_Suss, ch_U_Suss, Find_ID,
-                Find_PW, SuperPage, SuperShowUserINFO, SuperChangeListINFO):
+                Find_PW_S, Find_F, SuperPage, SuperShowUserINFO, SuperChangeListINFO):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             self.frames[page_name] = frame
@@ -95,12 +97,12 @@ class StartPage(tk.Frame):
         label_defaultlogo.place(x=-10, y=100)
 
         def clickMe():
-            global User_token
-            user_ID = str1.get()
+            global User_token, user_ID
+            user_ID.append(str1.get())
             user_PW = str2.get()
             display1.delete(0, tk.END)
             display3.delete(0, tk.END)
-            Lg = Login.Login(user_ID, user_PW)
+            Lg = Login.Login(user_ID[0], user_PW)
             Lg.Check(User_token)
             print(User_token)
             if User_token[0] == 1:
@@ -128,7 +130,7 @@ class StartPage(tk.Frame):
 
         # 첫 화면 텍스트 부분
         label4 = tk.Label(self,
-                          text="  정보바다에 오신 것을 환영합니다.\n\n정보바다에서는 여러분들의 학업 증진을 위하여\n 학교의 공지사항 정보들을 알려드리고 있습니다.\n\n회원가입과 로그인을 통하여 자세히 알아보세요.\n\n\nWelcome to Sea-Your-Info!\n\nSea-Your-Info will let you know all of the\nimportant school notice.\nIt will save your precious time.\n\nFor more information, do not hesitate to\njoin our free membership!\n\n",
+                          text="  정보바다에 오신 것을 환영합니다.\n\n정보바다에서는 여러분들의 학업 증진을 위하여\n 학교의 공지사항 정보들을 알려드리고 있습니다.\n\n회원가입과 로그인을 통하여 자세히 알아보세요.\n\n\n\n\nWelcome to Sea-Your-Info!\n\nSea-Your-Info will let you know all of the\nimportant school notice.\nIt will save your precious time.\n\nFor more information, do not hesitate to\njoin our free membership!\n\n",
                           font=font_startpageinfo, background='white')
         label4.place(x=440, y=160)
 
@@ -183,6 +185,28 @@ class StartPage(tk.Frame):
         button1.place(x=40, y=570)
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
+
+        quotation_up = PhotoImage(file='imagefile/up.png')
+        label_quotation_up = Label(self, image=quotation_up, borderwidth=0)
+        label_quotation_up.image = quotation_up
+        label_quotation_up.place(x=965, y=270)
+        quotation_down = PhotoImage(file='imagefile/down.png')
+        label_quotation_down = Label(self, image=quotation_down, borderwidth=0)
+        label_quotation_down.image = quotation_down
+        label_quotation_down.place(x=400, y=145)
+        quotation_middle = PhotoImage(file='imagefile/middle.png')
+        label_quotation_middle = Label(self, image=quotation_middle, borderwidth=0)
+        label_quotation_middle.image=quotation_middle
+        label_quotation_middle.place(x=580, y=340)
+
+        label_quotation_up2 = Label(self, image=quotation_up, borderwidth=0)
+        label_quotation_up2.image = quotation_up
+        label_quotation_up2.place(x=965, y=565)
+
+        label_quotation_down2 = Label(self, image=quotation_down, borderwidth=0)
+        label_quotation_down2.image = quotation_down
+        label_quotation_down2.place(x=400, y=390)
+
 
 
 # 슈퍼유저 관련 페이지
@@ -337,8 +361,10 @@ class SuperPage(tk.Frame):
             txt_sw = ""
             url_list = []
             url_list_sw = []
-            SpUser_dept = []
-            SpUser_sw = []
+            if not SpUser_dept :
+                SpUser_dept = []
+            if not SpUser_sw :
+                SpUser_sw = []
             j = 0
             print("-----------")
             print(a)
@@ -441,12 +467,11 @@ class SuperPage(tk.Frame):
             url = Data[0]
             if sep == 1:
                 url = cnt - 1 - url
-                # webbrowser.open(url_list[url])
+                webbrowser.open(url_list[url])
             else:
                 url = cnt2 - 1 - url
-                # webbrowser.open(url_list_sw[url])
+                webbrowser.open(url_list_sw[url])
 
-            controller.show_frame("SuperChangeListINFO")
 
         def Delet_data():
             listbox.pack()
@@ -599,8 +624,6 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             self.txt2.set(" ")
             self.txt3.set(" ")
             self.txt4.set(" ")
-            SpUser_sw = []
-            SpUser_dept = []
             controller.show_frame("SuperPage")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
@@ -621,7 +644,23 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             a = RadioVariety_1.get()
 
         def DeleteData():  # 이거 질문 필요
-            pass
+            global LIST_INFO, a
+            num = str1.get()
+            print("DDDDDD")
+            print(LIST_INFO)
+            POST2 = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], LIST_INFO[1], LIST_INFO[2], LIST_INFO[3],
+                                    LIST_INFO[4])
+            string=[]
+            if a ==1:
+                POST2.delete_list_dept(string)
+            else :
+                POST2.delete_list_sw(string)
+
+            if string[0] == 'OK':
+                self.txt4.set("Data를 성공적으로 삭제했습니다")
+            else:
+                self.txt4.set("Data 삭제에 실패했습니다")
+
 
         def Search():
             global a, SpUser_sw, SpUser_dept, LIST_INFO
@@ -633,19 +672,26 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             print("SpUser_dept")
             print(SpUser_dept)
 
-            num = str1.get()
-            if a == 1:
-                url1 = cnt - num
-                LIST_INFO = SpUser_dept[url1 * 5:url1 * 5 + 5]
-            else:
-                url2 = cnt2 - num
-                LIST_INFO = SpUser_sw[url2 * 5:url2 * 5 + 5]
+            try:
+                num = str1.get()
+                if num != 0:
+                    if a == 1:
+                        cnt = len(SpUser_dept) // 5
+                        url1 = cnt - num
+                        print("cnt :" + str(cnt) + " url1 :" + str(url1))
+                        LIST_INFO = SpUser_dept[url1 * 5:url1 * 5 + 5]
+                    else:
+                        cnt2 = len(SpUser_sw) // 5
+                        url2 = cnt2 - num
+                        print("cnt2 :" + str(cnt2) + " url2 :" + str(url2))
+                        LIST_INFO = SpUser_sw[url2 * 5:url2 * 5 + 5]
+            except:
+                pass
 
-            print(LIST_INFO)
             try:
                 if LIST_INFO:
-                    text1 = "제목 : " + LIST_INFO[1] + " 날짜 : " + LIST_INFO[2]
-                    text2 = "타입 : " + LIST_INFO[4]
+                    text1 = "제목 : " + LIST_INFO[1]
+                    text2 = "날짜 : " + LIST_INFO[2]+" 타입 : " + LIST_INFO[4]
                 else:
                     text1 = "Data가 없습니다"
                     text2 = " "
@@ -671,7 +717,7 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
                 messagebox.showwarning("Error", txt)
 
         def UpData_LIST():
-            global LIST_INFO
+            global LIST_INFO,a
             if str2.get():
                 title = str2.get()
             else:
@@ -695,7 +741,12 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             string = []
             print(str(LIST_INFO[0]) + str(User_token[2]) + str(title) + str(date) + str(URL) + str(type))
             POST = Post_ch.Post_ch(str(LIST_INFO[0]), User_token[2], title, date, URL, type)
-            POST.update_list(string)
+
+            if a==1:
+                POST.update_list_dept(string)
+            else :
+                POST.update_list_sw(string)
+
             print("string :" + str(string[0]))
             if string[0] == 200:
                 display2.delete(0, tk.END)
@@ -817,13 +868,14 @@ class main(tk.Frame):
         user_image.place(x=25, y=120)
 
         def Logout():  # 로그인 했을때 listbox에 남아있는 ID, PW기록 지우기
-            global User_token
+            global User_token, user_ID
             if listbox.size() != 0:
                 listbox.delete(0, listbox.size())
 
             if listbox2.size() != 0:
                 listbox2.delete(0, listbox2.size())
             User_token = []  # 유저 정보 저장하는 리스트 초기화
+            user_ID=[]
             controller.show_frame("StartPage")
 
         # 좌측 상단 user_image 바로 오른 쪽에 있는 로그아웃과 회원정보 수정 버튼 부분
@@ -1261,10 +1313,10 @@ class Change_User_Info(tk.Frame):
                 print("got false")
             message = []
             print(User_token[2])
-            CH = Update_User.Update_User(str1.get(), str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
+            CH = Update_User.Update_User(user_ID[0], str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
             CH.UUD_INFO(message)
             print(message)
-            display1.delete(0, tk.END)
+            self.str1.set(" ")
             display2.delete(0, tk.END)
             display3.delete(0, tk.END)
             display4.delete(0, tk.END)
@@ -1282,11 +1334,19 @@ class Change_User_Info(tk.Frame):
         label2 = tk.Label(self, text="Change User Info", background='white', font=font_startpageinfo)
         label2.place(x=375, y=230)
 
-        str1 = StringVar()
+        def Show(event):
+            print(1122)
+            self.str1.set(user_ID[0])
+
+        self.bind("<Enter>", Show)
+
+        self.str1 = StringVar()
+        self.str1.set(" ")
         LabelWidget1 = tk.Label(self, text="ID", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
-        display1 = tk.Entry(self, width=20, textvariable=str1)
-        display1.place(x=475, y=290)
+        show_ID = tk.Label(self, textvariable=self.str1, background='white', font=FB)
+        show_ID.place(x=475, y=290)
+
 
         str2 = StringVar()
         LabelWidget2 = tk.Label(self, text="Email", background='white', font=FB)
@@ -1388,8 +1448,6 @@ class Change_User_Info(tk.Frame):
         button.place(x=475, y=540)
 
         def Empty():
-            global User_token
-            User_token = []
             controller.show_frame("main")
 
         image_back = PhotoImage(file='imagefile/OP_button3_back.png')
@@ -1463,11 +1521,18 @@ class Find_User_Info(tk.Frame):
 
     def onReturn23(self, PW_id, PW_Email):
         global UserInfo
-        self.controller.show_frame("Find_PW")
         FU_PW = Find_User.Find_User(PW_id, PW_Email)
         FU_PW.find_PW(UserInfo)
 
-        self.controller.show_frame("Find_PW")
+        if UserInfo:
+            print(11111111111)
+            print(UserInfo)
+            if UserInfo[0] != 'None':
+                print(200)
+                self.controller.show_frame("Find_PW_S")
+            else:
+                print(404)
+                self.controller.show_frame("Find_F")
         # clickMe() clickme처럼 이곳에 작동해야 하는 함수 추가하면 됨
 
     def onReturn1(self, ID_Email):
@@ -1475,7 +1540,16 @@ class Find_User_Info(tk.Frame):
         FU_ID = Find_User.Find_User(None, ID_Email)
         FU_ID.find_ID(UserInfo)
         print(1111111111)
-        self.controller.show_frame("Find_ID")
+        if UserInfo:
+            print(11111111111)
+            print(UserInfo)
+            if UserInfo[0] != 'None':
+                print(200)
+                self.controller.show_frame("Find_ID")
+            else:
+                print(404)
+                self.controller.show_frame("Find_F")
+        # clickMe() clickme처럼 이곳에 작동해야 하는 함수 추가하면 됨
 
 
 class Find_ID(tk.Frame):
@@ -1485,40 +1559,46 @@ class Find_ID(tk.Frame):
         self.controller = controller
         self.configure(background='white')
 
+
+        def Show(event):
+            print(1122)
+            self.str1.set(UserInfo[0])
+
+        """
+        _widget = tk.LabelFrame(self, bd=0,background='white')  # 화면에 user의 아이디 혹은 존제하지 않음을 출력하기 위해 사용하는 Event를 사용하기 위해 추가
+        _widget.pack(fill=BOTH, expand=1)
+        _widget.bind("<Enter>", Show)
+        """
+        self.bind("<Enter>", Show)
+
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        def Show(event):
-            print('event happen')
-            if UserInfo:
-                print(11111111111)
-                print(UserInfo)
-                if UserInfo[0] != 'None':
-                    print(22222222)
-                    label2 = tk.Label(self, text="등록하신 아이디는 %s 입니다." % (UserInfo[0]), font=controller.title_font,
-                                      background='white')
-                    label2.place(x=250, y=300)
-                else:
-                    label3 = tk.Label(self, text="   유저가 존재하지 않습니다                       ", font=controller.title_font,
-                                      background='white')
-                    label3.place(x=250, y=300)
-
-        _widget = tk.LabelFrame(self, bg='white', bd=0)  # 화면에 user의 아이디 혹은 존제하지 않음을 출력하기 위해 사용하는 Event를 사용하기 위해 추가
-        _widget.pack(fill=BOTH, expand=1)
-        _widget.bind("<Enter>", Show)
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
+        image_user = PhotoImage(file="imagefile/ID_S.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=150)
+
+        self.str1 = StringVar()
+        self.str1.set(" ")
+        GetText1 = tk.Label(self, textvariable=self.str1, background='white', font=font_ID)
+        GetText1.place(x=455, y=213)
 
         def Empty():
             global UserInfo
             UserInfo = []
+            self.str1.set(" ")
             controller.show_frame("StartPage")
 
-        button1 = tk.Button(self, text="    확인    ", command=Empty)
-        button1.place(x=800, y=500)
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+                            command=Empty,
+                            fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1.place(x=500, y=520)
 
 
-class Find_PW(tk.Frame):
+class Find_PW_S(tk.Frame):
     def __init__(self, parent, controller):
         tk.Frame.__init__(self, parent)
         self.controller = controller
@@ -1526,25 +1606,10 @@ class Find_PW(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        def Show(event):
-            print('event happen')
-            if UserInfo:
-                print(11111111111)
-                print(UserInfo)
-                if UserInfo[0] != 'None':
-                    print(22222222)
-                    label2 = tk.Label(self, text="임시 비밀번호가 발급되었습니다.\n 접속후 PW를 변경해 주세요\n 임시비밀번호 : %s" % (UserInfo[0]),
-                                      font=controller.title_font,
-                                      background='white')
-                    label2.place(x=250, y=300)
-                else:
-                    label2 = tk.Label(self, text="유저가 존재하지 않습니다", font=controller.title_font,
-                                      background='white')
-                    label2.place(x=250, y=300)
-
-        _widget = tk.LabelFrame(self, bg='white', bd=0)  # 화면에 user의 아이디 혹은 존제하지 않음을 출력하기 위해 사용하는 Event를 사용하기 위해 추가
-        _widget.pack(fill=BOTH, expand=1)
-        _widget.bind("<Enter>", Show)
+        image_user = PhotoImage(file="imagefile/PW_OK.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=150)
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
 
@@ -1554,8 +1619,37 @@ class Find_PW(tk.Frame):
             controller.show_frame("StartPage")
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        button1 = tk.Button(self, text="    확인     ", command=Empty)
-        button1.place(x=800, y=500)
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+                            command=Empty,
+                            fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1.place(x=500, y=520)
+
+
+class Find_F(tk.Frame):
+    def __init__(self, parent, controller):
+        tk.Frame.__init__(self, parent)
+        self.controller = controller
+        self.configure(background='white')
+        label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
+        label.place(x=100, y=35)
+
+        image_user = PhotoImage(file="imagefile/PW_F.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=180)
+
+        # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
+
+        def Empty():
+            global UserInfo
+            UserInfo = []
+            controller.show_frame("StartPage")
+
+        # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+                            command=Empty,
+                            fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1.place(x=500, y=550)
 
 
 class Mk_U_Suss(tk.Frame):
@@ -1586,17 +1680,18 @@ class ch_U_Suss(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        label2 = tk.Label(self, text="회원정보 변경에 성공했습니다.", font=controller.title_font, background='white')
-        label2.place(x=250, y=300)
+        image_user = PhotoImage(file="imagefile/CH_USER_S.png")
+        user_image = Label(self, image=image_user, background="white", borderwidth=0)
+        user_image.image = image_user
+        user_image.place(x=230, y=150)
 
         def Empty():
-            global User_token
-            User_token = []
             controller.show_frame("main")
 
-        button1 = tk.Button(self, text="돌아가기", command=Empty)
-        button1.place(x=700, y=500)
-
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+                            command=Empty,
+                            fg="white", background="#00b0f0", font=font_Cheack_B)
+        button1.place(x=500, y=520)
 
 if __name__ == "__main__":
     app = Apps()
