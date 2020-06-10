@@ -65,7 +65,7 @@ def sender(recidpients, sw_post, department_post):
             </head>
             <body style="margin: 0; padding: 0; border: 0; font-size: 100%; font: inherit; vertical-align: baseline; line-height: 1.5; font-family: Noto Sans KR, Apple SD Gothic Neo, Malgun Gothic, sans-serif; font-size: 16px;">
                 <div style="margin: 10px 20px; padding: 10px 0; font-size: 28px; border-bottom: 1px solid lightgray; text-align: center;">
-                    <b>6월 6일 공지사항 데일리 리포트</b>
+                    <b>""" + str(today.month) + """월 """ + str(today.day) + """일 공지사항 데일리 리포트</b>
                 </div>
                 <div style="margin: 10px 20px 40px;">""" + department_body_with_header + sw_body_with_header + """</div>
                 <div style="margin: 40px 20px;">
