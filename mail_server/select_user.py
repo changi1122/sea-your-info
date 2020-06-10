@@ -51,5 +51,8 @@ def selectUser(subscribeUser = []):
         subscribeUser.append(recode_E[1])
         print("Email : %s" % (subscribeUser[j]))  # test
         j += 1
+        
+        if j >= len(hasSubscribe):
+            break
 
     db.close()
