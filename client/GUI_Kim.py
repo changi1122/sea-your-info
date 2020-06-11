@@ -130,7 +130,7 @@ class StartPage(tk.Frame):
 
         # 첫 화면 텍스트 부분
         label4 = tk.Label(self,
-                          text="  정보바다에 오신 것을 환영합니다.\n\n정보바다에서는 여러분들의 학업 증진을 위하여\n 학교의 공지사항 정보들을 알려드리고 있습니다.\n\n회원가입과 로그인을 통하여 자세히 알아보세요.\n\n\nWelcome to Sea-Your-Info!\n\nSea-Your-Info will let you know all of the\nimportant school notice.\nIt will save your precious time.\n\nFor more information, do not hesitate to\njoin our free membership!\n\n",
+                          text="  정보바다에 오신 것을 환영합니다.\n\n정보바다에서는 여러분들의 학업 증진을 위하여\n 학교의 공지사항 정보들을 알려드리고 있습니다.\n\n회원가입과 로그인을 통하여 자세히 알아보세요.\n\n\n\n\nWelcome to Sea-Your-Info!\n\nSea-Your-Info will let you know all of the\nimportant school notice.\nIt will save your precious time.\n\nFor more information, do not hesitate to\njoin our free membership!\n\n",
                           font=font_startpageinfo, background='white')
         label4.place(x=440, y=160)
 
@@ -185,6 +185,28 @@ class StartPage(tk.Frame):
         button1.place(x=40, y=570)
         button2.place(x=40, y=590)
         button3.place(x=115, y=380)
+
+
+        quotation_up = PhotoImage(file='imagefile/up.png')
+        label_quotation_up = Label(self, image=quotation_up, borderwidth=0)
+        label_quotation_up.image = quotation_up
+        label_quotation_up.place(x=985, y=270)
+        quotation_down = PhotoImage(file='imagefile/down.png')
+        label_quotation_down = Label(self, image=quotation_down, borderwidth=0)
+        label_quotation_down.image = quotation_down
+        label_quotation_down.place(x=380, y=145)
+        quotation_middle = PhotoImage(file='imagefile/middle.png')
+        label_quotation_middle = Label(self, image=quotation_middle, borderwidth=0)
+        label_quotation_middle.image=quotation_middle
+        label_quotation_middle.place(x=580, y=340)
+
+        label_quotation_up2 = Label(self, image=quotation_up, borderwidth=0)
+        label_quotation_up2.image = quotation_up
+        label_quotation_up2.place(x=985, y=565)
+
+        label_quotation_down2 = Label(self, image=quotation_down, borderwidth=0)
+        label_quotation_down2.image = quotation_down
+        label_quotation_down2.place(x=380, y=390)
 
 
 # 슈퍼유저 관련 페이지
@@ -814,7 +836,7 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
                            fg="white", background="#00b0f0", font=font_SuperButton, command=openweb)
         button.place(x=205, y=500)
 
-        button = tk.Button(self, borderwidth=3, relief="flat", text="   UplodeData   ",
+        button = tk.Button(self, borderwidth=3, relief="flat", text="   UploadData   ",
                            fg="white", background="#00b0f0", font=font_SuperButton, command=UpData_LIST)
         button.place(x=355, y=500)
 
