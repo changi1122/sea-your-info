@@ -1598,7 +1598,7 @@ class Find_ID(tk.Frame):
             self.str1.set(" ")
             controller.show_frame("StartPage")
 
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Check  ",
                             command=Empty,
                             fg="white", background="#00b0f0", font=font_Cheack_B)
         button1.place(x=500, y=520)
@@ -1625,7 +1625,7 @@ class Find_PW_S(tk.Frame):
             controller.show_frame("StartPage")
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Check  ",
                             command=Empty,
                             fg="white", background="#00b0f0", font=font_Cheack_B)
         button1.place(x=500, y=520)
