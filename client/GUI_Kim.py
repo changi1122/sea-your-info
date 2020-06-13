@@ -12,6 +12,12 @@ from tkinter import *
 from tkinter import messagebox
 import webbrowser
 
+import os, sys
+if getattr(sys, 'frozen', False):
+    application_path = sys._MEIPASS
+elif __file__:
+    application_path = os.path.dirname(__file__)
+
 UserInfo = []
 User_token = []
 SpUser_sw = []
@@ -52,7 +58,7 @@ class Apps(tk.Tk):
         self.geometry('1050x650')
         self.resizable(False, False)
         self.configure(background='white')
-        self.iconbitmap(r'imagefile\sea_your_info.ico')
+        self.iconbitmap(application_path + '\imagefile\sea_your_info.ico')
         container = tk.Frame(self)
         container.pack(side="top", fill="both", expand=True)
         container.grid_rowconfigure(0, weight=1)
@@ -85,13 +91,13 @@ class StartPage(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_mainlogo = PhotoImage(file='imagefile/logo2_color.gif')
+        image_mainlogo = PhotoImage(file=application_path + '/imagefile/logo2_color.gif')
         label_defaultlogo = Label(image=image_mainlogo, borderwidth=0)
         label_defaultlogo.image = image_mainlogo
         label_defaultlogo.place(x=20, y=20)
 
         # OP_bar 추가
-        image_bar = PhotoImage(file='imagefile/OP_bar.png')
+        image_bar = PhotoImage(file=application_path + '/imagefile/OP_bar.png')
         label_defaultlogo = Label(image=image_bar)
         label_defaultlogo.image = image_bar
         label_defaultlogo.place(x=-10, y=100)
@@ -135,7 +141,7 @@ class StartPage(tk.Frame):
         label4.place(x=440, y=160)
 
         # 텍스트 옆에 들어가는 로고 이미지 부분
-        image_logo = PhotoImage(file='imagefile/logo2_color.gif')
+        image_logo = PhotoImage(file=application_path + '/imagefile/logo2_color.gif')
         mainlogo = Label(self, image=image_logo, borderwidth=0)  # borderwidth가 여백을 제거해준다. 꿀팁
         mainlogo.image = image_logo
         mainlogo.place(x=445, y=140)
@@ -164,7 +170,7 @@ class StartPage(tk.Frame):
         checkbutton['variable'] = checkbutton.var
         checkbutton.place(x=150, y=310)
 
-        log_B = PhotoImage(file='imagefile/OP_button3.png')
+        log_B = PhotoImage(file=application_path + '/imagefile/OP_button3.png')
 
         button1 = Button(self, text="처음 오셨나요?", command=lambda: controller.show_frame("Make_User_page"),
                          background='white', borderwidth=0, font=font_hypertext, fg="#0000FF")
@@ -187,15 +193,15 @@ class StartPage(tk.Frame):
         button3.place(x=115, y=380)
 
 
-        quotation_up = PhotoImage(file='imagefile/up.png')
+        quotation_up = PhotoImage(file=application_path + '/imagefile/up.png')
         label_quotation_up = Label(self, image=quotation_up, borderwidth=0)
         label_quotation_up.image = quotation_up
         label_quotation_up.place(x=985, y=270)
-        quotation_down = PhotoImage(file='imagefile/down.png')
+        quotation_down = PhotoImage(file=application_path + '/imagefile/down.png')
         label_quotation_down = Label(self, image=quotation_down, borderwidth=0)
         label_quotation_down.image = quotation_down
         label_quotation_down.place(x=380, y=145)
-        quotation_middle = PhotoImage(file='imagefile/middle.png')
+        quotation_middle = PhotoImage(file=application_path + '/imagefile/middle.png')
         label_quotation_middle = Label(self, image=quotation_middle, borderwidth=0)
         label_quotation_middle.image=quotation_middle
         label_quotation_middle.place(x=580, y=340)
@@ -224,7 +230,7 @@ class SuperPage(tk.Frame):
         global type_list
         type_list = []
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
-        image_user = PhotoImage(file="imagefile/user_image.gif")
+        image_user = PhotoImage(file=application_path + "/imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
         user_image.place(x=25, y=120)
@@ -540,7 +546,7 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
             if search == '':
                 listbox.selection_clear(0, END)
 
-        image_user = PhotoImage(file="imagefile/user_image.gif")
+        image_user = PhotoImage(file=application_path + "/imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
         user_image.place(x=25, y=120)
@@ -557,7 +563,7 @@ class SuperShowUserINFO(tk.Frame):  # 스토리 보드상 가입된 유저 목�
         listbox = tk.Listbox(userpage, yscrollcommand=scrollbar.set, width=660, height=460,
                              font=font_listbox_content2)
 
-        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        image_back = PhotoImage(file=application_path + '/imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=lambda: controller.show_frame("SuperPage"), padx=10, pady=10, image=image_back)
         button_back.image = image_back
@@ -626,13 +632,13 @@ class SuperChangeListINFO(tk.Frame):  # 스토리 보드상 리스트의 항복 
             self.txt4.set(" ")
             controller.show_frame("SuperPage")
 
-        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        image_back = PhotoImage(file=application_path + '/imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=Delete, padx=10, pady=10, image=image_back)
         button_back.image = image_back
         button_back.place(x=25, y=550)  # 뒤로가기버튼
 
-        image_user = PhotoImage(file="imagefile/ChangListinfo.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/ChangListinfo.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=120, y=130)
@@ -862,7 +868,7 @@ class main(tk.Frame):
         global type_list
         type_list = []
         # 좌측 상단 user_image(USER라고 크게 적혀져있고 파란색 원 있는 부분) 출력 부분
-        image_user = PhotoImage(file="imagefile/user_image.gif")
+        image_user = PhotoImage(file=application_path + "/imagefile/user_image.gif")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
         user_image.place(x=25, y=120)
@@ -1223,7 +1229,7 @@ class Make_User_page(tk.Frame):
                 display3['show'] = ""
 
         # 회원가입 뒤 배경 추가
-        image_user = PhotoImage(file="imagefile/OP_make_user.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/OP_make_user.png")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=120)
@@ -1254,7 +1260,7 @@ class Make_User_page(tk.Frame):
         display3.place(x=475, y=430)
 
         # 물음표 이미지 띄우는 부분
-        que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
+        que_image = PhotoImage(file=application_path + '/imagefile/questionmarkimage.gif')
         label_Queimage = tk.Label(self, image=que_image, borderwidth=0)
         label_Queimage.image = que_image
         label_Queimage.place(x=595, y=450)
@@ -1278,7 +1284,7 @@ class Make_User_page(tk.Frame):
                            fg="white", background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=560)
 
-        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        image_back = PhotoImage(file=application_path + '/imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=lambda: controller.show_frame("StartPage"), padx=10, pady=10, image=image_back)
         button_back.image = image_back
@@ -1323,7 +1329,7 @@ class Change_User_Info(tk.Frame):
             subVar = IntVar(value=1)
             controller.show_frame("ch_U_Suss")
 
-        image_user = PhotoImage(file="imagefile/OP_make_user.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/OP_make_user.png")
         user_image = Label(self, image=image_user, borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=120)
@@ -1424,7 +1430,7 @@ class Change_User_Info(tk.Frame):
         def on_leave(event):
             label5.configure(text="")
 
-        que_image = PhotoImage(file='imagefile/questionmarkimage.gif')
+        que_image = PhotoImage(file=application_path + '/imagefile/questionmarkimage.gif')
         label_Queimage = tk.Label(self, image=que_image, borderwidth=0)
         label_Queimage.image = que_image
         label_Queimage.place(x=600, y=460)
@@ -1450,7 +1456,7 @@ class Change_User_Info(tk.Frame):
         def Empty():
             controller.show_frame("main")
 
-        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        image_back = PhotoImage(file=application_path + '/imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
@@ -1465,7 +1471,7 @@ class Find_User_Info(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_user = PhotoImage(file="imagefile/OP_FIND_PWID2.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/OP_FIND_PWID2.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=115)
@@ -1509,7 +1515,7 @@ class Find_User_Info(tk.Frame):
             Delet()
             controller.show_frame("StartPage")
 
-        image_back = PhotoImage(file='imagefile/OP_button3_back.png')
+        image_back = PhotoImage(file=application_path + '/imagefile/OP_button3_back.png')
         button_back = tk.Button(self, borderwidth=3, relief="flat", background='white',
                                 command=Empty, padx=10, pady=10, image=image_back)
         button_back.image = image_back
@@ -1576,7 +1582,7 @@ class Find_ID(tk.Frame):
 
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        image_user = PhotoImage(file="imagefile/ID_S.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/ID_S.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=150)
@@ -1606,7 +1612,7 @@ class Find_PW_S(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_user = PhotoImage(file="imagefile/PW_OK.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/PW_OK.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=150)
@@ -1633,7 +1639,7 @@ class Find_F(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_user = PhotoImage(file="imagefile/PW_F.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/PW_F.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=180)
@@ -1661,7 +1667,7 @@ class Mk_U_Suss(tk.Frame):
         label.place(x=100, y=35)
 
         # 로그인 성공시 페이지
-        image_user = PhotoImage(file="imagefile/Make_User_Successful.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/Make_User_Successful.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=270, y=130)
@@ -1680,7 +1686,7 @@ class ch_U_Suss(tk.Frame):
         label = tk.Label(self, text="Sea your Info", font=controller.title_font, background='white')
         label.place(x=100, y=35)
 
-        image_user = PhotoImage(file="imagefile/CH_USER_S.png")
+        image_user = PhotoImage(file=application_path + "/imagefile/CH_USER_S.png")
         user_image = Label(self, image=image_user, background="white", borderwidth=0)
         user_image.image = image_user
         user_image.place(x=230, y=150)
