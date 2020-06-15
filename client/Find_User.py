@@ -1,5 +1,6 @@
 import requests
 import json
+from tkinter import messagebox
 
 class Find_User():
     def __init__(self, id, email):
@@ -25,7 +26,12 @@ class Find_User():
         }
 
         # Request GET
-        response = requests.get(URL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.get(URL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
+
         response_ID = json.loads(response.text)
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 200
@@ -60,7 +66,12 @@ class Find_User():
         }
 
         # Request GET
-        response = requests.get(URL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.get(URL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
+
         response_PW = json.loads(response.text)
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 200

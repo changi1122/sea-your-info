@@ -119,11 +119,12 @@ class StartPage(tk.Frame):
                 txt = ""
                 for i in range(2, len(User_token)):
                     if 'password' in User_token[i]:
-                        txt += "비밀번호를 확인해 주세요\n"
+                        txt += "비밀번호를 확인해 주세요.\n"
                     if 'username' in User_token[i]:
-                        txt += "아이디를 확인해 주세요\n"
+                        txt += "아이디를 확인해 주세요.\n"
                     if 'non_field_errors' in User_token[i]:
-                        txt += "존재하지 않는 유저입니다\n"
+                        txt += "아이디 또는 비밀번호가 잘못되었습니다.\n"
+                user_ID = []
                 User_token = []
                 messagebox.showwarning("Error", txt)
 
