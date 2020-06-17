@@ -491,7 +491,7 @@ class SuperPage(tk.Frame):
                            background="#00b0f0", font=font_Cheack_B, command=Delet_data)
         button.place(x=230, y=560)
 
-    # cheack box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
+    # check box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
     def convert(self):
         global type_list
         title = ["scholarship", "contest", "exchange", "vacation", "tuition", "freshman",
@@ -1117,7 +1117,7 @@ class main(tk.Frame):
                            background="#00b0f0", font=font_Cheack_B, command=Delet_data)
         button.place(x=230, y=560)
 
-    # cheack box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
+    # check box 버튼을 통해 버튼이 선택되면 해당값 -1 의 인덱스 값에 해당하는 문자열 저장
     def convert(self):
         global type_list
         title = ["scholarship", "contest", "exchange", "vacation", "tuition", "freshman",
@@ -1247,13 +1247,13 @@ class Make_User_page(tk.Frame):
         label2.place(x=375, y=230)
 
         str1 = StringVar()
-        LabelWidget1 = tk.Label(self, text="ID(user name)", background='white', font=FB)
+        LabelWidget1 = tk.Label(self, text="ID (username)", background='white', font=FB)
         LabelWidget1.place(x=375, y=290)
         display1 = tk.Entry(self, width=20, textvariable=str1)
         display1.place(x=475, y=290)
 
         str2 = StringVar()
-        LabelWidget2 = tk.Label(self, text="E-mail", background='white', font=FB)
+        LabelWidget2 = tk.Label(self, text="Email", background='white', font=FB)
         LabelWidget2.place(x=375, y=360)
         display2 = tk.Entry(self, width=20, textvariable=str2)
         display2.place(x=475, y=360)
@@ -1393,7 +1393,7 @@ class Change_User_Info(tk.Frame):
         checkbutton1.place(x=620, y=385)
 
         str4 = StringVar()
-        LabelWidget4 = tk.Label(self, text="New_Password", background='white', font=FB)
+        LabelWidget4 = tk.Label(self, text="New Password", background='white', font=FB)
         LabelWidget4.place(x=375, y=440)
         display4 = tk.Entry(self, width=20, textvariable=str4)
         display4.place(x=475, y=440)
@@ -1455,7 +1455,7 @@ class Change_User_Info(tk.Frame):
         # subscribe_checkbutton.var = tk.BooleanVar(value=True)
         subscribe_checkbutton.place(x=470, y=490)
 
-        button = tk.Button(self, borderwidth=3, relief="flat", text="\tComplete\t", command=button_hit, fg="white",
+        button = tk.Button(self, borderwidth=3, relief="flat", text="\t    Save    \t", command=button_hit, fg="white",
                            background="#00b0f0", font=font_Cheack_B)
         button.place(x=475, y=540)
 
@@ -1604,7 +1604,7 @@ class Find_ID(tk.Frame):
             self.str1.set(" ")
             controller.show_frame("StartPage")
 
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Check  ",
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="    OK    ",
                             command=Empty,
                             fg="white", background="#00b0f0", font=font_Cheack_B)
         button1.place(x=500, y=520)
@@ -1631,7 +1631,7 @@ class Find_PW_S(tk.Frame):
             controller.show_frame("StartPage")
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Check  ",
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="    OK    ",
                             command=Empty,
                             fg="white", background="#00b0f0", font=font_Cheack_B)
         button1.place(x=500, y=520)
@@ -1658,7 +1658,7 @@ class Find_F(tk.Frame):
             controller.show_frame("StartPage")
 
         # DB에서 E-Mail 반환후 있으면 이거 없으면 오류 출력
-        button1 = tk.Button(self, borderwidth=3, relief="flat", text="  Cheak  ",
+        button1 = tk.Button(self, borderwidth=3, relief="flat", text="    OK    ",
                             command=Empty,
                             fg="white", background="#00b0f0", font=font_Cheack_B)
         button1.place(x=500, y=550)
