@@ -1161,6 +1161,11 @@ class Make_User_page(tk.Frame):
             user_ID = str1.get()
             user_Email = str2.get()
             user_PW = str3.get()
+            if not user_Email :
+                txt = ""
+                txt += "이메일을 적어주세요\n"
+                messagebox.showwarning(
+                    "Error", txt)
             if subVar.get() == 1:
                 print("hi")
                 user_Subscribe = "true"
