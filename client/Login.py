@@ -1,3 +1,5 @@
+from tkinter import messagebox
+
 class Login():
     def __init__(self, id, pw):
         self.id = id
@@ -22,7 +24,11 @@ class Login():
         # URL = "http://localhost:8000/issuperuser/" # 자기 컴퓨터에서 서버를 실행한 경우
 
         # Request POST
-        response = requests.post(URL, headers=headers)
+        try:
+            response = requests.post(URL, headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         response_dict2 = json.loads(response.text)  # 성공 실패 여부를 보기 위해서 딕셔너리로 변경
         # 응답 코드, 텍스트 출력
@@ -59,7 +65,11 @@ class Login():
         }
 
         # Request POST
-        response = requests.post(URL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.post(URL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201

@@ -1,5 +1,6 @@
 import requests
 import json
+from tkinter import messagebox
 
 class Post_ch():
     def __init__(self, ID, Token, title, date, URL, tpye):
@@ -29,7 +30,11 @@ class Post_ch():
         integratedURL = URL + ID + "/"
 
         # Request DELETE : id가 ID인 게시물을 삭제합니다.
-        response = requests.delete(integratedURL, headers=headers)
+        try:
+            response = requests.delete(integratedURL, headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("response")
@@ -60,7 +65,11 @@ class Post_ch():
         integratedURL = URL + ID + "/"
 
         # Request DELETE : id가 ID인 게시물을 삭제합니다.
-        response = requests.delete(integratedURL, headers=headers)
+        try:
+            response = requests.delete(integratedURL, headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("response")
@@ -102,7 +111,11 @@ class Post_ch():
         }
 
         # Request PUT
-        response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201
@@ -141,7 +154,11 @@ class Post_ch():
         }
 
         # Request PUT
-        response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201

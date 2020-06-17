@@ -1,6 +1,6 @@
 import requests
 import json
-
+from tkinter import messagebox
 
 class Update_User():
     def __init__(self, id, email, pw, new_pw, Token, subscribe):
@@ -41,7 +41,11 @@ class Update_User():
         }
 
         # Request PUT
-        response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        try:
+            response = requests.put(integratedURL, data=json.dumps(data), headers=headers)
+        except:
+            messagebox.showwarning("연결되어 있지 않음", "네트워크에 연결되지 않았거나, 불안정합니다.")
+            return
 
         # 응답 코드, 텍스트 출력
         print("status code : ", response.status_code)  # 성공 : 201
