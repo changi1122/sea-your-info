@@ -18,6 +18,11 @@ if getattr(sys, 'frozen', False):
 elif __file__:
     application_path = os.path.dirname(__file__)
 
+# 글꼴
+import pyglet
+pyglet.font.add_file(application_path + '/fontfile/jalnan.otf')
+
+
 UserInfo = []
 User_token = []
 SpUser_sw = []
