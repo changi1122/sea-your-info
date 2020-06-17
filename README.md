@@ -9,7 +9,7 @@
 - 🖼️**client** : GUI 프로그램을 담고 있는 폴더(Contains GUI part)
 - ⌨️**crawler** : 웹 크롤러를 담고 있는 폴더(Contains web crawling part)
 - 🌐**server** : Django와 DjangoRestFramework를 통한 REST API 서버를 담고 있는 폴더(Contains REST API server of Django and DjangoRestFramework)
-
+- ✉**mail_server** : 공지사항 메일 전송 프로그램을 담고 있는 폴더(Contains the report mail sending program)
 
 ## 개발자 - Developer
 
