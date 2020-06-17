@@ -11,6 +11,7 @@ from tkinter import font as tkfont
 from tkinter import *
 from tkinter import messagebox
 import webbrowser
+from pyglet import font
 
 import os, sys
 if getattr(sys, 'frozen', False):
@@ -19,8 +20,7 @@ elif __file__:
     application_path = os.path.dirname(__file__)
 
 # 글꼴
-import pyglet
-pyglet.font.add_file(application_path + '/fontfile/jalnan.otf')
+font.add_file(application_path + '/fontfile/jalnan.otf')
 
 
 UserInfo = []
@@ -1330,15 +1330,21 @@ class Change_User_Info(tk.Frame):
                 print("got false")
             message = []
             print(User_token[2])
-            CH = Update_User.Update_User(user_ID[0], str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
-            CH.UUD_INFO(message)
-            print(message)
-            self.str1.set(" ")
-            display2.delete(0, tk.END)
-            display3.delete(0, tk.END)
-            display4.delete(0, tk.END)
-            subVar = IntVar(value=1)
-            controller.show_frame("ch_U_Suss")
+            if not str2.get():
+                txt = ""
+                txt += "이메일을 적어주세요\n"
+                messagebox.showwarning(
+                    "Error", txt)
+            else :
+                CH = Update_User.Update_User(user_ID[0], str2.get(), str3.get(), str4.get(), User_token[2], user_Subscribe)
+                CH.UUD_INFO(message)
+                print(message)
+                self.str1.set(" ")
+                display2.delete(0, tk.END)
+                display3.delete(0, tk.END)
+                display4.delete(0, tk.END)
+                subVar = IntVar(value=1)
+                controller.show_frame("ch_U_Suss")
 
         image_user = PhotoImage(file=application_path + "/imagefile/OP_make_user.png")
         user_image = Label(self, image=image_user, borderwidth=0)
