@@ -1173,11 +1173,7 @@ class Make_User_page(tk.Frame):
             user_ID = str1.get()
             user_Email = str2.get()
             user_PW = str3.get()
-            if not user_Email :
-                txt = ""
-                txt += "이메일을 적어주세요\n"
-                messagebox.showwarning(
-                    "Error", txt)
+
             if subVar.get() == 1:
                 print("hi")
                 user_Subscribe = "true"
@@ -1187,7 +1183,13 @@ class Make_User_page(tk.Frame):
             Mk = Create_User.Make_user(user_ID, user_Email, user_PW, user_Subscribe)
             Mk.make(string)
             print(string)
-            if string[0] == 201:
+
+            if not user_Email :
+                txt = ""
+                txt += "이메일을 적어주세요\n"
+                messagebox.showwarning(
+                    "Error", txt)
+            elif string[0] == 201:
                 display1.delete(0, tk.END)  # 엔트리에 있는 정보 삭제
                 display2.delete(0, tk.END)
                 display3.delete(0, tk.END)
